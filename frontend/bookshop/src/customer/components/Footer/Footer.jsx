@@ -21,85 +21,85 @@ function Footer() {
           </Typography>
           <div>
             <Button className="pb-5" variant="h6">
-              <a href="/about">About</a>
+              <a href="/about">{t('about')}</a>
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Blog
+              {t('blog')}
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Jobs
+              {t('jobs')}
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Partners
-            </Button>
-          </div>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography className="pb-5" variant="h6">
-            Solutions
-          </Typography>
-          <div>
-            <Button className="pb-5" variant="h6">
-              Marketing
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6">
-              Analytics
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6">
-              Commerce
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6">
-              Support
+              {t('partners')}
             </Button>
           </div>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
           <Typography className="pb-5" variant="h6">
-            Documentation
+            {t('solutions')}
           </Typography>
           <div>
             <Button className="pb-5" variant="h6">
-              Guides
+              {t('marketing')}
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Api Status
+              {t('analytics')}
+            </Button>
+          </div>
+          <div>
+            <Button className="pb-5" variant="h6">
+              {t('commerce')}
+            </Button>
+          </div>
+          <div>
+            <Button className="pb-5" variant="h6">
+              {t('support')}
             </Button>
           </div>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
           <Typography className="pb-5" variant="h6">
-            Legal
+            {t('documentation')}
           </Typography>
           <div>
             <Button className="pb-5" variant="h6">
-              Claims
+              {t('guides')}
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Privacy
+              {t('apiStatus')}
+            </Button>
+          </div>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Typography className="pb-5" variant="h6">
+            {t('legal')}
+          </Typography>
+          <div>
+            <Button className="pb-5" variant="h6">
+              {t('claims')}
             </Button>
           </div>
           <div>
             <Button className="pb-5" variant="h6">
-              Terms
+              {t('privacy')}
+            </Button>
+          </div>
+          <div>
+            <Button className="pb-5" variant="h6">
+              {t('terms')}
             </Button>
           </div>
         </Grid>

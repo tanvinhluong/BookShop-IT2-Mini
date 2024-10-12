@@ -3,6 +3,7 @@ import axios from 'axios'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import { API_BASE_URL } from '../../../config/apiConfig'
+import { useTranslation } from 'react-i18next'
 function SearchBar({ setResults, setVisible }) {
   const [input, setInput] = useState('')
   const jwt = localStorage.getItem('jwt')
@@ -49,13 +50,15 @@ function SearchBar({ setResults, setVisible }) {
     setVisible(true)
   }
 
+  const { t } = useTranslation()
+
   return (
     <div className="container-search mr-4">
       <input
         spellCheck="false"
         value={input}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder="Tìm kiếm sản phẩm"
+        placeholder={t('search')}
         onFocus={() => setVisible(true)}
         onBlur={() => {
           setTimeout(() => {

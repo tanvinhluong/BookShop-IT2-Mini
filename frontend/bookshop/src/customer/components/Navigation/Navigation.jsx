@@ -94,6 +94,7 @@ export default function Navigation() {
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng)
   }
+  const { t } = useTranslation()
 
   return (
     <div className="bg-white pb-10">
@@ -247,7 +248,7 @@ export default function Navigation() {
                       onClick={handleOpen}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
-                      Signin
+                      {t('signin')}
                     </Button>
                   </div>
                 </div>
@@ -276,7 +277,7 @@ export default function Navigation() {
           className="flex h-10 items-center justify-center  px-4 text-sm font-medium text-white sm:px-6 lg:px-8"
           style={{ backgroundColor: '#e87bc7' }}
         >
-          Đơn hàng trên 200.000 đồng được freeship
+          {t('freeShipping')}
         </p>
 
         <nav aria-label="Top" className="mx-auto">
@@ -489,7 +490,7 @@ export default function Navigation() {
                       onClick={handleOpen}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
-                      Signin
+                      {t('signin')}
                     </Button>
                   )}
                 </div>

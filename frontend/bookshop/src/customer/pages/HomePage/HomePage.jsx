@@ -3,7 +3,7 @@ import MainCarousel from '../../components/HomeCarousel/MainCarousel'
 import HomeSectionCarousel from '../../components/HomeSectionCarousel/HomeSectionCarousel'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-
+import { useTranslation } from 'react-i18next'
 const HomePage = () => {
   const [category, setCategory] = useState([])
   const [productsFilter, setProductsFilter] = useState([])
@@ -87,7 +87,7 @@ const HomePage = () => {
       console.error('Error fetching data:', error)
     }
   }
-
+  const { t } = useTranslation()
   useEffect(() => {
     fecthCategory()
     fecthAllProduct()
@@ -103,7 +103,7 @@ const HomePage = () => {
           backgroundColor: 'pink',
         }}
       >
-        <div className="mr-2">Chọn Danh Mục: </div>
+        <div className="mr-2">{t('category')}</div>
         <select
           className="rounded-full w-20"
           value={category[selectedIndex]}
@@ -121,7 +121,7 @@ const HomePage = () => {
             categoryName={categoryName}
           />
         )}
-        <HomeSectionCarousel data={products} categoryName={'Tất cả sản phẩm'} />
+        <HomeSectionCarousel data={products} categoryName={t('allProducts')} />
       </div>
     </div>
   )
