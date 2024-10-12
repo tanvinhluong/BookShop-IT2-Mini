@@ -1,36 +1,54 @@
-import React, { useEffect } from "react";
-import CartItem from "./CartItem";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getCart } from "../../../State/Cart/Action";
+import React, { useEffect } from 'react'
+import CartItem from './CartItem'
+import { Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCart } from '../../../State/Cart/Action'
 const Cart = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { cart } = useSelector((store) => store);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { cart } = useSelector((store) => store)
 
   useEffect(() => {
-    dispatch(getCart());
-  }, [cart.removeCartItem, cart.updateCartItem]);
+    dispatch(getCart())
+  }, [cart.removeCartItem, cart.updateCartItem])
+
+  const isCartEmpty = cart.cartItems.length === 0
+
   return (
     <div>
-      {cart.cartItems.length > 0 && (
+      {isCartEmpty ? (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h2 className="text-xl font-bold">Giỏ hàng trống</h2>
+          <p className="text-gray-600">
+            Bạn có thể trở về trang chủ để tiếp tục chọn hàng.
+          </p>
+          <Button
+            onClick={() => navigate('/')}
+            variant="contained"
+            className="mt-5"
+            sx={{
+              bgcolor: '#9155fd',
+            }}
+          >
+            Trở về trang chủ
+          </Button>
+        </div>
+      ) : (
         <div className="lg:grid grid-cols-3 lg:px-16 relative">
           <div className="lg:col-span-2 lg:px-5 bg-white">
             <div className="space-y-3">
-              {cart.cart?.cartItems.map((item, index) => (
-                <>
-                  <CartItem
-                    item={item}
-                    key={`cartitem#${index}`}
-                    showButton={true}
-                  />
-                </>
+              {cart.cartItems.map((item, index) => (
+                <CartItem
+                  item={item}
+                  key={`cartitem#${index}`}
+                  showButton={true}
+                />
               ))}
             </div>
           </div>
           <div className="px-5 sticky top-0 h-[100vh] mt-5 lg:mt-0">
-            <div className="border  p-5 bg-white shadow-lg rounded-md">
+            <div className="border p-5 bg-white shadow-lg rounded-md">
               <p className="uppercase font-bold opacity-60 pb-4">
                 Billing Details
               </p>
@@ -62,14 +80,14 @@ const Cart = () => {
               </div>
 
               <Button
-                onClick={() => navigate("/checkout?step=2")}
+                onClick={() => navigate('/checkout?step=2')}
                 variant="contained"
                 className="w-full mt-5"
                 sx={{
-                  padding: ".8rem 2rem",
-                  marginTop: "2rem",
-                  width: "100%",
-                  bgcolor: "#9155fd",
+                  padding: '.8rem 2rem',
+                  marginTop: '2rem',
+                  width: '100%',
+                  bgcolor: '#9155fd',
                 }}
               >
                 Check Out
@@ -79,7 +97,7 @@ const Cart = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

@@ -18,6 +18,7 @@ const initalState = {
   loading: false,
   error: null,
   cartItems: [],
+  totalItems: 0,
 }
 
 export const cartReducer = (state = initalState, action) => {
@@ -26,9 +27,12 @@ export const cartReducer = (state = initalState, action) => {
       return { ...state, loading: true, error: null }
 
     case ADD_ITEM_TO_CART_SUCCESS:
+      console.log('Cart Items before:', state.cartItems.length)
+      console.log('New Items:', state.totalItems + 1)
       return {
         ...state,
         cartItems: [...state.cartItems, action.payload.cartItems],
+        totalItems: state.totalItems + 1,
         loading: false,
       }
 
@@ -61,6 +65,7 @@ export const cartReducer = (state = initalState, action) => {
       return {
         ...state,
         deleteCartItem: action.payload,
+        totalItems: state.totalItems - 1,
         loading: false,
       }
 
@@ -68,6 +73,7 @@ export const cartReducer = (state = initalState, action) => {
       return {
         ...state,
         updateCartItem: action.payload,
+        totalItems: state.totalItems,
         loading: false,
       }
 

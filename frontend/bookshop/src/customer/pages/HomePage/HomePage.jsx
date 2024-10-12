@@ -1,7 +1,6 @@
 import { API_BASE_URL } from '../../../config/apiConfig'
 import MainCarousel from '../../components/HomeCarousel/MainCarousel'
 import HomeSectionCarousel from '../../components/HomeSectionCarousel/HomeSectionCarousel'
-import { mens_kurta } from '../../Data/mens_kurta'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
@@ -104,8 +103,12 @@ const HomePage = () => {
           backgroundColor: 'pink',
         }}
       >
-        <div className='mr-2'>Chọn Danh Mục: </div>
-        <select className='rounded-full w-20'  value={category[selectedIndex]} onChange={handleComboBoxChange}>
+        <div className="mr-2">Chọn Danh Mục: </div>
+        <select
+          className="rounded-full w-20"
+          value={category[selectedIndex]}
+          onChange={handleComboBoxChange}
+        >
           {category.map((option, index) => (
             <option key={'combo#' + index}>{option}</option>
           ))}

@@ -64,7 +64,7 @@ function ProductDetails() {
     const data = { productId: params.productId }
     console.log('Selected data :', data)
     dispatch(addItemToCart(data))
-    navigate('/cart')
+    // navigate('/cart')
   }
 
   useEffect(() => {

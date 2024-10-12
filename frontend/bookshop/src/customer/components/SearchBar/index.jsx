@@ -55,6 +55,7 @@ function SearchBar({ setResults, setVisible }) {
         spellCheck="false"
         value={input}
         onChange={(e) => handleChange(e.target.value)}
+        placeholder="Tìm kiếm sản phẩm"
         onFocus={() => setVisible(true)}
         onBlur={() => {
           setTimeout(() => {
