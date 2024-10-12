@@ -16,7 +16,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUser, logout } from '../../../State/Auth/Action'
 import ResultsList from '../SearchBar/ResultsList'
 import SearchBar from '../SearchBar'
-
+import flagUS from '../assets/united-states-64x.png'
+import flagVN from '../assets/vietnam-64x.png'
+import { useTranslation } from 'react-i18next'
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -31,7 +33,7 @@ export default function Navigation() {
   const openUserMenu = Boolean(anchorEl)
   const jwt = localStorage.getItem('jwt')
   const location = useLocation()
-
+  const { i18n } = useTranslation()
   // search
   const [results, setResults] = useState([])
   const [product, setProduct] = useState({})
@@ -87,6 +89,11 @@ export default function Navigation() {
   }
 
   const { totalItems } = useSelector((state) => state.cart)
+
+  // change language
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng)
+  }
 
   return (
     <div className="bg-white pb-10">
@@ -505,6 +512,41 @@ export default function Navigation() {
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"></span>
                     <span className="sr-only">items in cart, view bag</span>
                   </Button>
+                </div>
+                {/* Button change language */}
+                <div className="flex ml-4">
+                  <button
+                    onClick={() => changeLanguage('en')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <img
+                      src={flagUS}
+                      alt="English"
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        marginRight: '8px',
+                      }}
+                    />
+                  </button>
+                  <button
+                    onClick={() => changeLanguage('vi')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <img
+                      src={flagVN}
+                      alt="Tiếng Việt"
+                      style={{ width: '24px', height: '24px' }}
+                    />
+                  </button>
                 </div>
               </div>
             </div>

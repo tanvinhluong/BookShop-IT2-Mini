@@ -1,21 +1,23 @@
-import { Button, Grid, Link, Typography } from "@mui/material";
-import React from "react";
+import { Button, Grid, Link, Typography } from '@mui/material'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 function Footer() {
+  const { t } = useTranslation()
   return (
     <div>
       <Grid
         className="bg-black text-white text-center mt-10"
         container
         sx={{
-          bgcolor: "#ffb0bd",
-          color: "white",
+          bgcolor: '#ffb0bd',
+          color: 'white',
           py: 3,
         }}
       >
         <Grid item xs={12} sm={6} md={3}>
           <Typography className="pb-5" variant="h6">
-            Company
+            {t('welcome')}
           </Typography>
           <div>
             <Button className="pb-5" variant="h6">
@@ -111,15 +113,15 @@ function Footer() {
           </Typography>
 
           <Typography variant="body2" component="p" align="center">
-            Icons made by{" "}
+            Icons made by{' '}
             <Link
               href="https://www.freepik.com"
               color="inherit"
               underline="always"
             >
               Freepik
-            </Link>{" "}
-            from{" "}
+            </Link>{' '}
+            from{' '}
             <Link
               href="https://www.flaticon.com/"
               color="inherit"
@@ -131,7 +133,7 @@ function Footer() {
         </Grid>
       </Grid>
     </div>
-  );
+  )
 }
 
-export default Footer;
+export default Footer
