@@ -17,13 +17,13 @@
 //@Service
 //public class OrderServiceImplementation implements OrderService{
 //    private OrderRepository orderRepository;
-//    private CartService cartService;
+//    private ICartService cartService;
 //    private AddressRepository addressRepository;
 //    private UserRepository userRepository;
 //    private OrderItemService orderItemService;
 //    private OrderItemRepository orderItemRepository;
 //
-//    public OrderServiceImplementation(OrderRepository orderRepository,CartService cartService,
+//    public OrderServiceImplementation(OrderRepository orderRepository,ICartService cartService,
 //                                      AddressRepository addressRepository,UserRepository userRepository,
 //                                      OrderItemService orderItemService,OrderItemRepository orderItemRepository) {
 //        this.orderRepository=orderRepository;

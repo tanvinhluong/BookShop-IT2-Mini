@@ -26,7 +26,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "payment_id") // Liên kết với bảng PaymentDetail qua paymentId
-    private PaymentDetail paymentDetail;
+    private PaymentInfo paymentInfo;
 
     private Double totalDiscountedPrice;
     private Double totalItem;

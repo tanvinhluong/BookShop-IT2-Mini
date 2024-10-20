@@ -32,6 +32,12 @@ public class User {
     @Column(name = "CREATED_AT")
     private Date createdAt;
 
+    //  default address
+    private Integer default_address_id;
+
+    // active user or not
+    private Boolean active;
+
     @Setter
     @Getter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

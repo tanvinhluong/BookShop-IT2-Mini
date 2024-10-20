@@ -28,6 +28,12 @@ public class PaymentInfo {
     @Column(name="CVV")
     private String cvv;
 
+    @Column(name = "CARD_METHOD")
+    private String method;
+
+    @Column(name = "PAYMENT_STATUS")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

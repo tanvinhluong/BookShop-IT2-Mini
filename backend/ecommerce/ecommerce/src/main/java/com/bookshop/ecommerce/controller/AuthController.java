@@ -7,7 +7,7 @@
 //import com.bookshop.ecommerce.repository.UserRepository;
 //import com.bookshop.ecommerce.request.LoginRequest;
 //import com.bookshop.ecommerce.response.AuthResponse;
-//import com.bookshop.ecommerce.service.CartService;
+//import com.bookshop.ecommerce.service.ICartService;
 //import com.bookshop.ecommerce.service.CustomUserServiceImplementation;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
@@ -38,7 +38,7 @@
 //    @Autowired
 //    private CustomUserServiceImplementation customUserServiceImplementation;
 //    @Autowired
-//    private CartService cartService;
+//    private ICartService cartService;
 //
 //    @PostMapping("/signup")
 //    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws UserException {

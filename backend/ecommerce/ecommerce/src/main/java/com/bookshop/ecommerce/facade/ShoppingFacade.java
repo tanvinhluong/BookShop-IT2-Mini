@@ -8,18 +8,18 @@
 //import com.bookshop.ecommerce.model.User;
 //import com.bookshop.ecommerce.request.AddItemRequest;
 //import com.bookshop.ecommerce.service.CartItemService;
-//import com.bookshop.ecommerce.service.CartService;
+//import com.bookshop.ecommerce.service.ICartService;
 //import com.bookshop.ecommerce.service.UserService;
 //import org.springframework.stereotype.Component;
 //
 //@Component
 //public class ShoppingFacade {
 //    private UserService userService;
-//    private CartService cartService;
+//    private ICartService cartService;
 //    private CartItemService cartItemService;
 //
 //    // FACADE PATTERN
-//    public ShoppingFacade(UserService userService, CartService cartService, CartItemService cartItemService) {
+//    public ShoppingFacade(UserService userService, ICartService cartService, CartItemService cartItemService) {
 //        this.userService = userService;
 //        this.cartService = cartService;
 //        this.cartItemService = cartItemService;
