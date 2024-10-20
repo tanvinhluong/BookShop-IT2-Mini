@@ -27,8 +27,6 @@ public class OrderItem {
     @JoinColumn(name = "PRODUCT_DETAIL_ID")
     private ProductDetail productDetail;
 
-    private String size;
-
     private int quantity;
 
     private Integer price;

@@ -16,17 +16,20 @@ public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "CARD_HOLDER_NAME")
-    private String cardholderName;
+    @Column(name = "paymentName")
+    private String paymentName;
 
-    @Column(name = "CREDIT_CARD_NUMBER")
-    private String cardNumber;
+    @Column(name = "PAYMENT_CODE")
+    private String paymentCode;
 
-    @Column(name = "EXPIRATION_DATE")
-    private String expirationDate;
+    @Column(name = "PAYMENTPHONE")
+    private String paymentPhone;
 
-    @Column(name="CVV")
-    private String cvv;
+    @Column(name = "CREATED_AT")
+    private String createdAt;
+
+    @Column(name = "PAYMENTAMOUNT")
+    private String paymentAmount;
 
     @Column(name = "CARD_METHOD")
     private String method;

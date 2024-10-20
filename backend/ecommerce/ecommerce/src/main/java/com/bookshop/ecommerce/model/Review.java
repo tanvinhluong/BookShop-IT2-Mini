@@ -29,13 +29,15 @@ public class Review {
 
     private Integer rating;
 
+    private Boolean active;
+
     @ManyToOne
     @JoinColumn(name = "ORDER_ITEM_ID")
     @JsonIgnore
     private OrderItem orderItem;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_DETAIL_ID")
+    @JoinColumn(name = "PRODUCT_ID")
     @JsonIgnore
-    private ProductDetail productDetail;
+    private Product product;
 }

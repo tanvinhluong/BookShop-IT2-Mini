@@ -22,7 +22,6 @@ public class Promotion {
     private String promotionName;
     private Integer promotionType;
     private Integer percentage;
-    private Double discountAmount;
     private Date startDate;
     private Date endDate;
 

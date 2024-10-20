@@ -31,9 +31,7 @@ public class Order {
     private Double totalDiscountedPrice;
     private Double totalItem;
     private Double totalPrice;
-    private Integer ShippingAddressId;
-
-    private Integer voucherId;
+    private Integer shippingAddressId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
