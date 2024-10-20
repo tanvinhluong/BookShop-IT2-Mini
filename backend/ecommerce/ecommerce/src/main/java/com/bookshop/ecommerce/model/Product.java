@@ -1,4 +1,4 @@
-package com.bookshop.ecommerce.model.newmodel;
+package com.bookshop.ecommerce.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
