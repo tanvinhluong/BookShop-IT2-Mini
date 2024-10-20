@@ -1,32 +1,32 @@
-package com.bookshop.ecommerce.model;
-
-import jakarta.persistence.Entity;
+package com.bookshop.ecommerce.model.newmodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
+@Table(name = "category_detail")
+public class CategoryDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
+    // category_id is a foreign key
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID")
     @JsonIgnore
+    private Category category;
+    // product_id is a foreign key
     @ManyToOne
-    private Cart cart;
-
-    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    @JsonIgnore
     private Product product;
-    private String size;
-    private int quantity;
-    private Integer price;
-    private Integer discountedPrice;
-    private int discount;
-    private Long userId;
+
+
 }
