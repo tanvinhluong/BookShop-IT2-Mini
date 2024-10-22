@@ -1,0 +1,22 @@
+package com.bookshop.ecommerce.service;
+
+
+import com.bookshop.ecommerce.exception.OrderException;
+import com.bookshop.ecommerce.model.Address;
+import com.bookshop.ecommerce.model.Order;
+import com.bookshop.ecommerce.model.User;
+
+import java.util.List;
+
+public interface IOrderService {
+    public Order createOrder(User user, Address shippingAddress);
+    public Order findOrderById(Integer orderId) throws OrderException;
+    public List<Order> usersOrderHistory(Integer userId);
+    public Order placedOrder(Integer orderId) throws OrderException;
+    public Order confirmedOrder(Integer orderId) throws OrderException;
+    public Order ShippedOrder(Integer orderId) throws OrderException;
+    public Order deliveredOrder(Integer orderId) throws OrderException;
+    public Order cancelOrder(Integer orderId) throws OrderException;
+    public List<Order> getAllOrders();
+    public void deleteOrder(Integer orderId) throws OrderException;
+}

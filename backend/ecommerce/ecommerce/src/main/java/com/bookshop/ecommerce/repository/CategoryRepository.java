@@ -1,12 +1,10 @@
-//package com.bookshop.ecommerce.repository;
-//
-//import com.bookshop.ecommerce.model.Category;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-//
-//
-//public interface CategoryRepository extends JpaRepository<Category, Long> {
+package com.bookshop.ecommerce.repository;
+
+import com.bookshop.ecommerce.model.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 //    Category findByName(String topLevelCategory);
 //
 //
@@ -17,4 +15,4 @@
 //
 //    @Query("SELECT c, d FROM Category c LEFT JOIN Category d ON c.parentCategory.id = d.id WHERE c.id = :id")
 //    Category findParentCategoryById(@Param("id") Long id);
-//}
+}

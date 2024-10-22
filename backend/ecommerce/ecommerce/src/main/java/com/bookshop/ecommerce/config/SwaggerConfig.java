@@ -1,9 +1,6 @@
 package com.bookshop.ecommerce.config;
 
 
-import io.swagger.models.Contact;
-import io.swagger.models.Info;
-import io.swagger.models.License;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;

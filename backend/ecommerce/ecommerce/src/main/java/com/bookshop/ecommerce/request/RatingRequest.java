@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RatingRequest {
-    private Long productId;
+    private Integer productId;
     private double rating;
 }
