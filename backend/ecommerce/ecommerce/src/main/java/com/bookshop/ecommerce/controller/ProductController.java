@@ -2,7 +2,7 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
-import com.bookshop.ecommerce.service.IProductService;
+import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

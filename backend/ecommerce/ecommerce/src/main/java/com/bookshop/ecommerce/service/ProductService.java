@@ -1,24 +1,22 @@
 package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
-import com.bookshop.ecommerce.model.Category;
 import com.bookshop.ecommerce.model.Product;
 import com.bookshop.ecommerce.repository.CategoryRepository;
 import com.bookshop.ecommerce.repository.ProductRepository;
 import com.bookshop.ecommerce.request.CreateProductRequest;
+import com.bookshop.ecommerce.service.impl.IProductService;
+import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
 
     private ProductRepository productRepository;
     private IUserService userService;

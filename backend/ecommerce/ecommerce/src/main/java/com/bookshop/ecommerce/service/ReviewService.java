@@ -7,12 +7,14 @@ import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.repository.ProductRepository;
 import com.bookshop.ecommerce.repository.ReviewRepository;
 import com.bookshop.ecommerce.request.ReviewRequest;
+import com.bookshop.ecommerce.service.impl.IProductService;
+import com.bookshop.ecommerce.service.impl.IReviewService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ReviewService implements IReviewService{
+public class ReviewService implements IReviewService {
 
     private ReviewRepository reviewRepository;
     private IProductService productService;

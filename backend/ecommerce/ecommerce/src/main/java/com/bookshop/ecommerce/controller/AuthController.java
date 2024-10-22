@@ -7,7 +7,7 @@ import com.bookshop.ecommerce.repository.UserRepository;
 import com.bookshop.ecommerce.request.LoginRequest;
 import com.bookshop.ecommerce.response.AuthResponse;
 import com.bookshop.ecommerce.service.CustomUserService;
-import com.bookshop.ecommerce.service.ICartService;
+import com.bookshop.ecommerce.service.impl.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

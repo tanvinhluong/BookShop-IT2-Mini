@@ -7,6 +7,9 @@ import com.bookshop.ecommerce.model.Product;
 import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.repository.CartRepository;
 import com.bookshop.ecommerce.request.AddItemRequest;
+import com.bookshop.ecommerce.service.impl.ICartItemService;
+import com.bookshop.ecommerce.service.impl.ICartService;
+import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

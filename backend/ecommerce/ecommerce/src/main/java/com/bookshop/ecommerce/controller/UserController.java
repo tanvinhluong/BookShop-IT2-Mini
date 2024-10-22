@@ -2,7 +2,7 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.UserException;
 import com.bookshop.ecommerce.model.User;
-import com.bookshop.ecommerce.service.IUserService;
+import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

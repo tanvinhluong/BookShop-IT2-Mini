@@ -1,10 +1,8 @@
-package com.bookshop.ecommerce.service;
+package com.bookshop.ecommerce.service.impl;
 
 import com.bookshop.ecommerce.exception.CartItemException;
 import com.bookshop.ecommerce.exception.UserException;
-import com.bookshop.ecommerce.model.Cart;
 import com.bookshop.ecommerce.model.CartItem;
-import com.bookshop.ecommerce.model.Product;
 
 public interface ICartItemService {
     public CartItem createCartItem(CartItem cartItem);

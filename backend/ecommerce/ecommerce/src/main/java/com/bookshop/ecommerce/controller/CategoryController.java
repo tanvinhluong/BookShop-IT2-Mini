@@ -2,7 +2,7 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.CategoryException;
 import com.bookshop.ecommerce.model.Category;
-import com.bookshop.ecommerce.service.ICategoryService;
+import com.bookshop.ecommerce.service.impl.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

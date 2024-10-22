@@ -2,19 +2,19 @@ package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.CartItemException;
 import com.bookshop.ecommerce.exception.UserException;
-import com.bookshop.ecommerce.model.Cart;
 import com.bookshop.ecommerce.model.CartItem;
-import com.bookshop.ecommerce.model.Product;
 import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.repository.CartItemRepository;
 import com.bookshop.ecommerce.repository.CartRepository;
+import com.bookshop.ecommerce.service.impl.ICartItemService;
+import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class CartItemService implements ICartItemService{
+public class CartItemService implements ICartItemService {
 
     @Autowired
     private CartItemRepository cartItemRepository;

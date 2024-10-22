@@ -2,6 +2,7 @@ package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.model.Category;
 import com.bookshop.ecommerce.repository.CategoryRepository;
+import com.bookshop.ecommerce.service.impl.ICategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

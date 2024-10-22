@@ -4,7 +4,7 @@ import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import com.bookshop.ecommerce.response.ApiResponse;
-import com.bookshop.ecommerce.service.IProductService;
+import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

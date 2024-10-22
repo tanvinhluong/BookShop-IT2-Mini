@@ -3,7 +3,7 @@ package com.bookshop.ecommerce.controller;
 import com.bookshop.ecommerce.exception.OrderException;
 import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.response.ApiResponse;
-import com.bookshop.ecommerce.service.IOrderService;
+import com.bookshop.ecommerce.service.impl.IOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

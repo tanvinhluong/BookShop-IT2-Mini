@@ -1,4 +1,4 @@
-package com.bookshop.ecommerce.service;
+package com.bookshop.ecommerce.service.impl;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Cart;
