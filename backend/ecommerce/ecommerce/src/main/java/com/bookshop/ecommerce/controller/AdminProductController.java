@@ -19,7 +19,7 @@ public class AdminProductController {
     private IProductService productService;
 
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Product> createProductHandler(@RequestBody CreateProductRequest req) throws ProductException {
 
         Product createdProduct = productService.createProduct(req);

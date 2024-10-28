@@ -2,8 +2,10 @@ package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
+import com.bookshop.ecommerce.model.Supplier;
 import com.bookshop.ecommerce.repository.CategoryRepository;
 import com.bookshop.ecommerce.repository.ProductRepository;
+import com.bookshop.ecommerce.repository.SupplierRepository;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import com.bookshop.ecommerce.service.impl.IUserService;
@@ -12,38 +14,37 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductService implements IProductService {
 
+    private final SupplierRepository supplierRepository;
     private ProductRepository productRepository;
     private IUserService userService;
     private CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, IUserService userService, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, IUserService userService, CategoryRepository categoryRepository, SupplierRepository supplierRepository) {
         this.productRepository = productRepository;
         this.userService = userService;
         this.categoryRepository = categoryRepository;
+        this.supplierRepository = supplierRepository;
     }
     @Override
     public Product createProduct(CreateProductRequest createProductRequest) {
         Product product = new Product();
-//        product.setTitle(createProductRequest.getTitle());
-//        product.setColor(createProductRequest.getColor());
-//        product.setDescription(createProductRequest.getDescription());
-//        product.setBrand(createProductRequest.getBrand());
-//        product.setDiscountPrice(createProductRequest.getDiscountedPrice());
-//        product.setDiscountPersent(createProductRequest.getDiscountPercent());
-//        product.setPrice(createProductRequest.getPrice());
-//        product.setQuantity(createProductRequest.getQuantity());
-//        product.setImageUrl(createProductRequest.getImageUrl());
-//        product.setCategory(thirdLevel);
-//        product.setCreatedAt(LocalDateTime.now());
-
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        Supplier supplier = supplierRepository.findById(createProductRequest.getSupplierId()).get();
+        product.setProductName(createProductRequest.getProductName());
+        product.setProductDescription(createProductRequest.getProductDescription());
+        product.setCreatedAt(new Date());
+        product.setPrice(createProductRequest.getPrice());
+        product.setSupplier(supplier);
+        product.setActive(createProductRequest.getIsActive());
+        product.setNumRatings(createProductRequest.getNumRate());
+        product.setProductImageUrl(createProductRequest.getImageUrl());
+        return productRepository.save(product);
     }
 
     @Override

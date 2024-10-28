@@ -2,14 +2,14 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.CategoryException;
 import com.bookshop.ecommerce.model.Category;
+import com.bookshop.ecommerce.model.Supplier;
+import com.bookshop.ecommerce.request.CreateCategoryRequest;
+import com.bookshop.ecommerce.request.CreateSupplierRequest;
 import com.bookshop.ecommerce.service.impl.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,14 +24,18 @@ public class CategoryController {
         this.categoryService=categoryService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<Category>> findAllCategory() throws CategoryException {
-        List<Category> res = categoryService.findAllCategory();
-        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+    @PostMapping("/create")
+    public ResponseEntity<Category> createCategoryHandler(@RequestBody CreateCategoryRequest req) {
+
+        Category category = categoryService.createCategory(req);
+
+        return new ResponseEntity<>(category, HttpStatus.ACCEPTED);
+
     }
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<Category> findParentCategoryById(@PathVariable Integer categoryId) throws CategoryException {
-        return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
+    @GetMapping("/")
+    public ResponseEntity<List<Category>> findAllCategory() {
+        List<Category> res = categoryService.findAllCategory();
+        return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 }
