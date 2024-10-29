@@ -22,7 +22,10 @@ public class AppConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests(
-                Authorize -> Authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
+                        authorize  -> authorize
+                                .requestMatchers("/api/category/get").permitAll()
+                                .requestMatchers("/api/**").authenticated().anyRequest().permitAll())
+
                         .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf().disable().cors().configurationSource(new CorsConfigurationSource() {
             @Override

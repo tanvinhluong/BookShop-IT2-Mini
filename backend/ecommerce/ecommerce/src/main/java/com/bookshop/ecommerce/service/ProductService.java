@@ -1,19 +1,24 @@
 package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
+import com.bookshop.ecommerce.model.Category;
+import com.bookshop.ecommerce.model.CategoryDetail;
 import com.bookshop.ecommerce.model.Product;
 import com.bookshop.ecommerce.model.Supplier;
+import com.bookshop.ecommerce.repository.CategoryDetailRepository;
 import com.bookshop.ecommerce.repository.CategoryRepository;
 import com.bookshop.ecommerce.repository.ProductRepository;
 import com.bookshop.ecommerce.repository.SupplierRepository;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import com.bookshop.ecommerce.service.impl.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +26,20 @@ import java.util.Optional;
 @Service
 public class ProductService implements IProductService {
 
-    private final SupplierRepository supplierRepository;
+    @Autowired
+    private SupplierRepository supplierRepository;
+
+    @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
     private IUserService userService;
+
+    @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryDetailRepository categoryDetailRepository;
 
     public ProductService(ProductRepository productRepository, IUserService userService, CategoryRepository categoryRepository, SupplierRepository supplierRepository) {
         this.productRepository = productRepository;
@@ -35,7 +50,8 @@ public class ProductService implements IProductService {
     @Override
     public Product createProduct(CreateProductRequest createProductRequest) {
         Product product = new Product();
-        Supplier supplier = supplierRepository.findById(createProductRequest.getSupplierId()).get();
+        Supplier supplier = supplierRepository.findById(createProductRequest.getSupplierId())
+                .orElseThrow(() -> new RuntimeException("Supplier not found"));
         product.setProductName(createProductRequest.getProductName());
         product.setProductDescription(createProductRequest.getProductDescription());
         product.setCreatedAt(new Date());
@@ -44,6 +60,21 @@ public class ProductService implements IProductService {
         product.setActive(createProductRequest.getIsActive());
         product.setNumRatings(createProductRequest.getNumRate());
         product.setProductImageUrl(createProductRequest.getImageUrl());
+
+        List<CategoryDetail> categoryDetails = new ArrayList<>();
+        if (createProductRequest.getCategoryIds() != null) {
+            for (Integer categoryId : createProductRequest.getCategoryIds()) {
+
+                Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found"));
+                CategoryDetail categoryDetail = new CategoryDetail();
+                categoryDetail.setProduct(product);
+                categoryDetail.setCategory(category);
+                categoryDetails.add(categoryDetail);
+
+            }
+        }
+        product.setCategoryDetails(categoryDetails);
         return productRepository.save(product);
     }
 
@@ -57,13 +88,12 @@ public class ProductService implements IProductService {
     @Override
     public Product updateProduct(CreateProductRequest createProductRequest, Integer productId) throws ProductException {
         Product product = findProductById(productId);
-//        product.setTitle(createProductRequest.getTitle());
-//        product.setBrand(createProductRequest.getBrand());
-//        product.setPrice(createProductRequest.getPrice());
-//        product.setImageUrl(createProductRequest.getImageUrl());
-//        if(product.getQuantity() != 0){
-//            product.setQuantity(createProductRequest.getQuantity());
-//        }
+        product.setProductName(createProductRequest.getProductName());
+        product.setProductDescription(createProductRequest.getProductDescription());
+        product.setPrice(createProductRequest.getPrice());
+        product.setActive(createProductRequest.getIsActive());
+        product.setNumRatings(createProductRequest.getNumRate());
+        product.setProductImageUrl(createProductRequest.getImageUrl());
         return productRepository.save(product);
     }
 
@@ -77,13 +107,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findProductByCategory(String category) {
+    public List<Product> findProductByCategory(Integer categoryId) {
 
-        System.out.println("category --- "+category);
+        System.out.println("category --- "+ categoryId);
 
-//        List<Product> products = productRepository.findByCategory(category);
-
-        return null;
+        return productRepository.findProductsByCategoryId(categoryId);
     }
 
     @Override

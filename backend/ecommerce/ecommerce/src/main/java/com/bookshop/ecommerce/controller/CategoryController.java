@@ -33,7 +33,7 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/get")
     public ResponseEntity<List<Category>> findAllCategory() {
         List<Category> res = categoryService.findAllCategory();
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);

@@ -20,20 +20,18 @@ public class AdminProductController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Product> createProductHandler(@RequestBody CreateProductRequest req) throws ProductException {
+    public ResponseEntity<Product> createProductHandler(@RequestBody CreateProductRequest req) {
 
         Product createdProduct = productService.createProduct(req);
 
-        return new ResponseEntity<Product>(createdProduct, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(createdProduct, HttpStatus.ACCEPTED);
 
     }
 
     @DeleteMapping("/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProductHandler(@PathVariable Integer productId) throws ProductException{
 
-        System.out.println("dlete product controller .... ");
         String msg=productService.deleteProduct(productId);
-        System.out.println("dlete product controller .... msg "+msg);
         ApiResponse res=new ApiResponse(msg,true);
 
         return new ResponseEntity<ApiResponse>(res,HttpStatus.ACCEPTED);

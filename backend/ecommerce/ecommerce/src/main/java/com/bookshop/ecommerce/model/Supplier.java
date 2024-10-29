@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class Supplier {
     private String description;
 
     @OneToMany(mappedBy = "supplier")
+    @JsonIgnore
     private List<Product> products;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Promotion> promotions;
 
 }

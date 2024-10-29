@@ -59,5 +59,16 @@ public class ProductController {
 
     }
 
+    @GetMapping("/categories/{categoryId}/products")
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable Integer categoryId) {
+        List<Product> products = productService.findProductByCategory(categoryId);
+        if (products.isEmpty()) {
+            String message = "No products found for category id: " + categoryId;
+            System.out.println(message);
+            return ResponseEntity.ok(null);
+        }
+        return ResponseEntity.ok(products);
+    }
+
 
 }

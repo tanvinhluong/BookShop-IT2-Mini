@@ -2,11 +2,15 @@ package com.bookshop.ecommerce.repository;
 
 import com.bookshop.ecommerce.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-//    @Query("SELECT p From Product p Where LOWER(p.)=:category")
-//    public List<Product> findByCategory(@Param("category") String category);
+    @Query("SELECT cd.product FROM CategoryDetail cd WHERE cd.category.id = :categoryId")
+    List<Product> findProductsByCategoryId(@Param("categoryId") Integer categoryId);
 //
 //    @Query("SELECT p From Product p where LOWER(p.productName) Like %:query% OR LOWER(p.productDescription) Like %:query% OR LOWER(p.supplier) LIKE %:query% OR LOWER(p.categoryDetails) LIKE %:query%")
 //    public List<Product> searchProduct(@Param("query")String query);

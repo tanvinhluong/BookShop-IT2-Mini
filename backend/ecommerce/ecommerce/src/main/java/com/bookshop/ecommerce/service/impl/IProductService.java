@@ -19,7 +19,7 @@ public interface IProductService {
 
     public Product findProductById(Integer id) throws ProductException;
 
-    public List<Product> findProductByCategory(String category);
+    public List<Product> findProductByCategory(Integer categoryId);
 
     public List<Product> searchProduct(String query);
 

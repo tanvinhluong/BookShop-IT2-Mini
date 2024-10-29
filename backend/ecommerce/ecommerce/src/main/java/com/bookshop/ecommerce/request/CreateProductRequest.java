@@ -4,6 +4,7 @@ import com.bookshop.ecommerce.model.Supplier;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CreateProductRequest {
@@ -16,5 +17,5 @@ public class CreateProductRequest {
     private Double price;
     private Boolean isActive;
     private Double numRate;
-
+    private List<Integer> categoryIds;
 }
