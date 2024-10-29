@@ -14,25 +14,21 @@ const ProductsTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const config = {
-          headers: { Authorization: `Bearer ${jwt}` },
-        }
         const response = await axios.get(
-          `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=1000000&minDiscount=0&category=all_products&stock=null&sort=price_low&pageNumber=0&pageSize=10`,
-          config
+          `${API_BASE_URL}/api/admin/products/all?pageNumber=0&pageSize=100`
         )
-        setResults(response.data.content)
-        console.log(response.data.content)
+        setResults(response.data)
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
     fetchData()
-  }, [jwt])
+  })
 
   const handleDelete = async (productId) => {
-    const conFirmDelete = window.confirm("Bạn có muốn xóa không?")
+    const conFirmDelete = window.confirm('Bạn có muốn xóa không?')
     if (conFirmDelete) {
       try {
         const config = {
@@ -47,7 +43,6 @@ const ProductsTable = () => {
         console.error('Error deleting product:', error)
       }
     }
-    
   }
 
   const handleEdit = (productId) => {
@@ -62,7 +57,7 @@ const ProductsTable = () => {
       <h1>All Products List</h1>
       <div className="listproduct-format-main">
         <p>Products</p>
-        <p>Brand</p>
+        <p>Product Name</p>
         <p>Title</p>
         <p>Price</p>
         <p>Quantity</p>
@@ -76,20 +71,22 @@ const ProductsTable = () => {
             <React.Fragment key={index}>
               <div className="listproduct-format-main listproduct-format">
                 <img
-                  src={result.imageUrl}
-                  alt=""
+                  src={result.productImageUrl} // Sử dụng productImageUrl từ JSON
+                  alt={result.productName}
                   className="listproduct-product-icon"
                 />
-                <p>{result.brand}</p>
-                <p>{result.title}</p>
-                <p>{result.price}</p>
-                <p>{result.quantity}</p>
+                <p>{result.productName}</p>
+                <p>{result.productDescription || 'No description'}</p>{' '}
+                {/* Cập nhật để hiển thị mô tả sản phẩm */}
+                <p>{result.price.toLocaleString()} VND</p> {/* Định dạng giá */}
+                <p>{result.quantity || 'N/A'}</p>{' '}
+                {/* Hiển thị số lượng nếu có */}
                 <img
                   onClick={() => handleDelete(result.id)}
                   src={cross_icon}
-                  alt=""
+                  alt="Remove"
                   className="listproduct-remove-icon"
-                  data-id = {result.id}
+                  data-id={result.id}
                 />
                 <button onClick={() => handleEdit(result.id)}>EDIT</button>
               </div>

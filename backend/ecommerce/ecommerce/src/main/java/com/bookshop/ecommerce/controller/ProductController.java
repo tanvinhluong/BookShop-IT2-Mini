@@ -2,6 +2,7 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
+import com.bookshop.ecommerce.model.ProductDetail;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,19 +18,12 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
-    @GetMapping("/products")
-    public ResponseEntity<Page<Product>> findProductByCategoryHandler(
-            @RequestParam String category,
-            @RequestParam List<String> color,
-            @RequestParam Integer minPrice,
-            @RequestParam Integer maxPrice,
-            @RequestParam Integer minDiscount,
-            @RequestParam String sort,
-            @RequestParam String stock,
+    @GetMapping("/products/getAll")
+    public ResponseEntity<Page<Product>> findAllProductHandler(
             @RequestParam Integer pageNumber,
             @RequestParam Integer pageSize
     ){
-        Page<Product> res = productService.getAllProducts(category, color, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize);
+        Page<Product> res = productService.getAllProducts(pageNumber, pageSize);
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 

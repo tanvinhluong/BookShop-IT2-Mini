@@ -2,6 +2,7 @@ package com.bookshop.ecommerce.service.impl;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
+import com.bookshop.ecommerce.model.ProductDetail;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,5 @@ public interface IProductService {
 
     public List<Product> searchProduct(String query);
 
-    Page<Product> getAllProducts(String category, List<String> colors, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize);
+    Page<Product> getAllProducts(Integer pageNumber, Integer pageSize);
 }

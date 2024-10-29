@@ -2,10 +2,12 @@ package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.ProductException;
 import com.bookshop.ecommerce.model.Product;
+import com.bookshop.ecommerce.model.ProductDetail;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import com.bookshop.ecommerce.response.ApiResponse;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +41,13 @@ public class AdminProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> findAllProduct(String category, List<String> colors, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize){
+    public ResponseEntity<List<Product>> findAllProduct(Integer pageNumber, Integer pageSize){
 
-        List<Product> products = (List<Product>) productService.getAllProducts(category, colors, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize);
+        Page<Product> pageResult = productService.getAllProducts( pageNumber, pageSize);
 
-        return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
+        List<Product> products = pageResult.getContent();
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @PutMapping("/{productId}/update")

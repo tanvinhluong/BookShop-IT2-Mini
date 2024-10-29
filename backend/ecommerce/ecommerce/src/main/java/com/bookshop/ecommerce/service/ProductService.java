@@ -1,19 +1,14 @@
 package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
-import com.bookshop.ecommerce.model.Category;
-import com.bookshop.ecommerce.model.CategoryDetail;
-import com.bookshop.ecommerce.model.Product;
-import com.bookshop.ecommerce.model.Supplier;
-import com.bookshop.ecommerce.repository.CategoryDetailRepository;
-import com.bookshop.ecommerce.repository.CategoryRepository;
-import com.bookshop.ecommerce.repository.ProductRepository;
-import com.bookshop.ecommerce.repository.SupplierRepository;
+import com.bookshop.ecommerce.model.*;
+import com.bookshop.ecommerce.repository.*;
 import com.bookshop.ecommerce.request.CreateProductRequest;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -31,6 +27,9 @@ public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductDetailRepository productDetailRepository;
 
     @Autowired
     private IUserService userService;
@@ -121,28 +120,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAllProducts(String category, List<String> colors, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
+    public Page<Product> getAllProducts(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-//        List<Product> products = productRepository.filterProducts(category,minPrice,maxPrice,minDiscount,sort);
-//        if(!colors.isEmpty()){
-//            products = products.stream().filter(product -> colors.stream().anyMatch(color ->color.equalsIgnoreCase(product.getColor()))).collect(Collectors.toList());
-//
-//        }
-
-//        if(stock != null){
-//            if(stock.equalsIgnoreCase("in_stock")){
-//                products = products.stream().filter(product -> product.getQuantity() > 0).collect(Collectors.toList());
-//            }
-//            else if(stock.equalsIgnoreCase("out_of_stock")){
-//                products = products.stream().filter(product -> product.getQuantity() == 0).collect(Collectors.toList());
-//            }
-//        }
-
-//        int startIndex = (int)pageable.getOffset();
-//        int endIndex = Math.min(startIndex + pageable.getPageSize(),products.size());
-//        List<Product> pageContent = products.subList(startIndex,endIndex);
-//        Page<Product> filteredPproducts = new PageImpl<>(pageContent,pageable,products.size());
-//        return filteredPproducts;
-        return null;
+        return productRepository.findAll(pageable);
     }
 }

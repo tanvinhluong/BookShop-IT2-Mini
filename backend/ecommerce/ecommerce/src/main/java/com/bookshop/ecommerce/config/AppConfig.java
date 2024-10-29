@@ -24,6 +24,7 @@ public class AppConfig {
                 .authorizeHttpRequests(
                         authorize  -> authorize
                                 .requestMatchers("/api/category/get").permitAll()
+                                .requestMatchers("api/admin/products/**").permitAll()
                                 .requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 
                         .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)

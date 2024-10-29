@@ -1,6 +1,7 @@
 package com.bookshop.ecommerce.repository;
 
 import com.bookshop.ecommerce.model.Product;
+import com.bookshop.ecommerce.model.ProductDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,11 +24,4 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 //    public List<Product> findByParentCategory(@Param("category") String category);
 //
 //
-//    List<Product> filterProducts(
-//            @Param("category") String category,
-//            @Param("minPrice") Integer minPrice,
-//            @Param("maxPrice") Integer maxPrice,
-//            @Param("minDiscount") Integer minDiscount,
-//            @Param("sort") String sort
-//    );
 }

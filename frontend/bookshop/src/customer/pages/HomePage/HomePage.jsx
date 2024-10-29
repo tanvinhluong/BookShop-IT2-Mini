@@ -25,25 +25,21 @@ const HomePage = () => {
 
   const fecthFilterProduct = async (categoryName) => {
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${jwt}` },
-      }
-      const results = await axios.get(
-        `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=1000000&minDiscount=0&category=&stock=null&sort=null&pageNumber=0&pageSize=100`,
-        config
-      )
+      // const config = {
+      //   headers: { Authorization: `Bearer ${jwt}` },
+      // }
+      // const results = await axios.get(
+      //   `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=1000000&minDiscount=0&category=&stock=null&sort=null&pageNumber=0&pageSize=100`,
+      //   config
+      // )
 
-      setProductsFilter(
-        results.data.content.filter(
-          (product) => product.category.parentCategory.name === categoryName
-        )
-      )
-      setCategoryName(categoryName)
-      console.log(
-        results.data.content.filter(
-          (product) => product.category.parentCategory.name === categoryName
-        )
-      )
+      // setProductsFilter(
+      //   results.data.content.filter(
+      //     (product) => product.category.parentCategory.name === categoryName
+      //   )
+      // )
+      // setCategoryName(categoryName)
+      console.log(null)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -51,16 +47,8 @@ const HomePage = () => {
 
   const fecthCategory = async (category) => {
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${jwt}` },
-      }
-      const results = await axios.get(`${API_BASE_URL}/api/category/`, config)
-      results.data.filter((category) => category.level === 2)
-      setCategory(
-        results.data
-          .filter((category) => category.level === 2)
-          .map((item) => item.name)
-      )
+      const results = await axios.get(`${API_BASE_URL}/api/category/get`)
+      setCategory(results.data.map((item) => item.name))
       // console.log(
       //   results.data
       //     .filter((category) => category.level === 2)
@@ -76,12 +64,12 @@ const HomePage = () => {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       }
-      const results = await axios.get(
-        `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=10000000&minDiscount=0&category=all_products&stock=&sort=&pageNumber=0&pageSize=100`,
-        config
-      )
+      // const results = await axios.get(
+      //   `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=10000000&minDiscount=0&category=all_products&stock=&sort=&pageNumber=0&pageSize=100`,
+      //   config
+      // )
 
-      setProducts(results.data.content)
+      // setProducts(results.data.content)
       // console.log(results.data.content);
     } catch (error) {
       console.error('Error fetching data:', error)
