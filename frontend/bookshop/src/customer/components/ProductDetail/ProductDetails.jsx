@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { findProductsById } from '../../../State/Products/Action'
 import { addItemToCart } from '../../../State/Cart/Action'
-import { mens_kurta } from '../../Data/mens_kurta'
+import { data_mock } from '../../Data/data_mock'
 
 const product = {
   name: 'Basic Tee 6-Pack',
@@ -109,7 +109,7 @@ function ProductDetails() {
                 aria-current="page"
                 className="font-medium text-gray-500 hover:text-gray-600"
               >
-                {products.product?.brand}
+                {product?.supplier?.name}
               </a>
             </li>
           </ol>
@@ -119,7 +119,7 @@ function ProductDetails() {
           <div className="flex flex-col items-center">
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
-                src={activeImage?.src || products?.product?.imageUrl}
+                src={activeImage?.src || products?.product?.productImageUrl}
                 alt={product.images[0].alt}
                 style={{ transform: `rotate(${rotationAngle}deg)` }}
                 onClick={rotateImage}
@@ -143,11 +143,10 @@ function ProductDetails() {
           <div className="lg:col-span-1 maxt-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2 ">
               <h1 className="text-lg lg:text-xl font-semibold text-gray-900 ">
-                {products.product?.brand}
+                {products.product?.supplier?.name}
               </h1>
               <h1 className="text-lg lg:text-xl opacity-60 text-gray-900 pt-1">
-                {' '}
-                {products.product?.title}
+                Tên Sản Phẩm: {products.product?.productName}
               </h1>
             </div>
 
@@ -156,14 +155,12 @@ function ProductDetails() {
               <h2 className="sr-only">Product information</h2>
 
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
+                <p className="font-semibold">{products.product?.price} VND</p>
+                <p className="font-semibold ">Còn hàng</p>
+              </div>
+              <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
                 <p className="font-semibold">
-                  {products.product?.discountPrice} đ
-                </p>
-                <p className="opacity-50 line-through">
-                  {products.product?.price} đ
-                </p>
-                <p className="text-green-600 font-semibold">
-                  {products.product?.discountPersent}% Off
+                  Mô tả về sản phẩm: {products.product?.productDescription}
                 </p>
               </div>
 
@@ -176,7 +173,9 @@ function ProductDetails() {
                     precision={0.5}
                     readOnly
                   />
-                  <p className="opacity-50 text-sm">4560 Ratings</p>
+                  <p className="opacity-50 text-sm">
+                    {products.product?.numRatings} Rate
+                  </p>
                   <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-400">
                     {reviews.totalCount} Reviews
                   </p>
@@ -337,7 +336,7 @@ function ProductDetails() {
         <section className="pt-10">
           <h1 className="font-bold text-xl py-5">Các sản phẩm tương tự</h1>
           <div className=" flex flex-wrap space-y-5">
-            {mens_kurta.map((item) => (
+            {data_mock.map((item) => (
               <HomeSectionCard product={item} />
             ))}
           </div>

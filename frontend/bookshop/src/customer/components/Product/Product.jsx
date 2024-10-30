@@ -8,7 +8,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid'
-import { mens_kurta } from '../../Data/mens_kurta'
+import { data_mock } from '../../Data/data_mock'
 import ProductCard from './ProductCard'
 
 import { filters, singleFilter } from './FilterData'

@@ -7,14 +7,14 @@ const ProductCard = ({ product }) => {
     <div
       onClick={() => navigate(`/product/${product.id}`)}
       className="productCard w-[15rem] m-3 transition-all cursor-pointer p-5  "
-      style={{border: "1px solid #333333", borderRadius: "20px" }}
+      style={{ border: '1px solid #333333', borderRadius: '20px' }}
     >
       <div className="h-[12rem]">
         <img
           className="h-full w-full object-cover "
-          src={product.imageUrl}
+          src={product.productImageUrl}
           alt=""
-        />  
+        />
       </div>
       <div className="textPart bg-white p-3">
         <div>

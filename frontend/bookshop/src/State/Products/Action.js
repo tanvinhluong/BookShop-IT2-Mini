@@ -1,4 +1,4 @@
-import { API_BASE_URL, api } from '../../config/apiConfig'
+import { API_BASE_URL, api, API_TOKEN } from '../../config/apiConfig'
 import {
   CREATE_PRODUCT_FAILURE,
   CREATE_PRODUCT_REQUEST,
@@ -19,23 +19,12 @@ import {
 
 // API TIM SAN PHAM
 export const findProducts = (reqData) => async (dispatch) => {
-  const {
-    colors,
-    minPrice,
-    maxPrice,
-    minDiscount,
-    category,
-    stock,
-    sort,
-    pageNumber,
-    pageSize,
-  } = reqData
-
+  const { pageNumber, pageSize } = reqData
   try {
     dispatch({ type: FIND_PRODUCTS_REQUEST })
 
     const { data } = await api.get(
-      `/api/products?color=${colors}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+      `${API_BASE_URL}/api/products?color=pageNumber=${pageNumber}&pageSize=${pageSize}`
     )
 
     console.log('get product by category - ', data)
@@ -58,14 +47,28 @@ export const findProductsById = (reqData) => async (dispatch) => {
   try {
     dispatch({ type: FIND_PRODUCT_ID_REQUEST })
 
-    const { data } = await api.get(`/api/products/${reqData.productId}`)
+    // Lấy JWT từ localStorage
+    const url = `${API_BASE_URL}/api/products/${reqData.productId}`
+    console.log('Fetching from:', url)
 
-    console.log('products by  id : ', data)
+    // Cấu hình header với JWT
+    const config = {
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+    }
+
+    // Thực hiện yêu cầu GET
+    const { data } = await api.get(url, config)
+
+    console.log('Product details by ID:', data)
     dispatch({
       type: FIND_PRODUCT_ID_SUCCESS,
       payload: data,
     })
   } catch (error) {
+    console.error('Error fetching product by ID:', error.message)
+    console.error('Response:', error.response) // In ra phản hồi để debug
     dispatch({
       type: FIND_PRODUCT_ID_FAILURE,
       payload:
