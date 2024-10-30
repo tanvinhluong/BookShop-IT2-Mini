@@ -32,16 +32,12 @@ const HomeSectionCarousel = ({ data, categoryName }) => {
 
   const fecthData = async (category) => {
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${jwt}` },
-      }
       const results = await axios.get(
-        `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=10000000&minDiscount=0&category=all_products&stock=&sort=&pageNumber=0&pageSize=100`,
-        config
+        `${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`
       )
 
       setProducts(results.data.content)
-      // console.log(results.data.content);
+      console.log(results.data.content)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -66,7 +62,7 @@ const HomeSectionCarousel = ({ data, categoryName }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: "20px"          
+          marginBottom: '20px',
         }}
       >
         {categoryName ? categoryName : 'Sản Phẩm'}

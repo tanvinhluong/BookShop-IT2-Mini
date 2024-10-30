@@ -67,18 +67,18 @@ function About() {
       <p>
         <strong>Chương kết:</strong> Kết thúc hành trình Cuối cùng, ba chàng IT
         không chỉ giành chiến thắng trong cuộc thi, mà còn tìm thấy niềm vui
-        trong việc học tập và sự ủng hộ lẫn nhau. X biến mất, nhưng họ luôn nhớ
-        về anh và bài học quý báu mà anh đã truyền đạt.
+        trong việc học tập và sự ủng hộ lẫn nhau. Thịnh biến mất, nhưng họ luôn
+        nhớ về anh và bài học quý báu mà anh đã truyền đạt.
         <br></br>
         Vinh, Nghiêm và Phi không chỉ trở thành những chuyên gia IT xuất sắc, mà
         còn là những người bạn đồng hành trên con đường đầy thách thức của cuộc
         sống.
       </p>
-      <div className="circle-container">
-        <div className="circle">
+      <div className="flex justify-center items-center">
+        <div className="circle flex justify-center items-center overflow-hidden bg-gray-200 w-200 h-100">
           <img
-            className=""
-            src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t1.15752-9/441968310_2150060048713947_7692275727240279331_n.png?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGge761m0XoDaMxOKKgN0xTo6KOQXJYBKOjoo5BclgEo0rmINpXMcA5lj_FiZlASyQak0IYdHGDQwM4qosUHalV&_nc_ohc=j-hl0QHFOm0Q7kNvgFgxIxT&_nc_ht=scontent.fsgn2-6.fna&oh=03_Q7cD1QFHi21Y_PR6NypIMkptLM0zWj56rirlTERQC_jGQO8MWA&oe=66908C3E"
+            className="object-cover"
+            src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t1.15752-9/441968310_2150060048713947_7692275727240279331_n.png?_nc_cat=110&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGge761m0XoDaMxOKKgN0xTo6KOQXJYBKOjoo5BclgEo0rmINpXMcA5lj_FiZlASyQak0IYdHGDQwM4qosUHalV&_nc_ohc=AxN0AMAUBm8Q7kNvgHzzOgY&_nc_zt=23&_nc_ht=scontent.fsgn2-6.fna&_nc_gid=ANRytTEK-NiqoGvVAbQ_X8g&oh=03_Q7cD1QErl8Dx_TDr1Z1bFPyeYK0rBsZVHo3vvX7CZXlgtq-3EQ&oe=6749C6FE"
             alt="IT2-Mini"
           />
         </div>

@@ -4,11 +4,12 @@ import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCart } from '../../../State/Cart/Action'
+import { useTranslation } from 'react-i18next'
 const Cart = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { cart } = useSelector((store) => store)
-
+  const { t } = useTranslation()
   useEffect(() => {
     dispatch(getCart())
   }, [cart.removeCartItem, cart.updateCartItem])
@@ -19,10 +20,8 @@ const Cart = () => {
     <div>
       {isCartEmpty ? (
         <div className="flex flex-col items-center justify-center h-screen">
-          <h2 className="text-xl font-bold">Giỏ hàng trống</h2>
-          <p className="text-gray-600">
-            Bạn có thể trở về trang chủ để tiếp tục chọn hàng.
-          </p>
+          <h2 className="text-xl font-bold">{t('emptyCart')}</h2>
+          <p className="text-gray-600">{t('goToHome')}</p>
           <Button
             onClick={() => navigate('/')}
             variant="contained"
@@ -31,7 +30,7 @@ const Cart = () => {
               bgcolor: '#9155fd',
             }}
           >
-            Trở về trang chủ
+            {t('backToHome')}
           </Button>
         </div>
       ) : (
@@ -50,31 +49,33 @@ const Cart = () => {
           <div className="px-5 sticky top-0 h-[100vh] mt-5 lg:mt-0">
             <div className="border p-5 bg-white shadow-lg rounded-md">
               <p className="uppercase font-bold opacity-60 pb-4">
-                Billing Details
+                {t('billingDetails')}
               </p>
               <hr />
               <div className="space-y-3 font-semibold mb-10">
                 <div className="flex justify-between pt-3 text-black">
-                  <span>Price ({cart.cart?.totalItem} item)</span>
-                  <span>{cart.cart?.totalPrice} đ</span>
+                  <span>
+                    {t('price')} ({cart.cart?.totalItem} {t('item')})
+                  </span>
+                  <span>{cart.cart?.totalPrice} VND</span>
                 </div>
 
                 <div className="flex justify-between pt-3 text-black">
-                  <span>Discount</span>
+                  <span>{t('discount')}</span>
                   <span className="text-green-600">
-                    - {cart.cart?.discount}đ
+                    - {cart.cart?.discount}VND
                   </span>
                 </div>
 
                 <div className="flex justify-between pt-3 text-black">
-                  <span>Delivery Charges</span>
+                  <span>{t('deliveryCharges')}</span>
                   <span className="text-green-600">Free</span>
                 </div>
 
                 <div className="flex justify-between pt-3 text-black">
-                  <span className="font-bold">Total Amount</span>
+                  <span className="font-bold">{t('totalAmount')}</span>
                   <span className="font-bold ">
-                    {cart.cart?.totalDiscountedPrice}đ
+                    {cart.cart?.totalDiscountedPrice}VND
                   </span>
                 </div>
               </div>
@@ -90,7 +91,7 @@ const Cart = () => {
                   bgcolor: '#9155fd',
                 }}
               >
-                Check Out
+                {t('checkout')}
               </Button>
             </div>
           </div>

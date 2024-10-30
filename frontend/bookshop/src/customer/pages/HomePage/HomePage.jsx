@@ -12,7 +12,6 @@ const HomePage = () => {
   const [categoryName, setCategoryName] = useState('')
   const [selectedValue, setSelectedValue] = useState('')
   const jwt = localStorage.getItem('jwt')
-
   const handleComboBoxChange = (event) => {
     const newValue = event.target.value
     const newIndex = event.target.selectedIndex
@@ -25,21 +24,30 @@ const HomePage = () => {
 
   const fecthFilterProduct = async (categoryName) => {
     try {
-      // const config = {
-      //   headers: { Authorization: `Bearer ${jwt}` },
-      // }
-      // const results = await axios.get(
-      //   `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=1000000&minDiscount=0&category=&stock=null&sort=null&pageNumber=0&pageSize=100`,
-      //   config
-      // )
+      const categoryResults = await axios.get(
+        `${API_BASE_URL}/api/category/get`
+      )
+      const category = categoryResults.data.find(
+        (cat) => cat.name === categoryName
+      )
 
-      // setProductsFilter(
-      //   results.data.content.filter(
-      //     (product) => product.category.parentCategory.name === categoryName
-      //   )
-      // )
-      // setCategoryName(categoryName)
-      console.log(null)
+      if (!category) {
+        console.error('Category không tìm thấy.')
+        return
+      }
+
+      const results = await axios.get(
+        `${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`
+      )
+
+      const filteredProducts = results.data.content.filter((product) =>
+        product.categoryDetails?.some(
+          (catDetail) => catDetail.id === category.id
+        )
+      )
+
+      setProductsFilter(filteredProducts)
+      setCategoryName(categoryName)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -50,10 +58,6 @@ const HomePage = () => {
       const results = await axios.get(`${API_BASE_URL}/api/category/get`)
       setCategory(results.data.map((item) => item.name))
       // console.log(
-      //   results.data
-      //     .filter((category) => category.level === 2)
-      //     .map((item) => item.name)
-      // );
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -61,15 +65,11 @@ const HomePage = () => {
 
   const fecthAllProduct = async (category) => {
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${jwt}` },
-      }
-      // const results = await axios.get(
-      //   `${API_BASE_URL}/api/products?color=&minPrice=0&maxPrice=10000000&minDiscount=0&category=all_products&stock=&sort=&pageNumber=0&pageSize=100`,
-      //   config
-      // )
+      const results = await axios.get(
+        `${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`
+      )
 
-      // setProducts(results.data.content)
+      setProducts(results.data.content)
       // console.log(results.data.content);
     } catch (error) {
       console.error('Error fetching data:', error)

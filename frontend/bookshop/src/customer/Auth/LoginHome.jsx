@@ -3,12 +3,13 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getUser, login } from '../../State/Auth/Action'
-
+import { useTranslation } from 'react-i18next'
 const LoginHome = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { auth } = useSelector((store) => store)
   const jwt = localStorage.getItem('jwt')
+  const { t } = useTranslation()
   useEffect(() => {
     if (jwt) {
       dispatch(getUser(jwt))
@@ -59,20 +60,20 @@ const LoginHome = () => {
               size="large"
               sx={{ padding: '.8rem 0', bgcolor: '#e87bc7' }}
             >
-              Login
+              {t('login')}
             </Button>
           </Grid>
         </Grid>
       </form>
       <div className="flex justify-center flex-col items-center">
         <div className="py-3 flex items-center">
-          <p>If you don't have account?</p>
+          <p>{t('ifNoAcc')}</p>
           <Button
             onClick={() => navigate('/register')}
             className="ml-5"
             size="small"
           >
-            Register
+            {t('register')}
           </Button>
         </div>
       </div>
