@@ -145,8 +145,8 @@ function ProductDetails() {
               <h1 className="text-lg lg:text-xl font-semibold text-gray-900 ">
                 {products.product?.supplier?.name}
               </h1>
-              <h1 className="text-lg lg:text-xl opacity-60 text-gray-900 pt-1">
-                Tên Sản Phẩm: {products.product?.productName}
+              <h1 className="flex space-x-5 font-extrabold items-center text-lg lg:text-xl text-gray-900 pt-1">
+                {products.product?.productName}
               </h1>
             </div>
 
@@ -155,11 +155,11 @@ function ProductDetails() {
               <h2 className="sr-only">Product information</h2>
 
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className="font-semibold">{products.product?.price} VND</p>
+                <p className="font-extrabold">{products.product?.price} VND</p>
                 <p className="font-semibold ">Còn hàng</p>
               </div>
-              <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className="font-semibold">
+              <div className="flex space-x-5 items-center opacity-60 text-lg lg:text-xl text-gray-900 mt-6">
+                <p className="font-sans ">
                   Mô tả về sản phẩm: {products.product?.productDescription}
                 </p>
               </div>
