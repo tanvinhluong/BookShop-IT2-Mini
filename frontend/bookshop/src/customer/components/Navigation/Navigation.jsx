@@ -297,7 +297,7 @@ export default function Navigation() {
                 <Link to="/">
                   <span className="sr-only">Your Company</span>
                   <img
-                    src="https://pos.nvncdn.com/cba2a3-7534/store/20241001_tvFfYUQl.png"
+                    src="https://www.hoteljob.vn/uploads/images/2022/12/16/639c238c9e08a5_56487036.jpg"
                     alt="Moji"
                     className="h-12 w-13 mr-3"
                   />

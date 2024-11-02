@@ -25,6 +25,8 @@ public class AppConfig {
                         authorize  -> authorize
                                 .requestMatchers("/api/category/get").permitAll()
                                 .requestMatchers("api/admin/products/**").permitAll()
+                                .requestMatchers("api/cart/**").permitAll()
+                                .requestMatchers("api/cart/").permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 

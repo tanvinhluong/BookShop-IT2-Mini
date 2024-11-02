@@ -1,14 +1,12 @@
 package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
-import com.bookshop.ecommerce.model.Cart;
-import com.bookshop.ecommerce.model.CartItem;
-import com.bookshop.ecommerce.model.Product;
-import com.bookshop.ecommerce.model.User;
+import com.bookshop.ecommerce.model.*;
 import com.bookshop.ecommerce.repository.CartRepository;
 import com.bookshop.ecommerce.request.AddItemRequest;
 import com.bookshop.ecommerce.service.impl.ICartItemService;
 import com.bookshop.ecommerce.service.impl.ICartService;
+import com.bookshop.ecommerce.service.impl.IProductDetailService;
 import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,7 @@ public class CartService implements ICartService {
     @Autowired
     private ICartItemService cartItemService;
     @Autowired
-    private IProductService productService;
+    private IProductDetailService productDetailService;
 
 
     @Override
@@ -33,15 +31,18 @@ public class CartService implements ICartService {
     @Override
     public String addToCartItem(Integer userId, AddItemRequest addItemRequest) throws ProductException {
         Cart cart = cartRepository.findByUserId(userId);
-        Product product = productService.findProductById(addItemRequest.getProductId());
-//        CartItem isPresent = cartItemService.isCartItemExists(cart, product, userId);
-//        if (isPresent == null) {
+        ProductDetail productDetail = productDetailService.findProductDetailById(addItemRequest.getProductId());
+        CartItem isPresent = cartItemService.isCartItemExists(cart, productDetail, userId);
+        if (isPresent == null) {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
+            cartItem.setProductDetail(productDetail);
             cartItem.setQuantity(addItemRequest.getQuantity());
+            int price = (int) (addItemRequest.getQuantity() * productDetail.getPrice());
+            cartItem.setPrice(price);
             CartItem createdCartItem = cartItemService.createCartItem(cartItem);
             cart.getCartItems().add(createdCartItem);
-//        }
+        }
         return "item added to cart";
     }
 

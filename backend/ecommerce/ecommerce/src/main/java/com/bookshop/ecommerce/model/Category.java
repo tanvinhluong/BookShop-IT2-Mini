@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +27,10 @@ public class Category {
     private String imageUrl;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<CategoryDetail> categoryDetails;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Promotion> promotions;
 }

@@ -2,8 +2,7 @@ package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.CartItemException;
 import com.bookshop.ecommerce.exception.UserException;
-import com.bookshop.ecommerce.model.CartItem;
-import com.bookshop.ecommerce.model.User;
+import com.bookshop.ecommerce.model.*;
 import com.bookshop.ecommerce.repository.CartItemRepository;
 import com.bookshop.ecommerce.repository.CartRepository;
 import com.bookshop.ecommerce.service.impl.ICartItemService;
@@ -50,10 +49,10 @@ public class CartItemService implements ICartItemService {
 
     }
 
-//    @Override
-//    public CartItem isCartItemExists(Cart cart, Product product, Integer userId) {
-//        return cartItemRepository.isCartItemExists(cart,product ,userId);
-//    }
+    @Override
+    public CartItem isCartItemExists(Cart cart, ProductDetail productDetail, Integer userId) {
+        return cartItemRepository.isCartItemExists(cart, productDetail.getProduct(),userId);
+    }
 
     @Override
     public void removeCartItem(Integer userId, Integer cartItemId) throws CartItemException, UserException {

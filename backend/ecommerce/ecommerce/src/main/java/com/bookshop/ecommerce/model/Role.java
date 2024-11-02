@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Role {
     private String description;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<User> users;
 
     @ManyToMany
@@ -32,5 +34,6 @@ public class Role {
             joinColumns = @JoinColumn(name = "ROLE_ID"),
             inverseJoinColumns = @JoinColumn(name = "PERMISSION_ID")
     )
+    @JsonIgnore
     private Set<Permission> permissions;
 }

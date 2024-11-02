@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class User {
     @Setter
     @Getter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Address> address = new ArrayList<>();
 
     @ManyToMany
@@ -49,6 +51,7 @@ public class User {
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID")
     )
+    @JsonIgnore
     private Set<Role> roles;
 
 }

@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,5 +25,6 @@ public class ProductDetail {
 
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID") // Chỉ định khoá ngoại product_id
+    @JsonIgnore
     private Product product;
 }

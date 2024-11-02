@@ -17,5 +17,8 @@ public class CreateProductRequest {
     private Double price;
     private Boolean isActive;
     private Double numRate;
+    private Integer quantity;
     private List<Integer> categoryIds;
+    private List<Integer> productDetailIds;
+    private List<Integer> promotionIds;
 }

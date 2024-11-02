@@ -36,6 +36,7 @@ public class ShoppingFacade {
     public void addItemToCart(Integer userId, AddItemRequest req) throws ProductException {
         cartService.addToCartItem(userId, req);
     }
+
     public void removeCartItem(Integer userId, Integer cartItemId) throws CartItemException, UserException {
         cartItemService.removeCartItem(userId, cartItemId);
     }

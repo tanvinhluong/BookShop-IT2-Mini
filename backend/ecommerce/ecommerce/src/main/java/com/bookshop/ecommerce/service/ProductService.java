@@ -73,6 +73,18 @@ public class ProductService implements IProductService {
 
             }
         }
+        // ProductDetail
+        List<ProductDetail> productDetails = new ArrayList<>();
+        ProductDetail productDetail = new ProductDetail();
+        productDetail.setProduct(product);
+        productDetail.setName(product.getProductName());
+        productDetail.setPrice(product.getPrice());
+        productDetail.setInStock(createProductRequest.getQuantity());   // set in stock
+        productDetail.setImageUrl(createProductRequest.getImageUrl());
+        productDetail.setSoldQuantity(0);
+        productDetails.add(productDetail);
+
+        product.setProductDetails(productDetails);
         product.setCategoryDetails(categoryDetails);
         return productRepository.save(product);
     }

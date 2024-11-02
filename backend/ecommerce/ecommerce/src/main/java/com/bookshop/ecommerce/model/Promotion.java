@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,19 +28,23 @@ public class Promotion {
 
     // ORDERS
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Order> orders;
 
     @ManyToOne
     @JoinColumn(name = "SUPPLIER_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JsonIgnore
     private Supplier supplier;
 
     // Liên kết với Product
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JsonIgnore
     private Product product;
 
     // Liên kết với Category (Giả sử có model Category)
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JsonIgnore
     private Category category;
 }
