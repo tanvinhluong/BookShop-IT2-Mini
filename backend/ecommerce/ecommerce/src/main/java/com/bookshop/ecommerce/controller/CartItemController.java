@@ -5,6 +5,7 @@ import com.bookshop.ecommerce.exception.UserException;
 import com.bookshop.ecommerce.facade.ShoppingFacade;
 import com.bookshop.ecommerce.model.CartItem;
 import com.bookshop.ecommerce.model.User;
+import com.bookshop.ecommerce.request.UpdateCartItemRequest;
 import com.bookshop.ecommerce.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,14 +36,21 @@ public class CartItemController {
     }
 
     @PutMapping("/{cartItemId}")
-    public ResponseEntity<CartItem>updateCartItemHandler(@PathVariable Integer cartItemId, @RequestBody CartItem cartItem, @RequestHeader("Authorization")String jwt) throws CartItemException, UserException{
+    public ResponseEntity<CartItem> updateCartItemHandler(
+            @PathVariable Integer cartItemId,
+            @RequestBody UpdateCartItemRequest updateRequest,
+            @RequestHeader("Authorization") String jwt)
+            throws CartItemException, UserException {
 
         User user = shoppingFacade.getUserByJwt(jwt);
 
-        CartItem updatedCartItem = shoppingFacade.updateCartItem(user.getId(), cartItemId, cartItem);
+        Integer userId = user.getId();
+        Integer quantity = updateRequest.getQuantity();
+        CartItem cartItem = updateRequest.getCartItem();
 
-        //ApiResponse res=new ApiResponse("Item Updated",true);
+        // Assuming your update method will need the userId, cartItemId, and quantity
+        CartItem updatedCartItem = shoppingFacade.updateCartItem(userId, cartItemId, quantity, cartItem);
 
-        return new ResponseEntity<>(updatedCartItem,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(updatedCartItem, HttpStatus.ACCEPTED);
     }
 }

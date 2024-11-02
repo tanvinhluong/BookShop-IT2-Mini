@@ -32,15 +32,15 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
-    public CartItem updateCartItem(Integer userId, Integer id, CartItem cartItem) throws CartItemException, UserException {
-        CartItem item = findCartItemById(id);
-        User user = userService.findUserById(item.getId());
+    public CartItem updateCartItem(Integer userId, Integer id, Integer quantity, CartItem cartItem) throws CartItemException, UserException {
+        cartItem = findCartItemById(id);
+        User user = userService.findUserById(cartItem.getCart().getUser().getId());
         if(user.getId() != userId){
             throw new UserException("User id not matched");
         }
-        item.setQuantity(cartItem.getQuantity());
-        item.setPrice(item.getQuantity() * item.getPrice());
-        return cartItemRepository.save(item);
+        cartItem.setQuantity(quantity);
+        cartItem.setPrice((int) (quantity * cartItem.getProductDetail().getPrice()));
+        return cartItemRepository.save(cartItem);
 
     }
 
@@ -57,7 +57,7 @@ public class CartItemService implements ICartItemService {
     @Override
     public void removeCartItem(Integer userId, Integer cartItemId) throws CartItemException, UserException {
         CartItem cartItem = findCartItemById(cartItemId);
-        User user = userService.findUserById(cartItem.getId());
+        User user = userService.findUserById(cartItem.getCart().getUser().getId());
         User requestedUser = userService.findUserById(userId);
         if(user.getId().equals(requestedUser.getId())) {
             cartItemRepository.deleteById(cartItemId);

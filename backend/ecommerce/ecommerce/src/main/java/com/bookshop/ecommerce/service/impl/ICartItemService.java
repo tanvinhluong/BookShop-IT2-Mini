@@ -9,7 +9,7 @@ import com.bookshop.ecommerce.model.ProductDetail;
 
 public interface ICartItemService {
     public CartItem createCartItem(CartItem cartItem);
-    public CartItem updateCartItem(Integer userId,Integer id,CartItem cartItem)
+    public CartItem updateCartItem(Integer userId,Integer id, Integer quantity, CartItem cartItem)
             throws CartItemException, UserException;
     public void deleteCartItem(Integer cartItemId);
 

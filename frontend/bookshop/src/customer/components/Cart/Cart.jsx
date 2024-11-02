@@ -14,7 +14,7 @@ const Cart = () => {
     dispatch(getCart())
   }, [cart.removeCartItem, cart.updateCartItem])
 
-  const isCartEmpty = cart.cartItems.length === 0
+  const isCartEmpty = cart.cart?.totalItem === 0
 
   return (
     <div>
@@ -37,7 +37,7 @@ const Cart = () => {
         <div className="lg:grid grid-cols-3 lg:px-16 relative">
           <div className="lg:col-span-2 lg:px-5 bg-white">
             <div className="space-y-3">
-              {cart.cartItems.map((item, index) => (
+              {(cart.cartItems ?? []).map((item, index) => (
                 <CartItem
                   item={item}
                   key={`cartitem#${index}`}
@@ -62,9 +62,7 @@ const Cart = () => {
 
                 <div className="flex justify-between pt-3 text-black">
                   <span>{t('discount')}</span>
-                  <span className="text-green-600">
-                    - {cart.cart?.discount}VND
-                  </span>
+                  <span className="text-green-600">- VND</span>
                 </div>
 
                 <div className="flex justify-between pt-3 text-black">
@@ -75,7 +73,7 @@ const Cart = () => {
                 <div className="flex justify-between pt-3 text-black">
                   <span className="font-bold">{t('totalAmount')}</span>
                   <span className="font-bold ">
-                    {cart.cart?.totalDiscountedPrice}VND
+                    {cart.cart?.totalPrice} VND
                   </span>
                 </div>
               </div>

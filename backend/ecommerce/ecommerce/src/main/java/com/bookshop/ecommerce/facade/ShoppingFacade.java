@@ -40,7 +40,7 @@ public class ShoppingFacade {
     public void removeCartItem(Integer userId, Integer cartItemId) throws CartItemException, UserException {
         cartItemService.removeCartItem(userId, cartItemId);
     }
-    public CartItem updateCartItem(Integer userId, Integer cartItemId, CartItem cartItem) throws CartItemException, UserException {
-        return cartItemService.updateCartItem(userId, cartItemId, cartItem);
+    public CartItem updateCartItem(Integer userId, Integer cartItemId, Integer quantity, CartItem cartItem) throws CartItemException, UserException {
+        return cartItemService.updateCartItem(userId, cartItemId, quantity, cartItem);
     }
 }

@@ -11,6 +11,8 @@ import com.bookshop.ecommerce.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CartService implements ICartService {
     @Autowired
@@ -31,14 +33,14 @@ public class CartService implements ICartService {
     @Override
     public String addToCartItem(Integer userId, AddItemRequest addItemRequest) throws ProductException {
         Cart cart = cartRepository.findByUserId(userId);
-        ProductDetail productDetail = productDetailService.findProductDetailById(addItemRequest.getProductId());
+        ProductDetail productDetail = productDetailService.findProductDetailByPrdId(addItemRequest.getProductId());
         CartItem isPresent = cartItemService.isCartItemExists(cart, productDetail, userId);
         if (isPresent == null) {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setProductDetail(productDetail);
             cartItem.setQuantity(addItemRequest.getQuantity());
-            int price = (int) (addItemRequest.getQuantity() * productDetail.getPrice());
+            int price = (int) (addItemRequest.getQuantity() * cartItem.getProductDetail().getPrice());
             cartItem.setPrice(price);
             CartItem createdCartItem = cartItemService.createCartItem(cartItem);
             cart.getCartItems().add(createdCartItem);
@@ -50,7 +52,6 @@ public class CartService implements ICartService {
     public Cart findUserCart(Integer userId) {
         Cart cart = cartRepository.findByUserId(userId);
         int totalPrice = 0;
-        int totalDiscountedPrice = 0;
         int totalItem = 0;
 
 
@@ -59,6 +60,8 @@ public class CartService implements ICartService {
             totalItem = totalItem + cartItem.getQuantity();
         }
 
+        cart.setUser(cart.getUser());
+        cart.setCartItems(cart.getCartItems());
         cart.setTotalItem(totalItem);
         cart.setTotalPrice(totalPrice);
         return cartRepository.save(cart);

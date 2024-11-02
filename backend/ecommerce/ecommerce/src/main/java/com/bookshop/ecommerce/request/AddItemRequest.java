@@ -10,7 +10,7 @@ import lombok.Setter;
 public class AddItemRequest {
 
     private Integer productId;
-    private int quantity;
+    private int quantity = 1;
     private Integer price;
 
 }

@@ -5,6 +5,7 @@ const resources = {
   en: {
     translation: {
       login: 'Login',
+      quantity: 'Quantity',
       ifNoAcc: 'If you dont have account?',
       ifHaveAcc: 'If you have account',
       register: 'Register',
@@ -51,12 +52,14 @@ const resources = {
       discount: 'Discount',
       deliveryCharges: 'Delivery Charges',
       totalAmount: 'Total Amount',
+      remove: 'Remove',
       checkout: 'Check Out',
     },
   },
   vi: {
     translation: {
       ifNoAcc: 'Nếu bạn không có tài khoản?',
+      quantity: 'Số lượng',
       ifHaveAcc: 'Nếu bạn có tài khoản?',
       login: 'Đăng nhập',
       register: 'Đăng ký',
@@ -103,6 +106,7 @@ const resources = {
       discount: 'Giảm giá',
       deliveryCharges: 'Phí giao hàng',
       totalAmount: 'Tổng cộng',
+      remove: 'Xoá',
       checkout: 'Thanh toán',
     },
   },

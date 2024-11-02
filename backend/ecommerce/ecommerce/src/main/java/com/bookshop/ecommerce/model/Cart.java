@@ -28,7 +28,6 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,orphanRemoval = true)
     @Column(name = "cart_items")
-    @JsonIgnore
     private Set<CartItem> cartItems = new HashSet<>();
 
     @Column(name = "total_price")

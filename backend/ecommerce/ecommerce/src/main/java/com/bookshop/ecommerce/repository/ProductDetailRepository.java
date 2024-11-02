@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Integer> {
 //    @Query("SELECT pd FROM ProductDetail pd WHERE pd.category = :category AND pd.price BETWEEN :minPrice AND :maxPrice AND pd.discount >= :minDiscount ORDER BY pd.price")
 //
+    ProductDetail findByProductId(Integer productId);
 }

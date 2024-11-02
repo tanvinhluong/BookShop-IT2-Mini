@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class CreateProductRequest {
+public class    CreateProductRequest {
 
     private String productName;
     private Date createdAt;
@@ -19,6 +19,6 @@ public class CreateProductRequest {
     private Double numRate;
     private Integer quantity;
     private List<Integer> categoryIds;
-    private List<Integer> productDetailIds;
-    private List<Integer> promotionIds;
+//    private List<Integer> productDetailIds;
+//    private List<Integer> promotionIds;
 }
