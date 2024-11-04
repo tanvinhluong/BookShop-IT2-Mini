@@ -3,7 +3,7 @@ package com.bookshop.ecommerce.repository;
 import com.bookshop.ecommerce.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     public User findByEmail(String email);
 }

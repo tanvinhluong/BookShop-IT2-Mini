@@ -21,7 +21,7 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserById(Integer userid) throws UserException {
-        Optional<User> user = userRepo.findById(Long.valueOf(userid));
+        Optional<User> user = userRepo.findById(userid);
         if(user.isPresent()){
             return user.get();
         }
