@@ -2,7 +2,7 @@ import axios from 'axios'
 export const API_BASE_URL = 'http://localhost:5454'
 const jwt = localStorage.getItem('jwt')
 export const API_TOKEN =
-  'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzA0NzgwMDAsImV4cCI6MTczMTM0MjAwMCwiZW1haWwiOiIgIn0.jnSMxHL1mdSpW0bIOik8x3qLBV6tu-1YGVr7Q-vQHf8'
+  'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzA3MzA2NTAsImV4cCI6MTczMTU5NDY1MCwiZW1haWwiOiJ2aW5odGVzdGVyQGdtYWlsLmNvbSJ9.iFllq90JaEdZHA6iLQxt8RW6GhgZJQ34ly23mei0H_Y'
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
