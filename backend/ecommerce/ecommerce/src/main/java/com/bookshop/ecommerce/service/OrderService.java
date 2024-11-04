@@ -6,9 +6,11 @@ import com.bookshop.ecommerce.repository.*;
 import com.bookshop.ecommerce.service.impl.ICartService;
 import com.bookshop.ecommerce.service.impl.IOrderService;
 import com.bookshop.ecommerce.user.domain.OrderStatus;
+import com.bookshop.ecommerce.user.domain.PaymentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +49,10 @@ public class OrderService implements IOrderService {
             OrderItem orderItem=new OrderItem();
 
             orderItem.setPrice(item.getPrice());
-//            orderItem.setProduct(item.getProduct());
+            orderItem.setProductDetail(item.getProductDetail());
             orderItem.setQuantity(item.getQuantity());
-//            orderItem.setSize(item.getSize());
-//            orderItem.setUserId(item.getUserId());
-//            orderItem.setDiscountedPrice(item.getDiscountedPrice());
-
-
+            orderItem.setPrice(item.getPrice());
+            orderItem.setDiscountedPrice(0);
             OrderItem createdOrderItem = orderItemRepository.save(orderItem);
 
             orderItems.add(createdOrderItem);
@@ -62,17 +61,14 @@ public class OrderService implements IOrderService {
 
         Order createdOrder=new Order();
         createdOrder.setUser(user);
+        createdOrder.setCreatedAt(new Date());
         createdOrder.setOrderItems(orderItems);
+        createdOrder.setTotalItem((double) cart.getTotalItem());
         createdOrder.setTotalPrice(cart.getTotalPrice());
 //        createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountedPrice());
-//        createdOrder.setDiscount(cart.getDiscount());
-//        createdOrder.setTotalItem(cart.getTotalItem());
-
-//        createdOrder.setShippingAddress(address);
-//        createdOrder.setOrderDate(LocalDateTime.now());
-//        createdOrder.setOrderStatus(OrderStatus.PENDING);
-//        createdOrder.getPaymentDetails().setStatus(PaymentStatus.PENDING);
-//        createdOrder.setCreatedAt(LocalDateTime.now());
+        createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
+        createdOrder.setShippingAddressId(address.getId());
+        createdOrder.setDeliveryDate(new Date());
 
         Order savedOrder=orderRepository.save(createdOrder);
 
@@ -136,8 +132,8 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<Order> usersOrderHistory(Integer userId) {
-//        List<Order> orders=orderRepository.getUsersOrders(userId);
-        return null;
+        List<Order> orders=orderRepository.getUsersOrders(userId);
+        return orders;
     }
 
     @Override

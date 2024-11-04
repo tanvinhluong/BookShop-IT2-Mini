@@ -23,8 +23,10 @@ public class Address {
 
     private String state;
 
+    @Column(name = "street_address")
     private String streetAddress;
 
+    @Column(name = "zip_code")
     private String zipCode;
 
     private String mobile;

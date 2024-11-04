@@ -27,7 +27,6 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "payment_id") // Liên kết với bảng PaymentDetail qua paymentId
-    @JsonIgnore
     private PaymentInfo paymentInfo;
 
     private Double totalDiscountedPrice;
@@ -36,16 +35,13 @@ public class Order {
     private Integer shippingAddressId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "USER_ID") // Liên kết với bảng User qua userId
-    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "PROMOTION_ID") // Liên kết với bảng Promotion qua promotionId
-    @JsonIgnore
     private Promotion promotion;
 }

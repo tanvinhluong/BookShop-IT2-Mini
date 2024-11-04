@@ -30,6 +30,7 @@ const OrderDetails = () => {
       )
       setOrder(results.data)
       console.log(results.data)
+      console.log(order.orderItems)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -55,13 +56,21 @@ const OrderDetails = () => {
       </button>
       <div>
         <h1 className="font-bold text-lg py-7">
-          Địa chỉ giao hàng:{' '}
-          {/* {order.shippingAddress.streetAddress +
-            " - " +
-            order.shippingAddress.city} */}
+          Địa chỉ giao hàng: {order.user.firstName} {order.user.lastName} -{' '}
+          {order.user.address.find(
+            (addr) => addr.id === order.shippingAddressId
+          )?.streetAddress +
+            ' - ' +
+            order.user.address.find(
+              (addr) => addr.id === order.shippingAddressId
+            )?.city}
         </h1>
-        <AddressCard address={order.shippingAddress} />
-        <p>Tổng tiền đơn hàng: {order.totalDiscountedPrice}</p>
+        <AddressCard
+          address={order?.user?.address.find(
+            (addr) => addr.id === order.shippingAddressId
+          )}
+        />
+        <p>Tổng tiền đơn hàng: {order.totalPrice}</p>
       </div>
       <div className="py-20">
         <OrderTraker activeStep={3} />
@@ -79,19 +88,17 @@ const OrderDetails = () => {
               <div className="flex  items-center ">
                 <img
                   className="w-[5rem] h-[5rem] object-cover object-top"
-                  src={item.product.imageUrl}
+                  src={item?.productDetail?.imageUrl}
                   alt=""
                 />
                 <div className="ml-5 space-y-2">
-                  <p>{item.product.title}</p>
+                  <p>{item?.productDetail?.name}</p>
                   <p className="opacity-70 text-xs font-semibold space-x-5">
-                    <span>Đơn giá: {item.product.price}đ</span>
+                    <span>Đơn giá: {item?.productDetail?.price}đ</span>
                     <span>Số lượng: {item.quantity}</span>
                   </p>
-                  <p>Tạm tính: {item.product.price * item.quantity}đ</p>
-                  <p>
-                    Giảm giá còn: {item.product.discountPrice * item.quantity}đ
-                  </p>
+                  <p>Tạm tính: {item?.price}đ</p>
+                  <p>Giảm giá còn: {order?.totalPrice}đ</p>
                 </div>
               </div>
             </Grid>

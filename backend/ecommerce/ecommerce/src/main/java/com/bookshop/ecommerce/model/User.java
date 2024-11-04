@@ -42,7 +42,6 @@ public class User {
     @Setter
     @Getter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Address> address = new ArrayList<>();
 
     @ManyToMany

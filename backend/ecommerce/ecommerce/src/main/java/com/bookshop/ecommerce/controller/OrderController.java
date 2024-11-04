@@ -53,7 +53,7 @@ public class OrderController {
 
         User user=userService.findUserProfileByJwt(jwt);
         Order orders=orderService.findOrderById(orderId);
-        return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 
 }
