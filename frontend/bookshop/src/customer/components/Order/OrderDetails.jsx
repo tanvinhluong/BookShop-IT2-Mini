@@ -56,12 +56,12 @@ const OrderDetails = () => {
       </button>
       <div>
         <h1 className="font-bold text-lg py-7">
-          Địa chỉ giao hàng: {order.user.firstName} {order.user.lastName} -{' '}
-          {order.user.address.find(
+          Địa chỉ giao hàng: {order?.user?.firstName} {order?.user?.lastName} -{' '}
+          {order?.user?.address.find(
             (addr) => addr.id === order.shippingAddressId
           )?.streetAddress +
             ' - ' +
-            order.user.address.find(
+            order?.user?.address.find(
               (addr) => addr.id === order.shippingAddressId
             )?.city}
         </h1>

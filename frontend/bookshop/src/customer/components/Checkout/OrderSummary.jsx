@@ -1,31 +1,47 @@
-import React, { useEffect } from "react";
-import AddressCard from "../AddressCard/AddressCard";
-import CartItem from "../Cart/CartItem";
-import { Button } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { getOrderById } from "../../../State/Order/Action";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import AddressCard from '../AddressCard/AddressCard'
+import CartItem from '../Cart/CartItem'
+import { Button } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { getOrderById } from '../../../State/Order/Action'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function OrderSummary() {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const { order } = useSelector((store) => store);
-  const searchParams = new URLSearchParams(location.search);
-  const orderId = searchParams.get("order_id");
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const { order } = useSelector((store) => store)
+  const searchParams = new URLSearchParams(location.search)
+  const orderId = searchParams.get('order_id')
+  const navigate = useNavigate()
+  const addresses = order?.order?.user?.address || []
+  const latestAddress = addresses[addresses.length - 1]
   const handlePayment = () => {
-    navigate({ search: `step=4` });
-  };
+    navigate({ search: `step=4` })
+  }
 
   useEffect(() => {
-    dispatch(getOrderById(orderId));
-  }, [orderId]);
+    dispatch(getOrderById(orderId))
+  }, [orderId])
+
+  useEffect(() => {
+    console.log('Order object:', order)
+  }, [order])
 
   return (
     <div className="space-y-5">
       <div className="p-5 shadow-lg rounded-s-md border">
-        <AddressCard address={order.order?.shippingAddress} />
+        <h3>Địa chỉ giao hàng:</h3>
+        {latestAddress ? (
+          <div key={latestAddress.id}>
+            <p>Đường: {latestAddress.streetAddress}</p>
+            <p>Thành phố: {latestAddress.city}</p>
+            <p>Tỉnh: {latestAddress.state}</p>
+            <p>Mã bưu điện: {latestAddress.zipCode}</p>
+            <p>Số điện thoại: {latestAddress.mobile}</p>
+          </div>
+        ) : (
+          <p>Không có địa chỉ giao hàng nào.</p>
+        )}
       </div>
 
       <div className="lg:grid grid-cols-3  relative justify-between">
@@ -76,10 +92,10 @@ function OrderSummary() {
               className="w-full mt-5"
               onClick={() => handlePayment()}
               sx={{
-                padding: ".8rem 2rem",
-                marginTop: "2rem",
-                width: "100%",
-                bgcolor: "#9155fd",
+                padding: '.8rem 2rem',
+                marginTop: '2rem',
+                width: '100%',
+                bgcolor: '#9155fd',
               }}
             >
               Payment
@@ -88,7 +104,7 @@ function OrderSummary() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default OrderSummary;
+export default OrderSummary
