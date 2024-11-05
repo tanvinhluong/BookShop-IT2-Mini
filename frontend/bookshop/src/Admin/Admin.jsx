@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Routes, useNavigate, Route } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CreateProductForm from './components/CreateProductForm';
 import ProductsTable from './components/ProductsTable';
 import OrdersTable from './components/OrdersTable';
 import CustomersTable from './components/CustomersTable';
@@ -18,7 +17,6 @@ const menu = [
   { name: "Products", path: "/admin/products", icon: <DashboardIcon /> },
   { name: "Customers", path: "/admin/customers", icon: <DashboardIcon /> },
   { name: "Orders", path: "/admin/orders", icon: <DashboardIcon /> },
-  { name: "AddProduct", path: "/admin/product/create", icon: <DashboardIcon /> },
   { name: "", path: "" }
 ];
 
@@ -70,7 +68,6 @@ const Admin = () => {
       <div className='content'>
         <Routes>
           <Route path='/' element={<AdminDashboard />} />
-          <Route path='/product/create' element={<CreateProductForm />} />
           <Route path='/products' element={<ProductsTable />} />
           <Route path='/orders' element={<OrdersTable />} />
           <Route path='/customers' element={<CustomersTable />} />

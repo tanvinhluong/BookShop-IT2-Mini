@@ -101,10 +101,10 @@ const ProductsTable = () => {
           'Content-Type': 'multipart/form-data'
         }
       }
-      await axios.post(`${API_BASE_URL}/api/admin/products/create`, formData, config)
+      await axios.post(`${API_BASE_URL}/api/admin/products/creates`, formData, config)
       alert('Product added successfully!')
       setShowForm(false)
-      setNewProduct({ name: '', price: '', quantity: '', description: '', image: null })
+      setNewProduct({ productName: '', price: '', quantity: '', productDescription: '', imageUrl: '' })
     } catch (error) {
       console.error('Error adding product:', error)
     }
@@ -126,6 +126,7 @@ const ProductsTable = () => {
         <p>Price</p>
         <p>Quantity</p>
         <p>Remove</p>
+        <p>Active</p>
         <p>Update</p>
       </div>
       <div className="listproduct-allproducts">
@@ -188,7 +189,7 @@ const ProductsTable = () => {
                 hidden
               />
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" onChange={handleSubmit}>Submit</button>
         </form>
       )}
     </div>
