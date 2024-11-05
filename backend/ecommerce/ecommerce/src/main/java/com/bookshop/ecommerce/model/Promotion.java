@@ -33,18 +33,15 @@ public class Promotion {
 
     @ManyToOne
     @JoinColumn(name = "SUPPLIER_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
-    @JsonIgnore
     private Supplier supplier;
 
     // Liên kết với Product
     @ManyToOne
     @JoinColumn(name = "PRODUCT_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
-    @JsonIgnore
     private Product product;
 
     // Liên kết với Category (Giả sử có model Category)
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
-    @JsonIgnore
     private Category category;
 }
