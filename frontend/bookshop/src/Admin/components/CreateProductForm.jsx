@@ -93,32 +93,12 @@ const CreateProductForm = () => {
       </div>
       <div className="addproduct-price">
         <div className="addproduct-itemfield">
-          <p>Discounted Price</p>
-          <input
-            value={productDetails.discountedPrice}
-            onChange={changeHandler}
-            type="text"
-            name="discountedPrice"
-            placeholder="Type here"
-          />
-        </div>
-        <div className="addproduct-itemfield">
           <p>Price</p>
           <input
             value={productDetails.price}
             onChange={changeHandler}
             type="text"
             name="price"
-            placeholder="Type here"
-          />
-        </div>
-        <div className="addproduct-itemfield">
-          <p>Discount Percent</p>
-          <input
-            value={productDetails.discountPercent}
-            onChange={changeHandler}
-            type="text"
-            name="discountPercent"
             placeholder="Type here"
           />
         </div>
@@ -130,16 +110,6 @@ const CreateProductForm = () => {
           onChange={changeHandler}
           type="text"
           name="quantity"
-          placeholder="Type here"
-        />
-      </div>
-      <div className="addproduct-itemfield">
-        <p>Top Level Category</p>
-        <input
-          value={productDetails.topLevelCategory}
-          onChange={changeHandler}
-          type="text"
-          name="topLevelCategory"
           placeholder="Type here"
         />
       </div>
@@ -158,16 +128,6 @@ const CreateProductForm = () => {
           <option value="Sách">Sách</option>
           <option value="Tẩy">Tẩy</option>
         </select>
-      </div>
-      <div className="addproduct-itemfield">
-        <p>Third Level Category</p>
-        <input
-          value={productDetails.thirdLevelCategory}
-          onChange={changeHandler}
-          type="text"
-          name="thirdLevelCategory"
-          placeholder="Type here"
-        />
       </div>
       <div className="addproduct-itemfield">
         <label htmlFor="file-input">

@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import cross_icon from '../../customer/components/assets/cross_icon.png';
-import './CSS/ListProduct.css';
-import upload_area from '../../customer/components/assets/upload_area.svg';
-import { API_BASE_URL } from '../../config/apiConfig';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useNavigate, useLocation } from 'react-router-dom'
+import cross_icon from '../../customer/components/assets/cross_icon.png'
+import './CSS/ListProduct.css'
+import upload_area from '../../customer/components/assets/upload_area.svg'
+import { API_BASE_URL } from '../../config/apiConfig'
 
-const ProductsTable = () => {
-  const [results, setResults] = useState([]);
-  const [imageUrl, setImage] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+const ProductsTable = async () => {
+  const [imageUrl, setImage] = useState(null)
+  const [results, setResults] = useState([])
+  const [showForm, setShowForm] = useState(false)
   const [newProduct, setNewProduct] = useState({
     productName: '',
-    productDescription: '',
     price: '',
-    active: '1',
+    quantity: '',
+    productDescription: '',
     imageUrl: '',
-    supplierId: '',
-    categoryIds: []
-  });
-  const [suppliers, setSuppliers] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loadingSuppliers, setLoadingSuppliers] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const navigate = useNavigate();
-  const jwt = localStorage.getItem('jwt');
-  const location = useLocation();
+    active:'1'
+  })
+
+  const navigate = useNavigate()
+  const jwt = localStorage.getItem('jwt')
+  const location = useLocation()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +49,11 @@ const ProductsTable = () => {
           console.error("Dữ liệu categories không phải là một mảng:", categoriesResponse.data);
         }
   
+        const response = await axios.get(
+          `${API_BASE_URL}/api/admin/products/all`,
+          config
+        )
+        setResults(response.data.content)
       } catch (error) {
         console.error('Error fetching suppliers or categories:', error);
       } finally {
@@ -90,7 +91,7 @@ const ProductsTable = () => {
         console.error('Error deleting product:', error);
       }
     }
-  };
+  }
 
   const handleEdit = (productId) => {
     navigate(`/admin/products/edit/${productId}`);
@@ -118,6 +119,7 @@ const ProductsTable = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  }
 
     const formData = new FormData();
     formData.append("productName", newProduct.productName);
@@ -162,6 +164,43 @@ const ProductsTable = () => {
     }
   };
 
+  const handleAddProductClick = () => {
+    setShowForm(!showForm)
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target
+    setNewProduct((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const formData = new FormData()
+      formData.append('name', newProduct.productName)
+      formData.append('price', newProduct.price)
+      formData.append('quantity', newProduct.quantity)
+      formData.append('description', newProduct.productDescription)
+      formData.append('image', newProduct.imageUrl)
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      await axios.post(`${API_BASE_URL}/api/admin/products/creates`, formData, config)
+      alert('Product added successfully!')
+      setShowForm(false)
+      setNewProduct({ productName: '', price: '', quantity: '', productDescription: '', imageUrl: '' })
+    } catch (error) {
+      console.error('Error adding product:', error)
+    }
+  }
+
   return (
     <div className="list-product">
       {location.search.includes('message=edit_success') && (
@@ -171,6 +210,7 @@ const ProductsTable = () => {
         ADD PRODUCT
       </button>
       <h1>All Products List</h1>
+
       <div className="listproduct-format-main">
         <p>Products</p>
         <p>Product Name</p>
@@ -178,6 +218,7 @@ const ProductsTable = () => {
         <p>Price</p>
         <p>Quantity</p>
         <p>Remove</p>
+        <p>Active</p>
         <p>Update</p>
       </div>
       <div className="listproduct-allproducts">
@@ -208,98 +249,30 @@ const ProductsTable = () => {
             </React.Fragment>
           ))}
       </div>
-
+      {/* Form thêm sản phẩm */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="add-product-form">
-          <h2>Add New Product</h2>
-          <label>
-            Product Name:
-            <input
-              type="text"
-              name="productName"
-              value={newProduct.productName}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Product Description:
-            <input
-              type="text"
-              name="productDescription"
-              value={newProduct.productDescription}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Price:
-            <input
-              type="number"
-              name="price"
-              value={newProduct.price}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label>
-            Active:
-            <select
-              name="active"
-              value={newProduct.active}
-              onChange={handleInputChange}
-            >
-              <option value="1">Yes</option>
-              <option value="0">No</option>
-            </select>
-          </label>
-          <label>
-            Supplier:
-            {loadingSuppliers ? (
-              <div>Loading suppliers...</div>
-            ) : (
-              <select
-                name="supplierId"
-                value={newProduct.supplierId}
-                onChange={handleInputChange}
-              >
-                <option value="">Select a Supplier</option>
-                {Array.isArray(suppliers) && suppliers.map((supplier) => (
-                  <option key={supplier.id} value={supplier.id}>
-                    {supplier.name}
-                  </option>
-                ))}
+        <form className="product-form">
+          <input type="text" placeholder="Product Name" onChange={handleInputChange} name="productName" />
+          <input type="number" placeholder="Price" onChange={handleInputChange} name="price" />
+          <input type="number" placeholder="Quantity" onChange={handleInputChange} name="quantity" />
+          <textarea placeholder="Product Description" onChange={handleInputChange} name="productDescription"></textarea>
+          <div className="active-toggle">
+            <label>Active:</label>
+              <select name="active" onChange={handleInputChange} required>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
               </select>
-            )}
-          </label>
-          <label>
-            Categories:
-            {loadingCategories ? (
-              <div>Loading categories...</div>
-            ) : (
-              <select
-                multiple
-                name="categoryIds"
-                value={newProduct.categoryIds}
-                onChange={handleCategoryChange}
-              >
-                {Array.isArray(categories) && categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            )}
-          </label>
+          </div>
           <div className="addproduct-itemfield">
-            <label htmlFor="file-input">
-              <img
-                src={
-                newProduct.imageUrl ? newProduct.imageUrl : upload_area
-              }
-                className="addproduct-thumbnail-img"
-                alt=""
-              />
-            </label>
+              <label htmlFor="file-input">
+                <img
+                  src={
+                    newProduct.imageUrl ? newProduct.imageUrl : upload_area
+                  }
+                  className="addproduct-thumbnail-img"
+                  alt=""
+                />
+              </label>
               <input
                 onChange={imageHandler}
                 type="file"
@@ -308,13 +281,10 @@ const ProductsTable = () => {
                 hidden
               />
           </div>
-          <div className="add-product-button">
-            <button type="submit">Submit</button>
-          </div>
+          <button type="submit" onChange={handleSubmit}>Submit</button>
         </form>
       )}
     </div>
-  );
-};
+  )    
 
 export default ProductsTable;
