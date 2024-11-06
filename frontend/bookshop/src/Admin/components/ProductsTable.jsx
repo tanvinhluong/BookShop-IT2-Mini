@@ -35,21 +35,18 @@ const ProductsTable = () => {
           axios.get(`${API_BASE_URL}/api/category/get`)
         ]);
   
-        console.log("Suppliers Response:", suppliersResponse.data); // In ra dữ liệu suppliers
-        console.log("Categories Response:", categoriesResponse.data); // In ra dữ liệu categories
+        console.log("Suppliers Response:", suppliersResponse.data);
+        console.log("Categories Response:", categoriesResponse.data);
   
-        // Kiểm tra nếu suppliersResponse.data là một mảng trước khi gán
         if (Array.isArray(suppliersResponse.data)) {
           setSuppliers(suppliersResponse.data);
         } else {
-          // Nếu không phải mảng, kiểm tra cấu trúc và lấy đúng dữ liệu
           console.error("Dữ liệu suppliers không phải là một mảng:", suppliersResponse.data);
           if (suppliersResponse.data && suppliersResponse.data.suppliers) {
-            setSuppliers(suppliersResponse.data.suppliers); // Giả sử suppliers nằm trong thuộc tính "suppliers"
+            setSuppliers(suppliersResponse.data.suppliers);
           }
         }
   
-        // Kiểm tra nếu categoriesResponse.data là một mảng trước khi gán
         if (Array.isArray(categoriesResponse.data)) {
           setCategories(categoriesResponse.data);
         } else {
@@ -293,12 +290,23 @@ const ProductsTable = () => {
               </select>
             )}
           </label>
-          <div>
-            <label>
-              Upload Image:
-              <input type="file" onChange={imageHandler} />
+          <div className="addproduct-itemfield">
+            <label htmlFor="file-input">
+              <img
+                src={
+                newProduct.imageUrl ? newProduct.imageUrl : upload_area
+              }
+                className="addproduct-thumbnail-img"
+                alt=""
+              />
             </label>
-            {imageUrl && <img src={imageUrl} alt="Product Preview" />}
+              <input
+                onChange={imageHandler}
+                type="file"
+                name="image"
+                id="file-input"
+                hidden
+              />
           </div>
           <div className="add-product-button">
             <button type="submit">Submit</button>
