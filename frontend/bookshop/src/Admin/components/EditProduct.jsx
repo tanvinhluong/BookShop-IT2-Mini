@@ -8,18 +8,15 @@ const EditProduct = () => {
   const { productId } = useParams()
   const navigate = useNavigate()
   const [productDetails, setProductDetails] = useState({
-    imageUrl: '',
-    brand: '',
-    title: '',
-    color: '',
-    discountedPrice: 0,
-    price: 0,
-    discountPercent: 0,
-    quantity: 0,
-    topLevelCategory: '',
-    secondLevelCategory: 'Giấy',
-    thirdLevelCategory: 'all_products',
-    description: '',
+    productImageUrl: '',
+    productDescription: '',
+    productName:'',
+    supplierId:'0',
+    price:'0',
+    active: true,
+    numRatings:'0',
+    quantity:'0',
+    createdAt: null
   })
 
   const jwt = localStorage.getItem('jwt')
@@ -27,12 +24,8 @@ const EditProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const config = {
-          headers: { Authorization: `Bearer ${jwt}` },
-        }
         const response = await axios.get(
-          `${API_BASE_URL}/api/products/${productId}`,
-          config
+          `http://localhost:5454/api/products/${productId}`
         )
         setProductDetails(response.data)
       } catch (error) {
@@ -41,7 +34,7 @@ const EditProduct = () => {
     }
 
     fetchProduct()
-  }, [productId, jwt])
+  }, [productId])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -52,53 +45,44 @@ const EditProduct = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
-        },
-      }
-      await axios.put(
-        `${API_BASE_URL}/api/admin/products/${productId}/update`,
-        productDetails,
-        config
-      )
-      navigate('/admin/products?message=edit_success') // Truyền thông báo qua URL
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+        await axios.put(
+            `${API_BASE_URL}/api/admin/products/${productId}/update`,
+            productDetails,
+            config
+        );
+        navigate('/admin/products?message=edit_success'); 
     } catch (error) {
-      console.error('Error updating product:', error)
+        console.error('Error updating product:', error);
     }
-  }
+};
+
 
   return (
     <div className="edit-product">
       <h1>Edit Product</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Image URL:
+          Product Name:
           <input
             type="text"
-            name="imageUrl"
-            value={productDetails.imageUrl}
+            name="productName"
+            value={productDetails.productName}
             onChange={handleChange}
           />
         </label>
         <label>
-          Brand:
+          Product Description:
           <input
             type="text"
-            name="brand"
-            value={productDetails.brand}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={productDetails.title}
+            name="productDescription"
+            value={productDetails.productDescription}
             onChange={handleChange}
           />
         </label>
@@ -108,15 +92,6 @@ const EditProduct = () => {
             type="number"
             name="price"
             value={productDetails.price}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Quantity:
-          <input
-            type="number"
-            name="quantity"
-            value={productDetails.quantity}
             onChange={handleChange}
           />
         </label>

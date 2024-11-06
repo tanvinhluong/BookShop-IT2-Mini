@@ -39,4 +39,9 @@ public class SupplierService implements ISupplierService {
         return supplierRepository.save(supplier);
     }
 
+    @Override
+    public List<Supplier> getAllSuppliers() {
+        List<Supplier> supplierList = supplierRepository.findAll();
+        return supplierList;
+    }
 }
