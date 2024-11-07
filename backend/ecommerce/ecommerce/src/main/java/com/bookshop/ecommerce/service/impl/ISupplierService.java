@@ -14,5 +14,5 @@ import java.util.List;
 public interface ISupplierService {
 
     public Supplier createSupplier(CreateSupplierRequest req);
-
+    public List<Supplier> getAllSuppliers();
 }

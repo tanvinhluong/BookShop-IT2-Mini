@@ -30,6 +30,8 @@ public class SupplierService implements ISupplierService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public SupplierService(SupplierRepository supplierRepository){this.supplierRepository=supplierRepository;}
+
     @Override
     public Supplier createSupplier(CreateSupplierRequest req) {
         Supplier supplier = new Supplier();
