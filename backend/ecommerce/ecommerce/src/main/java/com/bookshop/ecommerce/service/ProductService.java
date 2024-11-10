@@ -127,8 +127,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> searchProduct(String query) {
-//        List<Product> products=productRepository.searchProduct(query);
-        return null;
+        return productRepository.searchProduct(query);
     }
 
     @Override

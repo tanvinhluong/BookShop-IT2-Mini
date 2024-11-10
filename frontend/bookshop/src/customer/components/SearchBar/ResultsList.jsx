@@ -1,13 +1,13 @@
-import './ResultsList.css'
-import { useNavigate } from 'react-router-dom'
+import "./ResultsList.css";
+import { useNavigate } from "react-router-dom";
 
 function ResultsList({ results, setProduct, setVisible }) {
   // const jwt = localStorage.getItem("jwt");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleProductClick = async (result) => {
-    const productId = result.id
-    navigate(`/product/${productId}`)
+    const productId = result.id;
+    navigate(`/product/${productId}`);
     // console.log(result.id);
     // try {
     //   const config = {
@@ -24,7 +24,7 @@ function ResultsList({ results, setProduct, setVisible }) {
     // } catch (error) {
     //   console.error("Error fetching data:", error);
     // }
-  }
+  };
 
   return (
     <div className="results-list">
@@ -35,12 +35,12 @@ function ResultsList({ results, setProduct, setVisible }) {
             key={index}
             onClick={() => handleProductClick(result)}
           >
-            <p className="results-title">{result.title}</p>
+            <p className="results-title">{result.productName}</p>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
-export default ResultsList
+export default ResultsList;

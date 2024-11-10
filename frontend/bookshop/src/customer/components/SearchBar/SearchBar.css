@@ -1,11 +1,13 @@
 .container-search {
   height: 40px;
+  max-width: 100%;
   width: 550px;
   border: 2.5px solid rgba(233, 233, 233, 255);
   border-radius: 92px;
   display: flex;
   justify-content: space-between;
   align-self: center;
+  margin: 0 auto;
 
   &:hover {
     border: 2.5px solid #f18cd3;
@@ -37,4 +39,15 @@ input {
   font-weight: 550;
   font-size: 1.2rem;
   caret-color: rgba(21, 134, 106, 255);
+}
+
+@media (max-width: 768px) {
+  .container-search {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  input {
+    font-size: 1rem;
+  }
 }
