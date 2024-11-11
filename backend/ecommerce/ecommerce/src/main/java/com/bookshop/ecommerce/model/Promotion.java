@@ -22,6 +22,7 @@ public class Promotion {
     private Integer id;
     private String promotionName;
     private Integer promotionType;
+    private String promotionCode;
     private Integer percentage;
     private Date startDate;
     private Date endDate;
@@ -32,16 +33,15 @@ public class Promotion {
     private List<Order> orders;
 
     @ManyToOne
-    @JoinColumn(name = "SUPPLIER_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JoinColumn(name = "SUPPLIER_ID")
     private Supplier supplier;
 
     // Liên kết với Product
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
-    // Liên kết với Category (Giả sử có model Category)
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID", insertable = false, updatable = false) // Tên cột khoá ngoại
+    @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 }

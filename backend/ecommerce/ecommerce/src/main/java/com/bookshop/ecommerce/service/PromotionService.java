@@ -34,6 +34,7 @@ public class PromotionService implements IPromotionService {
         Promotion promotion = new Promotion();
         promotion.setPromotionName(req.getPromotionName());
         promotion.setPromotionType(req.getPromotionType());
+        promotion.setPromotionCode(String.valueOf(req.getPromotionCode()));
         promotion.setPercentage(req.getPercentage());
         promotion.setStartDate(req.getStartDate());
         promotion.setEndDate(req.getEndDate());
