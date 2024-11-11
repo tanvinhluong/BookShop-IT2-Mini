@@ -72,13 +72,7 @@ const menu = [
         style={{ width: 24, height: 24 }}
       />
     ),
-  },
-  {
-    name: 'AddProduct',
-    path: '/admin/product/create',
-    icon: <DashboardIcon />,
-  },
-  { name: '', path: '' },
+  }
 ]
 
 const Admin = () => {
@@ -133,7 +127,6 @@ const Admin = () => {
         <Header />
         <Routes>
           <Route path="/" element={<AdminDashboard />} />
-          <Route path="/product/create" element={<CreateProductForm />} />
           <Route path="/products" element={<ProductsTable />} />
           <Route path="/orders" element={<OrdersTable />} />
           <Route path="/customers" element={<CustomersTable />} />

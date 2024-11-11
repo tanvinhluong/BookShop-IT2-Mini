@@ -30,6 +30,8 @@ public class SupplierService implements ISupplierService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public SupplierService(SupplierRepository supplierRepository){this.supplierRepository=supplierRepository;}
+
     @Override
     public Supplier createSupplier(CreateSupplierRequest req) {
         Supplier supplier = new Supplier();
@@ -39,4 +41,9 @@ public class SupplierService implements ISupplierService {
         return supplierRepository.save(supplier);
     }
 
+    @Override
+    public List<Supplier> getAllSuppliers() {
+        List<Supplier> supplierList = supplierRepository.findAll();
+        return supplierList;
+    }
 }
