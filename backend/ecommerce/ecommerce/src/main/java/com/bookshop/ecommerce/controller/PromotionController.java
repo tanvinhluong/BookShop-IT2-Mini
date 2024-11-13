@@ -17,7 +17,7 @@ public class PromotionController {
     private IPromotionService promotionService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Promotion>> getAllUsersHandler(){
+    public ResponseEntity<List<Promotion>> getAllPromotionsHandler(){
         List<Promotion> promotions= promotionService.getAllPromotions();
 
         return new ResponseEntity<>(promotions, HttpStatus.ACCEPTED);
