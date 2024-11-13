@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './CSS/CustomersTable.css'
-import { API_BASE_URL } from '../../config/apiConfig'
+import { API_BASE_URL, api, API_TOKEN } from '../../config/apiConfig'
 
 const CustomersTable = () => {
   const [users, setUsers] = useState([])
@@ -10,7 +10,10 @@ const CustomersTable = () => {
   const fetchData = async () => {
     try {
       const config = {
-        headers: { Authorization: `Bearer ${jwt}` },
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}
+`,
+        },
       }
       const response = await axios.get(`${API_BASE_URL}/api/users/`, config)
       setUsers(response.data)
@@ -32,21 +35,26 @@ const CustomersTable = () => {
         <p>First Name</p>
         <p>Last Name</p>
         <p>Email</p>
+        <p>Mobile</p>
+        <p>Active</p>
+        <p>Created</p>
       </div>
       <div className="table-body">
         <hr />
-        {!!users &&
-          users.map((user, index) => (
-            <React.Fragment key={index}>
-              <div className="table-row">
-                <p>{user.id}</p>
-                <p>{user.firstName}</p>
-                <p>{user.lastName}</p>
-                <p>{user.email}</p>
-              </div>
-              <hr />
-            </React.Fragment>
-          ))}
+        {users.map((user, index) => (
+          <React.Fragment key={index}>
+            <div className="table-row">
+              <p>{user?.id}</p>
+              <p>{user?.firstName}</p>
+              <p>{user?.lastName}</p>
+              <p>{user?.email}</p>
+              <p>{user?.mobile}</p>
+              <p>{user?.active}</p>
+              <p>{user?.createdAt}</p>
+            </div>
+            <hr />
+          </React.Fragment>
+        ))}
       </div>
     </div>
   )
