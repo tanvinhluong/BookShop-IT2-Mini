@@ -19,6 +19,7 @@ public class    CreateProductRequest {
     private Double numRate;
     private Integer quantity;
     private List<Integer> categoryIds;
+    private String productDetailName;
 //    private List<Integer> productDetailIds;
 //    private List<Integer> promotionIds;
 }

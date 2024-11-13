@@ -77,7 +77,7 @@ public class ProductService implements IProductService {
         List<ProductDetail> productDetails = new ArrayList<>();
         ProductDetail productDetail = new ProductDetail();
         productDetail.setProduct(product);
-        productDetail.setName(product.getProductName());
+        productDetail.setName(createProductRequest.getProductDetailName());
         productDetail.setPrice(product.getPrice());
         productDetail.setInStock(createProductRequest.getQuantity());   // set in stock
         productDetail.setImageUrl(createProductRequest.getImageUrl());

@@ -49,7 +49,6 @@ public class Product {
 
     // product detail
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<ProductDetail> productDetails;
 
     @ManyToOne

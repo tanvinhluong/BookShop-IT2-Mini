@@ -13,6 +13,8 @@ import com.bookshop.ecommerce.service.impl.IPromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PromotionService implements IPromotionService {
 
@@ -58,6 +60,11 @@ public class PromotionService implements IPromotionService {
         }
 
         return promotionRepository.save(promotion);
+    }
+
+    @Override
+    public List<Promotion> getAllPromotions() {
+        return promotionRepository.findAll();
     }
 
 }

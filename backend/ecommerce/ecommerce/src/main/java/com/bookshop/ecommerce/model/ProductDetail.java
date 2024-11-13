@@ -17,7 +17,7 @@ public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    private String name; // Loại size, màu, ... VD: ĐEN, SIZE M
     private Double price;
     private Integer inStock;
     private Integer soldQuantity;

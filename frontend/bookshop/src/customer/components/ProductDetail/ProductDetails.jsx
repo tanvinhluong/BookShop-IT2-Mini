@@ -164,6 +164,12 @@ function ProductDetails() {
                 </p>
               </div>
 
+              <div className="flex space-x-5 items-center opacity-60 text-lg lg:text-xl text-gray-900 mt-6">
+                <p className="font-sans ">
+                  Loại sản phẩm: {products?.product?.productDetails?.[0]?.name}
+                </p>
+              </div>
+
               {/* Reviews */}
               <div className="mt-6">
                 <div className="flex items-center space-x-3">
