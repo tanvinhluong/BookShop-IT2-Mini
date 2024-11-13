@@ -26,7 +26,9 @@ import dashBoardImg from './components/assets/dashboard-color.png'
 import checkListImg from './components/assets/checklist.png'
 import newProductImg from './components/assets/new-product.png'
 import customerImg from './components/assets/rating.png'
+import promotionImg from './components/assets/shopping-online.png'
 import Header from './components/Header'
+import PromotionTable from './components/PromotionTable'
 
 const menu = [
   {
@@ -72,7 +74,18 @@ const menu = [
         style={{ width: 24, height: 24 }}
       />
     ),
-  }
+  },
+  {
+    name: 'Promotion',
+    path: '/admin/promotion',
+    icon: (
+      <img
+        src={promotionImg}
+        alt="Dashboard"
+        style={{ width: 24, height: 24 }}
+      />
+    ),
+  },
 ]
 
 const Admin = () => {
@@ -132,6 +145,7 @@ const Admin = () => {
           <Route path="/customers" element={<CustomersTable />} />
           <Route path="/products/edit/:productId" element={<EditProduct />} />
           <Route path="/orders/:orderId" element={<OrderDetails />} />
+          <Route path="/promotion" element={<PromotionTable />} />
         </Routes>
       </div>
     </div>
