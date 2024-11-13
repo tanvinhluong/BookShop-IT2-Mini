@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import cross_icon from '../../customer/components/assets/cross_icon.png';
-import './CSS/ListProduct.css';
-import upload_area from '../../customer/components/assets/upload_area.svg';
-import { API_BASE_URL } from '../../config/apiConfig';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useNavigate, useLocation } from 'react-router-dom'
+import cross_icon from '../../customer/components/assets/cross_icon.png'
+import './CSS/ListProduct.css'
+import { API_BASE_URL, API_TOKEN } from '../../config/apiConfig'
 
 const ProductsTable = () => {
-  const [results, setResults] = useState([]);
-  const [imageUrl, setImage] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const [results, setResults] = useState([])
+  const [imageUrl, setImage] = useState(null)
+  const [showForm, setShowForm] = useState(false)
   const [newProduct, setNewProduct] = useState({
     productName: '',
     productDescription: '',
@@ -18,123 +17,144 @@ const ProductsTable = () => {
     imageUrl: '',
     supplierId: '',
     categoryIds: [],
-  });
-  const [suppliers, setSuppliers] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loadingSuppliers, setLoadingSuppliers] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const navigate = useNavigate();
-  const jwt = localStorage.getItem('jwt');
-  const location = useLocation();
+  })
+  const [suppliers, setSuppliers] = useState([])
+  const [categories, setCategories] = useState([])
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
+  const [loadingCategories, setLoadingCategories] = useState(true)
+  const navigate = useNavigate()
+  const jwt = localStorage.getItem('jwt')
+  const location = useLocation()
 
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const token = localStorage.getItem("jwt");
-        const suppliersResponse = await axios.get(`${API_BASE_URL}/api/admin/supplier/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const token = localStorage.getItem('jwt')
+        const suppliersResponse = await axios.get(
+          `${API_BASE_URL}/api/admin/supplier/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${API_TOKEN}`,
+            },
+          }
+        )
         if (Array.isArray(suppliersResponse.data)) {
-          setSuppliers(suppliersResponse.data);
+          setSuppliers(suppliersResponse.data)
         } else {
-          console.error("Dữ liệu suppliers không phải là một mảng:", suppliersResponse.data);
+          console.error(
+            'Dữ liệu suppliers không phải là một mảng:',
+            suppliersResponse.data
+          )
         }
       } catch (error) {
-        console.error("Error fetching suppliers:", error);
+        console.error('Error fetching suppliers:', error)
       } finally {
-        setLoadingSuppliers(false);
+        setLoadingSuppliers(false)
       }
-    };
-  
-    fetchSuppliers();
-  }, []);
-  
+    }
+
+    fetchSuppliers()
+  }, [])
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesResponse = await axios.get(`${API_BASE_URL}/api/category/get`);
+        const categoriesResponse = await axios.get(
+          `${API_BASE_URL}/api/category/get`
+        )
         if (Array.isArray(categoriesResponse.data)) {
-          setCategories(categoriesResponse.data);
+          setCategories(categoriesResponse.data)
         } else {
-          console.error("Dữ liệu categories không phải là một mảng:", categoriesResponse.data);
+          console.error(
+            'Dữ liệu categories không phải là một mảng:',
+            categoriesResponse.data
+          )
         }
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error)
       } finally {
-        setLoadingCategories(false);
+        setLoadingCategories(false)
       }
-    };
-  
-    fetchCategories();
-  }, []);  
+    }
+
+    fetchCategories()
+  }, [])
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`);
+        const response = await axios.get(
+          `${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`
+        )
         if (response.data && Array.isArray(response.data.content)) {
-          setResults(response.data.content);
+          setResults(response.data.content)
         } else {
-          console.error('Dữ liệu sản phẩm không đúng định dạng:', response.data);
+          console.error('Dữ liệu sản phẩm không đúng định dạng:', response.data)
         }
       } catch (error) {
-        console.error('Có lỗi xảy ra khi fetch sản phẩm:', error);
+        console.error('Có lỗi xảy ra khi fetch sản phẩm:', error)
       }
-    };
-    fetchProducts();
-  }, []);
+    }
+    fetchProducts()
+  }, [])
 
   const handleDelete = async (productId) => {
-    const conFirmDelete = window.confirm('Bạn có muốn xóa không?');
+    const conFirmDelete = window.confirm('Bạn có muốn xóa không?')
     if (conFirmDelete) {
       try {
         const config = {
           headers: { Authorization: `Bearer ${jwt}` },
-        };
+        }
         await axios.delete(
           `${API_BASE_URL}/api/admin/products/${productId}/delete`,
           config
-        );
-        setResults(results.filter((product) => product.id !== productId));
+        )
+        setResults(results.filter((product) => product.id !== productId))
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('Error deleting product:', error)
       }
     }
-  };
+  }
 
   const handleEdit = (productId) => {
-    navigate(`/admin/products/edit/${productId}`);
-  };
+    navigate(`/admin/products/edit/${productId}`)
+  }
 
   const handleAddProduct = () => {
-    setShowForm(true);
-  };
+    setShowForm(true)
+  }
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setNewProduct((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleCategoryChange = (e) => {
-    const { value } = e.target;
+    const { value } = e.target
     setNewProduct((prev) => ({
       ...prev,
-      categoryIds: Array.from(e.target.selectedOptions, option => option.value),
-    }));
-  };
+      categoryIds: Array.from(
+        e.target.selectedOptions,
+        (option) => option.value
+      ),
+    }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!newProduct.productName || !newProduct.price || !newProduct.supplierId || newProduct.categoryIds.length === 0) {
-      console.error('Các trường bắt buộc chưa được điền đầy đủ!');
-      return;
+    e.preventDefault()
+    if (
+      !newProduct.productName ||
+      !newProduct.price ||
+      !newProduct.supplierId ||
+      newProduct.categoryIds.length === 0
+    ) {
+      console.error('Các trường bắt buộc chưa được điền đầy đủ!')
+      return
     }
-  
+
     const productData = {
       productName: newProduct.productName,
       createdAt: new Date().toISOString(),
@@ -146,25 +166,25 @@ const ProductsTable = () => {
       numRate: 0,
       quantity: 0,
       categoryIds: newProduct.categoryIds,
-    };
-  
+    }
+
     try {
-      const token = localStorage.getItem("jwt");
+      const token = localStorage.getItem('jwt')
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-      };
-  
+      }
+
       const response = await axios.post(
         `${API_BASE_URL}/api/admin/products/create`,
         productData,
         config
-      );
-  
-      setShowForm(false);
-      setResults((prev) => [...prev, response.data]);
+      )
+
+      setShowForm(false)
+      setResults((prev) => [...prev, response.data])
       setNewProduct({
         productName: '',
         productDescription: '',
@@ -173,16 +193,19 @@ const ProductsTable = () => {
         imageUrl: '',
         supplierId: '',
         categoryIds: [],
-      });
-      setImage(null);
+      })
+      setImage(null)
     } catch (error) {
-      console.error("Error adding product:", error.response ? error.response.data : error.message);
+      console.error(
+        'Error adding product:',
+        error.response ? error.response.data : error.message
+      )
     }
-  };  
+  }
 
   const handleCancel = () => {
-    setShowForm(false);
-  };
+    setShowForm(false)
+  }
 
   return (
     <div className="list-product">
@@ -327,7 +350,7 @@ const ProductsTable = () => {
         </form>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ProductsTable;
+export default ProductsTable
