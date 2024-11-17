@@ -59,7 +59,7 @@ const resources = {
   vi: {
     translation: {
       ifNoAcc: 'Nếu bạn không có tài khoản?',
-      quantity: 'Số lượng',
+      quantity: 'Số lượng tồn',
       ifHaveAcc: 'Nếu bạn có tài khoản?',
       login: 'Đăng nhập',
       register: 'Đăng ký',

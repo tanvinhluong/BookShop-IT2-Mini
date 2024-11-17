@@ -7,10 +7,11 @@ import {
   GET_ORDER_BY_ID_SUCCESS,
   GET_ORDER_HISTORY_FAILURE,
   GET_ORDER_HISTORY_REQUEST,
-  GET_ORDER_HISTORY_SUCCESS,
+  GET_ORDER_HISTORY_SUCCESS, SAVE_INFO_ADDRESS,
 } from './ActionType'
 
 const initialState = {
+  address: {},
   orders: [],
   order: null,
   error: null,
@@ -68,6 +69,11 @@ export const orderReducer = (state = initialState, action) => {
         error: action.payload,
         orders: [],
       }
+    case SAVE_INFO_ADDRESS:
+      return {
+        ...state,
+        address: action.payload,
+      };
     default:
       return state
   }

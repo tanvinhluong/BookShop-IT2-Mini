@@ -1,31 +1,103 @@
-import React, { useEffect } from 'react'
-import AddressCard from '../AddressCard/AddressCard'
+import React, {useEffect, useState} from 'react'
 import CartItem from '../Cart/CartItem'
-import { Button } from '@mui/material'
+import {Button, Input} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { getOrderById } from '../../../State/Order/Action'
 import { useLocation, useNavigate } from 'react-router-dom'
+import {ChevronDown, ChevronUp, Ticket} from "lucide-react";
+import {API_BASE_URL, API_TOKEN} from "../../../config/apiConfig";
+import axios from "axios";
+import {getCart} from "../../../State/Cart/Action";
 
 function OrderSummary() {
   const dispatch = useDispatch()
-  const location = useLocation()
-  const { order } = useSelector((store) => store)
-  const searchParams = new URLSearchParams(location.search)
-  const orderId = searchParams.get('order_id')
   const navigate = useNavigate()
-  const addresses = order?.order?.user?.address || []
-  const latestAddress = addresses[addresses.length - 1]
+
+  const cart = useSelector((state) => state.cart); // state.cart chứa danh sách sản phẩm
+  const jwt = localStorage.getItem('jwt');
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputCode, setInputCode] = useState('');
+  const [promotions, setPromotions] = useState([]);
+  const [selectedPromotion, setSelectedPromotion] = useState(null);
+  const [promoCode, setPromoCode] = useState('');
+  const [latestAddress, setLatestAddress] = useState(null);
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, [cart.removeCartItem, cart.updateCartItem]);
+
   const handlePayment = () => {
     navigate({ search: `step=4` })
   }
 
-  useEffect(() => {
-    dispatch(getOrderById(orderId))
-  }, [orderId])
+  const calculateDiscount = () => {
+    if (!selectedPromotion || !cart.cart?.totalPrice) return 0;
+    return Math.floor((cart.cart.totalPrice * selectedPromotion.percentage) / 100);
+  };
+
+
+  const calculateFinalTotal = () => {
+    const discount = calculateDiscount();
+    return cart.cart?.totalPrice ? cart.cart.totalPrice - discount : 0;
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const fetchData = async () => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${API_TOKEN}` },
+      };
+      const results = await axios.get(`${API_BASE_URL}/api/admin/promotion/`, config);
+      setPromotions(results.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleApplyPromotion = (promotion) => {
+    setSelectedPromotion(selectedPromotion?.id === promotion.id ? null : promotion);
+    setPromoCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
+    setInputCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
+  };
+
+  const handleApplyPromoCodeInput = () => {
+    const matchingPromotion = promotions.find(
+        promo => promo.promotionCode.toLowerCase() === inputCode.toLowerCase()
+    );
+    if (matchingPromotion) {
+      handleApplyPromotion(matchingPromotion);
+    }
+  };
 
   useEffect(() => {
-    console.log('Order object:', order)
-  }, [order])
+    fetchData();
+  }, []);
+
+  // Lấy địa chỉ mới nhất
+  useEffect(() => {
+    const fetchLatestAddress = async () => {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${jwt}` },
+        };
+        const response = await axios.get(`${API_BASE_URL}/api/address/get/latest`, config);
+        setLatestAddress(response.data);
+      } catch (error) {
+        console.error('Error fetching latest address:', error);
+      }
+    };
+
+    fetchLatestAddress();
+  }, [jwt]);
+
 
   return (
     <div className="space-y-5">
@@ -35,7 +107,7 @@ function OrderSummary() {
           <div key={latestAddress.id}>
             <p>Đường: {latestAddress.streetAddress}</p>
             <p>Thành phố: {latestAddress.city}</p>
-            <p>Tỉnh: {latestAddress.state}</p>
+            <p>Quốc gia: {latestAddress.state}</p>
             <p>Mã bưu điện: {latestAddress.zipCode}</p>
             <p>Số điện thoại: {latestAddress.mobile}</p>
           </div>
@@ -47,7 +119,7 @@ function OrderSummary() {
       <div className="lg:grid grid-cols-3  relative justify-between">
         <div className="lg:col-span-2">
           <div className="space-y-3">
-            {order.order?.orderItems.map((item) => (
+            {cart.cart?.cartItems.map((item) => (
               <>
                 <CartItem item={item} showButton={false} />
               </>
@@ -63,14 +135,14 @@ function OrderSummary() {
             <hr />
             <div className="space-y-3 font-semibold mb-10">
               <div className="flex justify-between pt-3 text-black">
-                <span>Price ({order.order?.totalItem} item)</span>
-                <span>{order?.order?.totalPrice} đ</span>
+                <span>Price ({cart.cart?.totalItem} item)</span>
+                <span>{cart?.cart?.totalPrice} đ</span>
               </div>
 
               <div className="flex justify-between pt-3 text-black">
                 <span>Discount</span>
                 <span className="text-green-600">
-                  -{order?.order?.discount} đ
+                  -{calculateDiscount()} đ
                 </span>
               </div>
 
@@ -82,10 +154,69 @@ function OrderSummary() {
               <div className="flex justify-between pt-3 text-black">
                 <span className="font-bold">Total Amount</span>
                 <span className="font-bold ">
-                  {order?.order?.totalDiscountedPrice}
+                  {calculateFinalTotal()}
                 </span>
               </div>
             </div>
+            <hr/>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 text-blue-600 font-medium mb-2"
+            >
+              <Ticket size={20}/>
+              <span>Sử dụng mã giảm giá</span>
+              {isOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+            </button>
+            {isOpen && (
+                <div className="border rounded-lg p-4 space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                        placeholder="Nhập mã giảm giá/Phiếu mua hàng"
+                        value={inputCode}
+                        onChange={(e) => setInputCode(e.target.value)}
+                        className="flex-1"
+                    />
+                    <Button
+                        variant="default"
+                        onClick={handleApplyPromoCodeInput}
+                    >
+                      Áp dụng
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    {promotions.map((promotion) => (
+                        <div
+                            key={promotion.id}
+                            className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <Ticket className="text-blue-600" size={24} />
+                            </div>
+                            <div>
+                              <div className="font-semibold flex items-center gap-2">
+                                Giảm {promotion.percentage}%
+                              </div>
+                              <div className="text-sm text-gray-600">{promotion.promotionName}</div>
+                              <div className="text-xs text-gray-500">
+                                HSD: {formatDate(promotion.startDate)} - {formatDate(promotion.endDate)}
+                              </div>
+                              <div className="text-xs text-gray-500">Mã: {promotion.promotionCode}</div>
+                            </div>
+                          </div>
+                          <Button
+                              variant={selectedPromotion?.id === promotion.id ? "secondary" : "default"}
+                              onClick={() => handleApplyPromotion(promotion)}
+                              className="flex-shrink-0"
+                          >
+                            {selectedPromotion?.id === promotion.id ? 'Bỏ chọn' : 'Áp dụng'}
+                          </Button>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+            )}
             {/* CUSTOM THÊM THANH THÊM BỚT SẢN PHẨM TRONG TRANG NÀY, REMOVE NỮA! */}
             <Button
               variant="contained"

@@ -30,9 +30,11 @@ public class AddressController {
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/get/latest/{userId}")
-    public ResponseEntity<Address> findLatestAddress(@PathVariable Integer userId) {
-        Address res = addressService.findLatestAddressByUserId(userId);
+    @GetMapping("/get/latest")
+    public ResponseEntity<Address> findLatestAddress(@RequestHeader("Authorization")
+                                                         String jwt) throws UserException {
+        User user = userService.findUserProfileByJwt(jwt);
+        Address res = addressService.findLatestAddressByUserId(user.getId());
         return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
     }
 

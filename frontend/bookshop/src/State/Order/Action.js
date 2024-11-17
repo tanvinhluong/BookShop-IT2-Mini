@@ -8,7 +8,7 @@ import {
   GET_ORDER_BY_ID_SUCCESS,
   GET_ORDER_HISTORY_FAILURE,
   GET_ORDER_HISTORY_REQUEST,
-  GET_ORDER_HISTORY_SUCCESS,
+  GET_ORDER_HISTORY_SUCCESS, SAVE_INFO_ADDRESS,
 } from './ActionType'
 
 export const createOrder = (reqData) => async (dispatch) => {
@@ -40,6 +40,13 @@ export const getOrderById = (orderId) => async (dispatch) => {
   }
 }
 
+
+export const saveAddress = (address) => {
+  return {
+    type: SAVE_INFO_ADDRESS,
+    payload: address,
+  };
+}
 export const getOrderHistory = (reqData) => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ORDER_HISTORY_REQUEST })
@@ -52,4 +59,7 @@ export const getOrderHistory = (reqData) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({ type: GET_ORDER_HISTORY_FAILURE, payload: error.message })
   }
+
+
+
 }
