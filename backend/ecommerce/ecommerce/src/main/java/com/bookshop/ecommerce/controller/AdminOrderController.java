@@ -60,4 +60,9 @@ public class AdminOrderController {
         return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderByIdHandler(@PathVariable Integer orderId, @RequestHeader("Authorization") String jwt) throws OrderException {
+        Order order = orderService.findOrderById(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
 }
