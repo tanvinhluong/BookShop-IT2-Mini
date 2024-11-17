@@ -6,7 +6,6 @@ import com.bookshop.ecommerce.repository.*;
 import com.bookshop.ecommerce.service.impl.ICartService;
 import com.bookshop.ecommerce.service.impl.IOrderService;
 import com.bookshop.ecommerce.user.domain.OrderStatus;
-import com.bookshop.ecommerce.user.domain.PaymentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.Optional;
 
 @Service
 public class OrderService implements IOrderService {
+    private final PromotionRepository promotionRepository;
     private OrderRepository orderRepository;
     private ICartService cartService;
     private AddressRepository addressRepository;
@@ -23,19 +23,20 @@ public class OrderService implements IOrderService {
     private OrderItemService orderItemService;
     private OrderItemRepository orderItemRepository;
 
-    public OrderService(OrderRepository orderRepository,ICartService cartService,
-                                      AddressRepository addressRepository,UserRepository userRepository,
-                                      OrderItemService orderItemService,OrderItemRepository orderItemRepository) {
+    public OrderService(OrderRepository orderRepository, ICartService cartService,
+                        AddressRepository addressRepository, UserRepository userRepository,
+                        OrderItemService orderItemService, OrderItemRepository orderItemRepository, PromotionRepository promotionRepository) {
         this.orderRepository=orderRepository;
         this.cartService=cartService;
         this.addressRepository=addressRepository;
         this.userRepository=userRepository;
         this.orderItemService=orderItemService;
         this.orderItemRepository=orderItemRepository;
+        this.promotionRepository = promotionRepository;
     }
 
     @Override
-    public Order createOrder(User user, Address shippAddress){
+    public Order createOrder(User user, Address shippAddress) {
 
         shippAddress.setUser(user);
         Address address= addressRepository.save(shippAddress);
@@ -49,7 +50,7 @@ public class OrderService implements IOrderService {
         createdOrder.setCreatedAt(new Date());
         createdOrder.setTotalItem((double) cart.getTotalItem());
         createdOrder.setTotalPrice(cart.getTotalPrice());
-//        createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountedPrice());
+//        createdOrder.setTotalDiscountedPrice(cart);
         createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
         createdOrder.setShippingAddressId(address.getId());
         createdOrder.setDeliveryDate(new Date());
@@ -79,6 +80,62 @@ public class OrderService implements IOrderService {
 
         return savedOrder;
 
+    }
+
+    @Override
+    public Order createOrderPhase2(User user, Integer cartId, Integer addressId, List<String> promotionCodes) {
+
+        Cart cart=cartService.findUserCart(user.getId());
+        Promotion promotion = promotionRepository.findByPromotionCode(String.valueOf(promotionCodes));
+        double totalDiscount =0;
+        if (promotion != null){
+                totalDiscount += calculateDiscount(cart.getTotalPrice(), promotion);
+        } else {
+            totalDiscount = 0;
+        }
+
+        Order createdOrder=new Order();
+        createdOrder.setUser(user);
+        createdOrder.setCreatedAt(new Date());
+        createdOrder.setTotalItem((double) cart.getTotalItem());
+        createdOrder.setTotalPrice(cart.getTotalPrice() - totalDiscount);
+        createdOrder.setTotalDiscountedPrice(totalDiscount);
+        createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
+        createdOrder.setShippingAddressId(addressId);
+        createdOrder.setDeliveryDate(new Date());
+        createdOrder.setPromotion(promotion);
+
+
+        Order savedOrder=orderRepository.save(createdOrder);
+
+        List<OrderItem> orderItems=new ArrayList<>();
+
+        for(CartItem item: cart.getCartItems()) {
+            OrderItem orderItem=new OrderItem();
+            orderItem.setOrder(savedOrder);
+            orderItem.setPrice(item.getPrice());
+            orderItem.setProductDetail(item.getProductDetail());
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setPrice(item.getPrice());
+            orderItem.setDiscountedPrice((int) totalDiscount);
+            OrderItem createdOrderItem = orderItemRepository.save(orderItem);
+
+            orderItems.add(createdOrderItem);
+        }
+
+
+        for(OrderItem item: orderItems) {
+            item.setOrder(savedOrder);
+            orderItemRepository.save(item);
+        }
+
+        savedOrder.setOrderItems(orderItems);
+        return savedOrder;
+
+    }
+
+    private double calculateDiscount(double totalPrice, Promotion promotion) {
+        return totalPrice * (promotion.getPercentage() / 100.0);
     }
 
     @Override

@@ -19,15 +19,38 @@ function OrderSummary() {
   const [inputCode, setInputCode] = useState('');
   const [promotions, setPromotions] = useState([]);
   const [selectedPromotion, setSelectedPromotion] = useState(null);
-  const [promoCode, setPromoCode] = useState('');
+  const [promoCode, setPromoCode] = useState([]);
   const [latestAddress, setLatestAddress] = useState(null);
 
   useEffect(() => {
     dispatch(getCart());
   }, [cart.removeCartItem, cart.updateCartItem]);
 
-  const handlePayment = () => {
-    navigate({ search: `step=4` })
+  const handlePayment = async () => {
+    try {
+      const config = {
+        headers: {Authorization: `Bearer ${jwt}`},
+      };
+      const formattedPromoCode = Array.isArray(promoCode) ? promoCode : [promoCode];
+      const cleanedPromoCode = formattedPromoCode.map(code => code.replace(/[\[\]']+/g, '').trim());
+      const orderPayload = {
+        cartId: cart.cart?.id,
+        addressId: latestAddress?.id,
+        promotionCode: cleanedPromoCode,
+      };
+
+      const response = await axios.post(`${API_BASE_URL}/api/orders/create`, orderPayload, config);
+      console.log('Order api:' ,orderPayload)
+      console.log('Order created:', response.data);
+      if (response.data?.orderId) {
+        navigate({search: `step=4&orderId=${response.data.orderId}`});
+      } else {
+        console.error('Order creation failed:', response.data);
+      }
+    } catch (error) {
+      console.error('Error during order creation:', error);
+      alert('Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại!');
+    }
   }
 
   const calculateDiscount = () => {

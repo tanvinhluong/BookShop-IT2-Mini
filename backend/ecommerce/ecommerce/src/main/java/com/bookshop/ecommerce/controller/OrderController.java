@@ -5,6 +5,7 @@ import com.bookshop.ecommerce.exception.UserException;
 import com.bookshop.ecommerce.model.Address;
 import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.model.User;
+import com.bookshop.ecommerce.request.CreateOrderRequest;
 import com.bookshop.ecommerce.service.impl.IOrderService;
 import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,17 @@ public class OrderController {
 
         User user=userService.findUserProfileByJwt(jwt);
         Order order =orderService.createOrder(user, shippingAddress);
+        System.out.println("order:"+order);
+        return new ResponseEntity<Order>(order,HttpStatus.OK);
+
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Order> createOrderReqHandler(@RequestBody CreateOrderRequest req,
+                                                    @RequestHeader("Authorization")String jwt) throws UserException, OrderException {
+
+        User user=userService.findUserProfileByJwt(jwt);
+        Order order =orderService.createOrderPhase2(user,req.getCartId(), req.getAddressId(), req.getPromotionCode());
         System.out.println("order:"+order);
         return new ResponseEntity<Order>(order,HttpStatus.OK);
 

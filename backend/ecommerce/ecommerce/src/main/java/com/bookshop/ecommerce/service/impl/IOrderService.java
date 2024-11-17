@@ -3,6 +3,7 @@ package com.bookshop.ecommerce.service.impl;
 
 import com.bookshop.ecommerce.exception.OrderException;
 import com.bookshop.ecommerce.model.Address;
+import com.bookshop.ecommerce.model.Cart;
 import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.model.User;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 public interface IOrderService {
     public Order createOrder(User user, Address shippingAddress);
+    public Order createOrderPhase2(User user, Integer cartId, Integer addressId, List<String> promotionCode) throws OrderException;
     public Order findOrderById(Integer orderId) throws OrderException;
     public List<Order> usersOrderHistory(Integer userId);
     public Order placedOrder(Integer orderId) throws OrderException;
