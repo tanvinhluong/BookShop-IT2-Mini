@@ -9,8 +9,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import DeliveryAddressForm from "./DeliveryAddressForm";
 import OrderSummary from "./OrderSummary";
 import OrderPaymentConfirm from "./OrderPaymentConfirm";
+import PaymentInfo from "./PaymentInfo";
 
-const steps = ["Login", "Delivery Address", "Order Summary", "Payment"];
+const steps = ["Login", "Delivery Address", "Order Summary", "Payment Info", "Order Status"];
 
 function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -67,8 +68,10 @@ function Checkout() {
             <div className="my-10">
               {step == 2 ? (
                 <DeliveryAddressForm />
-              ) : step == 4 ? (
+              ) : step == 5 ? (
                 <OrderPaymentConfirm />
+              ) : step == 4 ? (
+                <PaymentInfo />
               ) : (
                 <OrderSummary />
               )}
