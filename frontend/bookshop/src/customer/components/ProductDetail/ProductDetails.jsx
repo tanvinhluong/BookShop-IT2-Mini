@@ -56,6 +56,9 @@ function ProductDetails() {
   const [rotationAngle, setRotationAngle] = useState(0)
   const { products } = useSelector((store) => store)
 
+  // notìy when add Product
+  const [notification, setNotification] = useState('');
+
   const rotateImage = () => {
     // Rotate by 45 degrees each time
     setRotationAngle((prevAngle) => prevAngle + 45)
@@ -64,6 +67,12 @@ function ProductDetails() {
     const data = { productId: params.productId }
     console.log('Selected data :', data)
     dispatch(addItemToCart(data))
+
+    setNotification('Product added to cart!');
+
+    setTimeout(() => {
+      setNotification('');
+    }, 3000);
     // navigate('/cart')
   }
 
@@ -201,6 +210,7 @@ function ProductDetails() {
                     </a> */}
                   </div>
                 </div>
+                {notification && <div className="notification">{notification}</div>}
                 <Button
                   sx={{ px: '1.5rem', py: '1rem', bgcolor: '#9155fd' }}
                   variant="contained"
