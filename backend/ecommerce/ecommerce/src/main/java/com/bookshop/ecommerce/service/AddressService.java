@@ -28,17 +28,14 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public Address createAddress(CreateAddressRequest req) {
+    public Address createAddress(CreateAddressRequest req, User user) {
         Address address = new Address();
         address.setCity(req.getCity());
         address.setState(req.getState());
         address.setStreetAddress(req.getStreetAddress());
         address.setZipCode(req.getZipCode());
         address.setMobile(req.getMobile());
-        if (req.getUserId() != null) {
-            User user = userRepository.findById(req.getUserId()).orElse(null);
-            address.setUser(user);
-        }
+        address.setUser(user);
 
         return addressRepository.save(address);
     }

@@ -13,5 +13,4 @@ public class CreateAddressRequest {
         private String streetAddress;
         private String zipCode;
         private String mobile;
-        private Integer userId;
 }

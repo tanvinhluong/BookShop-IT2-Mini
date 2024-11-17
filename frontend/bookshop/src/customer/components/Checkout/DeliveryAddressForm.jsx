@@ -1,15 +1,17 @@
 import React from "react";
 import { Box, Button, Grid, TextField } from "@mui/material";
-import AddressCard from "../AddressCard/AddressCard";
 import { useDispatch } from "react-redux";
-import { createOrder } from "../../../State/Order/Action";
-import { useNavigate } from "react-router-dom";
+import {saveAddress} from "../../../State/Order/Action";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import {API_BASE_URL, API_TOKEN} from "../../../config/apiConfig";
 
 const DeliveryAddressForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const jwt = localStorage.getItem('jwt')
   console.log();
-  const handleSummit = (e) => {
+  const handleSummit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const address = {
@@ -21,27 +23,33 @@ const DeliveryAddressForm = () => {
       zipCode: data.get("zipcode"),
       mobile: data.get("phoneNumber"),
     };
-    const orderData = { address, navigate };
-    dispatch(createOrder(orderData));
-    console.log("address", address);
+    const orderData = {address, navigate};
+    try {
+      // Gửi dữ liệu tới
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.post(`${API_BASE_URL}/api/address/create`, address, config);
+
+      if (response.status === 202) {
+        console.log("Address created:", response.data);
+
+        dispatch(saveAddress(response.data));
+
+        navigate("/checkout?step=3");
+      } else {
+        console.error("Failed to create address:", response);
+        alert("Có lỗi xảy ra. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error creating address:", error);
+      alert("Không thể kết nối tới máy chủ. Vui lòng thử lại sau.");
+    }
   };
+
   return (
     <div>
       <Grid container spacing={4}>
-        {/* <Grid xs={12} lg={5}>
-          <Box className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll">
-            <div className="p-5 py-7 border-b cursor-pointer">
-              <AddressCard />
-              <Button
-                sx={{ mt: 2, bgcolor: "RGB(145 85 253)" }}
-                size="large"
-                variant="contained"
-              >
-                Deliver Here
-              </Button>
-            </div>
-          </Box>
-        </Grid> */}
         <Grid item xs={12} lg={10}>
           <Box className="border rounded-md shadow-md p-5">
             <form onSubmit={handleSummit}>
