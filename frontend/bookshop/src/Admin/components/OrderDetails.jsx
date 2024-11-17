@@ -16,7 +16,7 @@ const OrderDetails = () => {
         headers: { Authorization: `Bearer ${jwt}` },
       }
       const response = await axios.get(
-        `${API_BASE_URL}/api/orders/${orderId}`,
+        `${API_BASE_URL}/api/admin/orders/${orderId}`,
         config
       )
       setOrder(response.data)
@@ -34,20 +34,23 @@ const OrderDetails = () => {
     return <div>Loading...</div>
   }
 
+  const shippingAddress = order.user.address.find(
+    (addr) => addr.id === order.shippingAddressId
+  )
+
   return (
     <div className="order-details">
       <h1>Order Details</h1>
       <div className="order-details-info">
-        <AddressCard address={order.shippingAddress} />
+      <AddressCard address={{ ...shippingAddress, firstName: order.user.firstName, lastName: order.user.lastName }} />
         <p>
-          <strong>Customer Name:</strong> {order.user.firstName}{' '}
-          {order.user.lastName}
+          <strong>Customer Name:</strong> {order.user.firstName} {order.user.lastName}
         </p>
         <p>
-          <strong>Mobile:</strong> {order.shippingAddress.mobile}
+          <strong>Mobile:</strong> {shippingAddress?.mobile || 'N/A'}
         </p>
         <p>
-          <strong>Total Price:</strong> ${order.totalDiscountedPrice}
+          <strong>Total Price:</strong> ${order.totalPrice}
         </p>
       </div>
       <h2>Order Items</h2>
@@ -55,29 +58,27 @@ const OrderDetails = () => {
         {order.orderItems.map((item, index) => (
           <div key={index} className="order-item">
             <img
-              src={item.product.imageUrl || 'default-product-image.jpg'}
-              alt={item.product.title}
+              src={item.productDetail.imageUrl || 'default-product-image.jpg'}
+              alt={item.productDetail.name}
               className="product-image"
             />
             <div className="product-details">
               <p>
-                <strong>Product Name:</strong> {item.product.title}
+                <strong>Product Name:</strong> {item.productDetail.name}
               </p>
               <p>
-                <strong>Original Price:</strong> $
-                {item.product.price.toFixed(2)}
+                <strong>Original Price:</strong> ${item.productDetail.price.toFixed(2)}
               </p>
               <p>
-                <strong>Discount Price:</strong> $
-                {item.product.discountPrice.toFixed(2)}
+                <strong>Discount Price:</strong> ${item.discountedPrice.toFixed(2)}
               </p>
               <p>
                 <strong>Quantity:</strong> {item.quantity}
               </p>
-              <p>
+              {/* <p>
                 <strong>Total:</strong> $
-                {(item.product.discountPrice * item.quantity).toFixed(2)}
-              </p>
+                {(item.discountedPrice * item.quantity).toFixed(2)}
+              </p> */}
             </div>
           </div>
         ))}

@@ -1,11 +1,12 @@
 .list-order {
   font-family: Arial, sans-serif;
-  max-width: 900px;
+  max-width: 100%;
   margin: 20px auto;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Cho phép cuộn ngang nếu cần */
 }
 
 h1 {
@@ -16,12 +17,13 @@ h1 {
 
 .listorder-format-main {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 15px;
+  grid-template-columns: repeat(6, 1fr) 2fr; /* Cột cuối dành riêng cho nút */
+  gap: 10px;
   font-weight: bold;
   background-color: #e9ecef;
   padding: 10px;
   border-radius: 8px;
+  text-align: center;
 }
 
 .listorder-format-main p {
@@ -36,64 +38,73 @@ h1 {
 
 .listorder-format {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 15px;
+  grid-template-columns: repeat(6, 1fr) 2fr; /* Cột cuối dành riêng cho nút */
+  gap: 10px;
   padding: 15px 0;
   border-top: 1px solid #ddd;
+  align-items: center; /* Căn giữa nội dung theo chiều dọc */
 }
 
 .listorder-format p {
   text-align: center;
   padding: 5px 0;
+  word-wrap: break-word; /* Chia từ nếu nội dung quá dài */
+  overflow: hidden; /* Ẩn nội dung tràn */
+  text-overflow: ellipsis; /* Thêm dấu "..." nếu nội dung tràn */
+  white-space: nowrap; /* Không xuống dòng */
 }
 
-.listorder-format button {
+.actions-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa các nút */
+  flex-wrap: wrap; /* Cho phép nút xuống dòng nếu không đủ không gian */
+}
+
+.actions-row button {
   background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.listorder-format button:hover {
-  background-color: #0056b3;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #ddd;
-  margin: 20px 0;
-}
-
-.confirm-button {
-  background-color: #28a745;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 5px;
   transition: background-color 0.3s;
+  font-size: 14px;
+}
+
+.actions-row button:hover {
+  background-color: #0056b3;
+}
+
+.confirm-button {
+  background-color: #28a745;
 }
 
 .confirm-button:hover {
   background-color: #218838;
 }
 
+.cancel-button {
+  background-color: #dc3545;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
 .details-button {
   background-color: #17a2b8;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .details-button:hover {
   background-color: #117a8b;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
 }
 
 select {
@@ -124,43 +135,4 @@ label {
   margin-bottom: 8px;
   text-align: center;
   color: #495057;
-}
-
-.listorder-format-main p,
-.listorder-format p {
-  font-size: 14px;
-  color: #495057;
-}
-
-.listorder-allorders hr {
-  margin-top: 15px;
-}
-
-.confirm-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 5px;
-  transition: background-color 0.3s;
-}
-
-.confirm-button:hover {
-  background-color: #218838;
-}
-
-.cancel-button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.cancel-button:hover {
-  background-color: #c82333;
 }
