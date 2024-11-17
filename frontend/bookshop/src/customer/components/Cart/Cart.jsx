@@ -14,64 +14,6 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector((store) => store);
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [inputCode, setInputCode] = useState('');
-  const [promotions, setPromotions] = useState([]);
-  const [selectedPromotion, setSelectedPromotion] = useState(null);
-  const [promoCode, setPromoCode] = useState('');
-
-  // Calculate discount amount based on selected promotion
-  const calculateDiscount = () => {
-    if (!selectedPromotion || !cart.cart?.totalPrice) return 0;
-    return Math.floor((cart.cart.totalPrice * selectedPromotion.percentage) / 100);
-  };
-
-  // Calculate final total after discount
-  const calculateFinalTotal = () => {
-    const discount = calculateDiscount();
-    return cart.cart?.totalPrice ? cart.cart.totalPrice - discount : 0;
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
-
-  const fetchData = async () => {
-    try {
-      const config = {
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
-      };
-      const results = await axios.get(`${API_BASE_URL}/api/admin/promotion/`, config);
-      setPromotions(results.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const handleApplyPromotion = (promotion) => {
-    setSelectedPromotion(selectedPromotion?.id === promotion.id ? null : promotion);
-    setPromoCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
-    setInputCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
-  };
-
-  // Handle manual promo code input
-  const handleApplyPromoCodeInput = () => {
-    const matchingPromotion = promotions.find(
-        promo => promo.promotionCode.toLowerCase() === inputCode.toLowerCase()
-    );
-    if (matchingPromotion) {
-      handleApplyPromotion(matchingPromotion);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   useEffect(() => {
     dispatch(getCart());
@@ -123,10 +65,6 @@ const Cart = () => {
                       <span>{cart.cart?.totalPrice} VND</span>
                     </div>
 
-                    <div className="flex justify-between pt-3 text-black">
-                      <span>{t('discount')}</span>
-                      <span className="text-green-600">- {calculateDiscount()} VND</span>
-                    </div>
 
                     <div className="flex justify-between pt-3 text-black">
                       <span>{t('deliveryCharges')}</span>
@@ -136,69 +74,10 @@ const Cart = () => {
                     <div className="flex justify-between pt-3 text-black">
                       <span className="font-bold">{t('totalAmount')}</span>
                       <span className="font-bold">
-                    {calculateFinalTotal()} VND
+                    {cart.cart?.totalPrice} VND
                   </span>
                     </div>
                   </div>
-                  <hr/>
-                  <button
-                      onClick={() => setIsOpen(!isOpen)}
-                      className="flex items-center gap-2 text-blue-600 font-medium mb-2"
-                  >
-                    <Ticket size={20}/>
-                    <span>Sử dụng mã giảm giá</span>
-                    {isOpen ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
-                  </button>
-                  {isOpen && (
-                      <div className="border rounded-lg p-4 space-y-4">
-                        <div className="flex gap-2">
-                          <Input
-                              placeholder="Nhập mã giảm giá/Phiếu mua hàng"
-                              value={inputCode}
-                              onChange={(e) => setInputCode(e.target.value)}
-                              className="flex-1"
-                          />
-                          <Button
-                              variant="default"
-                              onClick={handleApplyPromoCodeInput}
-                          >
-                            Áp dụng
-                          </Button>
-                        </div>
-
-                        <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                          {promotions.map((promotion) => (
-                              <div
-                                  key={promotion.id}
-                                  className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50 transition-colors"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <Ticket className="text-blue-600" size={24} />
-                                  </div>
-                                  <div>
-                                    <div className="font-semibold flex items-center gap-2">
-                                      Giảm {promotion.percentage}%
-                                    </div>
-                                    <div className="text-sm text-gray-600">{promotion.promotionName}</div>
-                                    <div className="text-xs text-gray-500">
-                                      HSD: {formatDate(promotion.startDate)} - {formatDate(promotion.endDate)}
-                                    </div>
-                                    <div className="text-xs text-gray-500">Mã: {promotion.promotionCode}</div>
-                                  </div>
-                                </div>
-                                <Button
-                                    variant={selectedPromotion?.id === promotion.id ? "secondary" : "default"}
-                                    onClick={() => handleApplyPromotion(promotion)}
-                                    className="flex-shrink-0"
-                                >
-                                  {selectedPromotion?.id === promotion.id ? 'Bỏ chọn' : 'Áp dụng'}
-                                </Button>
-                              </div>
-                          ))}
-                        </div>
-                      </div>
-                  )}
                   <hr/>
                   <Button
                       onClick={() => navigate('/checkout?step=2')}
