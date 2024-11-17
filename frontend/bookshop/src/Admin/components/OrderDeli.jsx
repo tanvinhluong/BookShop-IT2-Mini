@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./CSS/ListOrder.css";
+import "./CSS/ListOrderDeli.css";
 import { API_BASE_URL } from "../../config/apiConfig";
 
-const OrdersTable = () => {
+const OrderDeli = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -21,10 +21,9 @@ const OrdersTable = () => {
         config
       );
 
-      // Lọc chỉ lấy các đơn hàng có orderStatus là 1, 2, 3, 4, hoặc 5
+      // Lọc chỉ trạng thái 2, 3, 4, 5
       const filtered = response.data.filter(
         (order) =>
-          order.orderStatus === 1 ||
           order.orderStatus === 2 ||
           order.orderStatus === 3 ||
           order.orderStatus === 4 ||
@@ -38,21 +37,57 @@ const OrdersTable = () => {
     }
   };
 
-  const handleShipOrder = async (orderId) => {
+  const handleDeliverOrder = async (orderId) => {
     try {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
       await axios.put(
-        `${API_BASE_URL}/api/admin/orders/${orderId}/ship`,
+        `${API_BASE_URL}/api/admin/orders/${orderId}/deliver`,
         null,
         config
       );
-      alert("Đơn hàng đã chuyển sang trạng thái Đang giao!");
+      alert("Đơn hàng đã chuyển sang trạng thái đang giao!");
       fetchOrders();
     } catch (error) {
-      console.error("Error updating order status:", error);
-      alert("Có lỗi xảy ra khi cập nhật trạng thái đơn hàng.");
+      console.error("Error delivering order:", error);
+      alert("Có lỗi xảy ra khi nhận đơn hàng.");
+    }
+  };
+
+  const handleCompleteOrder = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      await axios.put(
+        `${API_BASE_URL}/api/admin/orders/${orderId}/confirmed`,
+        null,
+        config
+      );
+      alert("Đơn hàng đã hoàn tất!");
+      fetchOrders();
+    } catch (error) {
+      console.error("Error confirming order:", error);
+      alert("Có lỗi xảy ra khi xác nhận đơn hàng.");
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      await axios.put(
+        `${API_BASE_URL}/api/admin/orders/${orderId}/cancel`,
+        null,
+        config
+      );
+      alert("Đơn hàng đã bị hủy!");
+      fetchOrders();
+    } catch (error) {
+      console.error("Error canceling order:", error);
+      alert("Có lỗi xảy ra khi hủy đơn hàng.");
     }
   };
 
@@ -80,7 +115,7 @@ const OrdersTable = () => {
 
   return (
     <div className="list-order">
-      <h1>All Orders List</h1>
+      <h1>Orders List</h1>
       <div>
         <label htmlFor="status-filter">Filter by Order Status:</label>
         <select
@@ -89,9 +124,8 @@ const OrdersTable = () => {
           onChange={handleStatusChange}
         >
           <option value="">All</option>
-          <option value="1">Đang chờ duyệt</option>
           <option value="2">Đã giao hoàn tất</option>
-          <option value="3">Đã duyệt</option>
+          <option value="3">Đang chờ nhận đơn</option>
           <option value="4">Đang giao</option>
           <option value="5">Hủy bỏ</option>
         </select>
@@ -102,7 +136,6 @@ const OrdersTable = () => {
         <p>Total Price</p>
         <p>Order Date</p>
         <p>Order Status</p>
-        <p>Approve</p>
         <p>Actions</p>
       </div>
       <div className="listorder-allorders">
@@ -116,29 +149,41 @@ const OrdersTable = () => {
                 <p>{order.totalPrice}</p>
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
                 <p>
-                  {order.orderStatus === 1
-                    ? "Đang chờ duyệt"
-                    : order.orderStatus === 2
+                  {order.orderStatus === 2
                     ? "Đã giao hoàn tất"
                     : order.orderStatus === 3
-                    ? "Đã duyệt"
+                    ? "Đang chờ nhận đơn"
                     : order.orderStatus === 4
                     ? "Đang giao"
                     : order.orderStatus === 5
                     ? "Hủy bỏ"
                     : "Không xác định"}
                 </p>
-                <div>
-                  {order.orderStatus === 1 && (
+                <div className="actions-row">
+                  {order.orderStatus === 3 && (
                     <button
-                      onClick={() => handleShipOrder(order.id)}
-                      className="confirm-button"
+                      onClick={() => handleDeliverOrder(order.id)}
+                      className="deliver-button"
                     >
-                      Duyệt
+                      Nhận đơn
                     </button>
                   )}
-                </div>
-                <div>
+                  {order.orderStatus === 4 && (
+                    <>
+                      <button
+                        onClick={() => handleCompleteOrder(order.id)}
+                        className="confirm-button"
+                      >
+                        Đã giao hoàn tất
+                      </button>
+                      <button
+                        onClick={() => handleCancelOrder(order.id)}
+                        className="cancel-button"
+                      >
+                        Hủy bỏ
+                      </button>
+                    </>
+                  )}
                   <button
                     onClick={() => handleDetailsClick(order.id)}
                     className="details-button"
@@ -155,4 +200,4 @@ const OrdersTable = () => {
   );
 };
 
-export default OrdersTable;
+export default OrderDeli;
