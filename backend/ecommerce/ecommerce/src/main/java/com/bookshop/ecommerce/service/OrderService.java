@@ -43,11 +43,24 @@ public class OrderService implements IOrderService {
         userRepository.save(user);
 
         Cart cart=cartService.findUserCart(user.getId());
+
+        Order createdOrder=new Order();
+        createdOrder.setUser(user);
+        createdOrder.setCreatedAt(new Date());
+        createdOrder.setTotalItem((double) cart.getTotalItem());
+        createdOrder.setTotalPrice(cart.getTotalPrice());
+//        createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountedPrice());
+        createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
+        createdOrder.setShippingAddressId(address.getId());
+        createdOrder.setDeliveryDate(new Date());
+
+        Order savedOrder=orderRepository.save(createdOrder);
+
         List<OrderItem> orderItems=new ArrayList<>();
 
         for(CartItem item: cart.getCartItems()) {
             OrderItem orderItem=new OrderItem();
-
+            orderItem.setOrder(savedOrder);
             orderItem.setPrice(item.getPrice());
             orderItem.setProductDetail(item.getProductDetail());
             orderItem.setQuantity(item.getQuantity());
@@ -58,19 +71,6 @@ public class OrderService implements IOrderService {
             orderItems.add(createdOrderItem);
         }
 
-
-        Order createdOrder=new Order();
-        createdOrder.setUser(user);
-        createdOrder.setCreatedAt(new Date());
-        createdOrder.setOrderItems(orderItems);
-        createdOrder.setTotalItem((double) cart.getTotalItem());
-        createdOrder.setTotalPrice(cart.getTotalPrice());
-//        createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountedPrice());
-        createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
-        createdOrder.setShippingAddressId(address.getId());
-        createdOrder.setDeliveryDate(new Date());
-
-        Order savedOrder=orderRepository.save(createdOrder);
 
         for(OrderItem item: orderItems) {
             item.setOrder(savedOrder);
