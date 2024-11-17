@@ -42,10 +42,13 @@ function OrderSummary() {
       const response = await axios.post(`${API_BASE_URL}/api/orders/create`, orderPayload, config);
       console.log('Order api:' ,orderPayload)
       console.log('Order created:', response.data);
-      if (response.data?.orderId) {
-        navigate({search: `step=4&orderId=${response.data.orderId}`});
+      if (response?.data?.id) {
+        console.log('Order created successfully:', response.data);
+        // Chuyển sang bước tiếp theo với orderId
+        navigate({ search: `step=4&orderId=${response.data.id}` });
       } else {
-        console.error('Order creation failed:', response.data);
+        console.error('API did not return orderId:', response.data);
+        alert('Đơn hàng không được tạo thành công. Vui lòng thử lại!');
       }
     } catch (error) {
       console.error('Error during order creation:', error);
