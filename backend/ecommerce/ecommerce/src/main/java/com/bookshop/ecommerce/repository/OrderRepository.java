@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 //
@@ -15,4 +16,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 //    new version
     @Query("SELECT o FROM Order o WHERE o.user.id = :userId")
     public List<Order> getUsersOrders(@Param("userId") Integer userId);
+
+    @Query("SELECT o FROM Order o ORDER BY o.id DESC LIMIT 1")
+    Optional<Order> findLatestOrder();
+
 }

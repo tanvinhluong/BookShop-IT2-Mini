@@ -188,6 +188,17 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public Order findLatestOrder() throws OrderException {
+        Optional<Order> opt = orderRepository.findLatestOrder();
+
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+        throw new OrderException("Không tồn tại đơn hàng nào.");
+    }
+
+
+    @Override
     public List<Order> usersOrderHistory(Integer userId) {
         List<Order> orders=orderRepository.getUsersOrders(userId);
         return orders;

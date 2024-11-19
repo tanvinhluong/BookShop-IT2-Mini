@@ -68,4 +68,15 @@ public class OrderController {
         return new ResponseEntity<>(orders,HttpStatus.OK);
     }
 
+    @GetMapping("/latest")
+    public ResponseEntity<Order> getLatestOrder() {
+        try {
+            Order latestOrder = orderService.findLatestOrder();
+            return ResponseEntity.ok(latestOrder);
+        } catch (OrderException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
 }
