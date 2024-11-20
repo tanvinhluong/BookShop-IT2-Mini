@@ -28,6 +28,7 @@ public class AppConfig {
                                 .requestMatchers("api/cart/**").permitAll()
                                 .requestMatchers("api/cart/").permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/payments/momo/callback").permitAll()
                                 .requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 
                         .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)

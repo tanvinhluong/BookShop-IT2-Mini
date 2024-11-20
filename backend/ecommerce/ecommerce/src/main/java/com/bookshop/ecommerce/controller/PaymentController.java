@@ -5,10 +5,12 @@ import com.bookshop.ecommerce.request.MomoPaymentRequest;
 import com.bookshop.ecommerce.request.VNPayRequest;
 import com.bookshop.ecommerce.response.PaymentMomoResponse;
 import com.bookshop.ecommerce.response.PaymentVNPayResponse;
+import com.bookshop.ecommerce.service.MomoPaymentService;
 import com.bookshop.ecommerce.service.impl.IPaymentService;
 import com.bookshop.ecommerce.service.impl.IUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,9 @@ import java.util.Map;
 public class PaymentController {
     @Autowired
     private IPaymentService paymentService;
+
+    @Autowired
+    private MomoPaymentService momoPaymentService;
 
     @Autowired
     private IUserService userService;
@@ -107,4 +112,31 @@ public class PaymentController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/momo/callback")
+    public ResponseEntity<String> momoCallback(
+            @RequestParam String orderId,
+            @RequestParam String resultCode,
+            @RequestParam String signature
+    ) {
+        // Validate signature
+//        if (!momoPaymentService.validateSignature(orderId, resultCode, signature)) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
+//        }
+
+        // Check result code
+        if ("0".equals(resultCode)) {  // Successful payment
+            paymentService.updatePaymentStatus(orderId, "SUCCESS");
+            String redirectHtml = "<html><head><script>" +
+                    "setTimeout(function() { " +
+                    "window.location.href = 'http://localhost:3000/checkout?step=5'; " +
+                    "}, 5000);" +
+                    "</script><body><h1>Bạn đã thanh toán thành công, vui lòng chờ chuyển trang...</h1></body></html>";
+            return ResponseEntity.ok(redirectHtml);
+        } else {
+            paymentService.updatePaymentStatus(orderId, "FAILED");
+            return ResponseEntity.ok("Payment failed");
+        }
+    }
+
 }

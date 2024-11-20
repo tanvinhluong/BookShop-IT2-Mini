@@ -81,4 +81,27 @@ public class MomoPaymentService {
             throw new RuntimeException("Error creating MOMO payment: " + e.getMessage());
         }
     }
+
+    public boolean validateSignature(String orderId, String resultCode, String receivedSignature) {
+        try {
+            String rawSignature = "accessKey=" + momoConfig.getAccessKey() +
+                    "&amount=" +
+                    "&extraData=" +
+                    "&message=" +
+                    "&orderId=" + orderId +
+                    "&orderInfo=" +
+                    "&partnerCode=" + momoConfig.getPartnerCode() +
+                    "&resultCode=" + resultCode +
+                    "&requestId=" +
+                    "&transId=";
+
+            String computedSignature = new HmacUtils("HmacSHA256", momoConfig.getSecretKey())
+                    .hmacHex(rawSignature);
+
+            return computedSignature.equals(receivedSignature);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

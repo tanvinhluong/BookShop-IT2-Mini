@@ -64,7 +64,7 @@ const PaymentInfo = ({orderId}) => {
     if (!orderData) return;
 
     const userId = orderData.user.id;
-    const amount = orderData.totalPrice.toString();
+    const amount = (orderData.totalPrice -orderData.totalDiscountedPrice).toString();
     const config = {
       headers: { Authorization: `Bearer ${jwt}` },
     }
