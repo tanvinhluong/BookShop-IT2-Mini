@@ -85,8 +85,7 @@ const PaymentInfo = ({orderId}) => {
 
         window.location.href = response.data.paymentUrl;
       } else { // Thanh toán khi nhận hàng
-        await axios.post('/api/orders/cod');
-        window.location.href = '/payment-success';
+        window.location.href = '/checkout?step=5';
       }
     } catch (error) {
       console.error('Thanh toán thất bại', error);

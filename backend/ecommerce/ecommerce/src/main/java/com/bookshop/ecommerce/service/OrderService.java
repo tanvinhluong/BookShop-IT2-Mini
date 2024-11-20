@@ -98,7 +98,7 @@ public class OrderService implements IOrderService {
         createdOrder.setUser(user);
         createdOrder.setCreatedAt(new Date());
         createdOrder.setTotalItem((double) cart.getTotalItem());
-        createdOrder.setTotalPrice(cart.getTotalPrice() - totalDiscount);
+        createdOrder.setTotalPrice(cart.getTotalPrice());
         createdOrder.setTotalDiscountedPrice(totalDiscount);
         createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
         createdOrder.setShippingAddressId(addressId);
