@@ -8,6 +8,8 @@ const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [editingOrderId, setEditingOrderId] = useState(null);
+  const [newDeliveryDate, setNewDeliveryDate] = useState("");
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
@@ -21,10 +23,9 @@ const OrdersTable = () => {
         config
       );
 
-      // Lọc chỉ lấy các đơn hàng có orderStatus là 1, 2, 3, 4, hoặc 5
       const filtered = response.data.filter(
         (order) =>
-          order.orderStatus === 1 ||
+          order.orderStatus === 0 ||
           order.orderStatus === 2 ||
           order.orderStatus === 3 ||
           order.orderStatus === 4 ||
@@ -56,6 +57,28 @@ const OrdersTable = () => {
     }
   };
 
+  const handleDeliveryDateUpdate = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.put(
+        `${API_BASE_URL}/api/admin/orders/${orderId}/update-delivery-date`,
+        null,
+        {
+          params: { deliveryDate: newDeliveryDate },
+          ...config,
+        }
+      );
+      alert("Ngày giao hàng đã được cập nhật!");
+      fetchOrders();
+      setEditingOrderId(null);
+    } catch (error) {
+      console.error("Error updating delivery date:", error);
+      alert("Có lỗi xảy ra khi cập nhật ngày giao hàng.");
+    }
+  };
+
   const handleDetailsClick = (orderId) => {
     navigate(`/admin/orders/${orderId}`);
   };
@@ -74,6 +97,16 @@ const OrdersTable = () => {
     }
   };
 
+  const handleEditClick = (orderId, currentDeliveryDate, orderStatus) => {
+    if (orderStatus === 0) {
+      setEditingOrderId(orderId);
+      setNewDeliveryDate(currentDeliveryDate);
+    } else {
+      alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt.");
+    }
+  };
+  
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -89,7 +122,7 @@ const OrdersTable = () => {
           onChange={handleStatusChange}
         >
           <option value="">All</option>
-          <option value="1">Đang chờ duyệt</option>
+          <option value="0">Đang chờ duyệt</option>
           <option value="2">Đã giao hoàn tất</option>
           <option value="3">Đã duyệt</option>
           <option value="4">Đang giao</option>
@@ -98,9 +131,9 @@ const OrdersTable = () => {
       </div>
       <div className="listorder-format-main">
         <p>Order ID</p>
-        <p>Total Items</p>
         <p>Total Price</p>
         <p>Order Date</p>
+        <p>Delivery Date</p>
         <p>Order Status</p>
         <p>Approve</p>
         <p>Actions</p>
@@ -112,11 +145,11 @@ const OrdersTable = () => {
             <React.Fragment key={index}>
               <div className="listorder-format-main listorder-format">
                 <p>{order.id}</p>
-                <p>{order.totalItem}</p>
                 <p>{order.totalPrice}</p>
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+                <p>{new Date(order.deliveryDate).toLocaleDateString()}</p>
                 <p>
-                  {order.orderStatus === 1
+                  {order.orderStatus === 0
                     ? "Đang chờ duyệt"
                     : order.orderStatus === 2
                     ? "Đã giao hoàn tất"
@@ -128,26 +161,54 @@ const OrdersTable = () => {
                     ? "Hủy bỏ"
                     : "Không xác định"}
                 </p>
-                <div>
-                  {order.orderStatus === 1 && (
-                    <button
-                      onClick={() => handleShipOrder(order.id)}
-                      className="confirm-button"
-                    >
-                      Duyệt
-                    </button>
-                  )}
-                </div>
-                <div>
+                <p>
+                {order.orderStatus === 0 && new Date(order.deliveryDate) >= new Date() && (
                   <button
-                    onClick={() => handleDetailsClick(order.id)}
+                    className="confirm-button"
+                    onClick={() => handleShipOrder(order.id)}
+                  >
+                    Duyệt
+                  </button>
+                )}
+                </p>
+                <p>
+                  <button
                     className="details-button"
+                    onClick={() => handleDetailsClick(order.id)}
                   >
                     Details
                   </button>
-                </div>
+                  {order.orderStatus === 0 && (
+                    <button
+                      className="delivery-date-button"
+                      onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
+                    >
+                      Edit DeliDate
+                    </button>
+                  )}
+                </p>
               </div>
-              <hr />
+              {editingOrderId === order.id && (
+                <div className="date-edit-form">
+                  <input
+                    type="date"
+                    value={newDeliveryDate}
+                    onChange={(e) => setNewDeliveryDate(e.target.value)}
+                  />
+                  <button
+                    className="update-date-button"
+                    onClick={() => handleDeliveryDateUpdate(order.id)}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="cancel-update-button"
+                    onClick={() => setEditingOrderId(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
             </React.Fragment>
           ))}
       </div>

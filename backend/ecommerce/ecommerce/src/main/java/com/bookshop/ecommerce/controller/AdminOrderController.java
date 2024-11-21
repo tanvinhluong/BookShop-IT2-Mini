@@ -7,6 +7,9 @@ import com.bookshop.ecommerce.service.impl.IOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.util.List;
 
@@ -65,4 +68,14 @@ public class AdminOrderController {
         Order order = orderService.findOrderById(orderId);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+
+    @PutMapping("/{orderId}/update-delivery-date")
+    public ResponseEntity<Order> updateDeliveryDateHandler(
+            @PathVariable Integer orderId,
+            @RequestParam("deliveryDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date deliveryDate,
+            @RequestHeader("Authorization") String jwt) throws OrderException {
+        Order updatedOrder = orderService.updateDeliveryDate(orderId, deliveryDate);
+        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    }
+
 }

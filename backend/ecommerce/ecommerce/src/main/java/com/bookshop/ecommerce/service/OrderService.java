@@ -215,4 +215,12 @@ public class OrderService implements IOrderService {
         orderRepository.deleteById(orderId);
 
     }
+
+    @Override
+    public Order updateDeliveryDate(Integer orderId, Date deliveryDate) throws OrderException {
+        Order order = findOrderById(orderId);
+        order.setDeliveryDate(deliveryDate);
+        return orderRepository.save(order);
+    }
+
 }

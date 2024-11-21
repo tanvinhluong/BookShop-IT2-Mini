@@ -8,6 +8,8 @@ const OrderDeli = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [editingOrderId, setEditingOrderId] = useState(null);
+  const [newDeliveryDate, setNewDeliveryDate] = useState("");
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
@@ -21,7 +23,6 @@ const OrderDeli = () => {
         config
       );
 
-      // Lọc chỉ trạng thái 2, 3, 4, 5
       const filtered = response.data.filter(
         (order) =>
           order.orderStatus === 2 ||
@@ -52,6 +53,55 @@ const OrderDeli = () => {
     } catch (error) {
       console.error("Error delivering order:", error);
       alert("Có lỗi xảy ra khi nhận đơn hàng.");
+    }
+  };
+
+  const handleDeliveryDateUpdate = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.put(
+        `${API_BASE_URL}/api/admin/orders/${orderId}/update-delivery-date`,
+        null,
+        {
+          params: { deliveryDate: newDeliveryDate },
+          ...config,
+        }
+      );
+      alert("Ngày giao hàng đã được cập nhật!");
+      fetchOrders();
+      setEditingOrderId(null);
+    } catch (error) {
+      console.error("Error updating delivery date:", error);
+      alert("Có lỗi xảy ra khi cập nhật ngày giao hàng.");
+    }
+  };
+
+  const handleDetailsClick = (orderId) => {
+    navigate(`/admin/orders/${orderId}`);
+  };
+
+  const handleStatusChange = (e) => {
+    const status = e.target.value;
+    setSelectedStatus(status);
+
+    if (status === "") {
+      setFilteredOrders(orders);
+    } else {
+      const filtered = orders.filter(
+        (order) => order.orderStatus.toString() === status
+      );
+      setFilteredOrders(filtered);
+    }
+  };
+
+  const handleEditClick = (orderId, currentDeliveryDate, orderStatus) => {
+    if (orderStatus === 3) {
+      setEditingOrderId(orderId);
+      setNewDeliveryDate(currentDeliveryDate);
+    } else {
+      alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ nhận đơn.");
     }
   };
 
@@ -91,24 +141,6 @@ const OrderDeli = () => {
     }
   };
 
-  const handleDetailsClick = (orderId) => {
-    navigate(`/admin/orders/${orderId}`);
-  };
-
-  const handleStatusChange = (e) => {
-    const status = e.target.value;
-    setSelectedStatus(status);
-
-    if (status === "") {
-      setFilteredOrders(orders);
-    } else {
-      const filtered = orders.filter(
-        (order) => order.orderStatus.toString() === status
-      );
-      setFilteredOrders(filtered);
-    }
-  };
-
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -135,6 +167,7 @@ const OrderDeli = () => {
         <p>Total Items</p>
         <p>Total Price</p>
         <p>Order Date</p>
+        <p>Delivery Date</p> {/* Thêm cột Ngày giao hàng */}
         <p>Order Status</p>
         <p>Actions</p>
       </div>
@@ -148,6 +181,7 @@ const OrderDeli = () => {
                 <p>{order.totalItem}</p>
                 <p>{order.totalPrice}</p>
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+                <p>{order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : "Chưa có"}</p> {/* Hiển thị ngày giao hàng */}
                 <p>
                   {order.orderStatus === 2
                     ? "Đã giao hoàn tất"
@@ -160,7 +194,7 @@ const OrderDeli = () => {
                     : "Không xác định"}
                 </p>
                 <div className="actions-row">
-                  {order.orderStatus === 3 && (
+                  {order.orderStatus === 3 && new Date(order.deliveryDate) >= new Date() && (
                     <button
                       onClick={() => handleDeliverOrder(order.id)}
                       className="deliver-button"
@@ -168,19 +202,13 @@ const OrderDeli = () => {
                       Nhận đơn
                     </button>
                   )}
-                  {order.orderStatus === 4 && (
+                  {order.orderStatus === 3 && (
                     <>
                       <button
-                        onClick={() => handleCompleteOrder(order.id)}
-                        className="confirm-button"
+                        onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
+                        className="edit-delivery-date-button"
                       >
-                        Đã giao hoàn tất
-                      </button>
-                      <button
-                        onClick={() => handleCancelOrder(order.id)}
-                        className="cancel-button"
-                      >
-                        Hủy bỏ
+                        Chỉnh sửa ngày giao hàng
                       </button>
                     </>
                   )}
@@ -190,6 +218,43 @@ const OrderDeli = () => {
                   >
                     Details
                   </button>
+                  {order.orderStatus == 4 && (
+                    <button
+                      onClick={() => handleCompleteOrder(order.id)}
+                      className="confirm-button"
+                    >
+                      Hoàn tất
+                    </button>
+                  )}
+                  {order.orderStatus == 4 && (
+                    <button
+                      onClick={() => handleCancelOrder(order.id)}
+                      className="cancel-button"
+                    >
+                      Hủy
+                    </button>
+                  )}
+                  {editingOrderId === order.id && (
+                    <div className="date-edit-form">
+                      <input
+                        type="date"
+                        value={newDeliveryDate}
+                        onChange={(e) => setNewDeliveryDate(e.target.value)}
+                      />
+                      <button
+                        className="update-date-button"
+                        onClick={() => handleDeliveryDateUpdate(order.id)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="cancel-update-button"
+                        onClick={() => setEditingOrderId(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
               <hr />

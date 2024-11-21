@@ -22,7 +22,6 @@ const Order = () => {
       }
       const results = await axios.get(`${API_BASE_URL}/api/orders/user`, config)
       setOrders(results.data)
-      // console.log(results.data);
     } catch (error) {
       console.error('Error fetching data:', error)
     }
