@@ -1,16 +1,14 @@
 package com.bookshop.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -47,10 +45,18 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "user_role",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonIgnore
+    @JsonProperty("roles")
     private Set<Role> roles;
 
+    @JsonProperty("permissions")
+    public Set<Permission> getPermissions() {
+        Set<Permission> permissions = new HashSet<>();
+        for (Role role : roles) {
+            permissions.addAll(role.getPermissions());
+        }
+        return permissions;
+    }
 }

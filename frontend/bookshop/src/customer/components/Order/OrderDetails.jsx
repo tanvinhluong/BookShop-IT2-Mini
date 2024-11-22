@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import AddressCard from '../AddressCard/AddressCard';
-import OrderTracker from './OrderTraker';
-import { Grid, Box } from '@mui/material';
-import { deepPurple } from '@mui/material/colors';
-import StarIcon from '@mui/icons-material/Star';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '../../../config/apiConfig';
+import React, { useState, useEffect } from "react";
+import AddressCard from "../AddressCard/AddressCard";
+import OrderTracker from "./OrderTraker";
+import { Grid, Box } from "@mui/material";
+import { deepPurple } from "@mui/material/colors";
+import StarIcon from "@mui/icons-material/Star";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "../../../config/apiConfig";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
-  const jwt = localStorage.getItem('jwt');
+  const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
   const handleBack = () => navigate(-1);
@@ -21,17 +21,19 @@ const OrderDetails = () => {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
-      const response = await axios.get(`${API_BASE_URL}/api/orders/${id}`, config);
+      const response = await axios.get(
+        `${API_BASE_URL}/api/orders/${id}`,
+        config
+      );
       setOrder(response.data);
     } catch (error) {
-      console.error('Error fetching order data:', error);
+      console.error("Error fetching order data:", error);
     }
   };
 
   useEffect(() => {
     fetchData(orderId);
   }, [orderId]);
-
 
   const getActiveStep = (status) => {
     switch (status) {
@@ -55,22 +57,22 @@ const OrderDetails = () => {
       <button
         onClick={handleBack}
         style={{
-          background: 'none',
-          border: 'none',
-          color: 'blue',
-          textDecoration: 'underline',
-          cursor: 'pointer',
+          background: "none",
+          border: "none",
+          color: "blue",
+          textDecoration: "underline",
+          cursor: "pointer",
         }}
       >
         Quay lại trang trước
       </button>
       <div>
         <h1 className="font-bold text-lg py-7">
-          Địa chỉ giao hàng: {order?.user?.firstName} {order?.user?.lastName} -{' '}
+          Địa chỉ giao hàng: {order?.user?.firstName} {order?.user?.lastName} -{" "}
           {order?.user?.address.find(
             (addr) => addr.id === order?.shippingAddressId
           )?.streetAddress +
-            ' - ' +
+            " - " +
             order?.user?.address.find(
               (addr) => addr.id === order?.shippingAddressId
             )?.city}
@@ -89,13 +91,14 @@ const OrderDetails = () => {
         />
       </div>
       <Grid className="space-y-5" container>
+        {console.log(order)}
         {order?.orderItems?.map((item, index) => (
           <Grid
             key={`orderItems#${index}`}
             item
             container
             className="shadow-xl rounded-md p-5 border"
-            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+            sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Grid item xs={6}>
               <div className="flex items-center">
@@ -119,8 +122,16 @@ const OrderDetails = () => {
               <Box
                 sx={{ color: deepPurple[500] }}
                 className="flex items-center cursor-pointer"
+                onClick={() => {
+                  navigate(`/product/${item.productId}`, {
+                    state: {
+                      isReviewing: true, // Giá trị boolean
+                      itemId: item.id, // ID của item
+                    },
+                  });
+                }}
               >
-                <StarIcon sx={{ fontSize: '2rem' }} className="px-2 text-5xl" />
+                <StarIcon sx={{ fontSize: "2rem" }} className="px-2 text-5xl" />
                 <span>Đánh giá sản phẩm</span>
               </Box>
             </Grid>
