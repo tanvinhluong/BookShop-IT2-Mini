@@ -64,10 +64,10 @@ public class AuthController {
             String lastName = user.getLastName();
             String mobile = user.getMobile();
 
-//        User isEmailExists = userRepo.findByEmail(email);
-//        if(isEmailExists != null){
-//            throw new UserException("Email already exists");
-//        }
+        User isEmailExists = userRepo.findByEmail(email);
+        if(isEmailExists != null){
+            throw new UserException("Email already exists");
+        }
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setPassword(passwordEncoder.encode(password));
