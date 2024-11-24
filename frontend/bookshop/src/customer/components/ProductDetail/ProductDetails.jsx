@@ -1,86 +1,122 @@
-import { useEffect, useState } from 'react'
-import { StarIcon } from '@heroicons/react/20/solid'
-import { RadioGroup } from '@headlessui/react'
-import { Box, Button, Grid, LinearProgress, Rating } from '@mui/material'
-import ProductReviewCard from './ProductReviewCard'
-import HomeSectionCard from '../HomeSectionCard/HomeSectionCard'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { findProductsById } from '../../../State/Products/Action'
-import { addItemToCart } from '../../../State/Cart/Action'
-import { data_mock } from '../../Data/data_mock'
+import { useEffect, useState } from "react";
+import { StarIcon } from "@heroicons/react/20/solid";
+import { RadioGroup } from "@headlessui/react";
+import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
+import ProductReviewCard from "./ProductReviewCard";
+import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { findProductsById } from "../../../State/Products/Action";
+import { addItemToCart } from "../../../State/Cart/Action";
+import { data_mock } from "../../Data/data_mock";
+import CommentBox from "../CommentBox/CommentBox";
+import UserComment from "../CommentBox/UserComment";
+import { API_BASE_URL } from "../../../config/apiConfig";
+import axios from "axios";
 
 const product = {
-  name: 'Basic Tee 6-Pack',
-  price: '$192',
-  href: '#',
+  name: "Basic Tee 6-Pack",
+  price: "$192",
+  href: "#",
   breadcrumbs: [
-    { id: 1, name: 'Dụng cụ học tập', href: '#' },
-    { id: 2, name: 'Đồ dùng học tập', href: '#' },
+    { id: 1, name: "Dụng cụ học tập", href: "#" },
+    { id: 2, name: "Đồ dùng học tập", href: "#" },
   ],
   images: [
     {
-      src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg',
-      alt: 'Two each of gray, white, and black shirts laying flat.',
+      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
+      alt: "Two each of gray, white, and black shirts laying flat.",
     },
     {
-      src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg',
-      alt: 'Model wearing plain black basic tee.',
+      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
+      alt: "Model wearing plain black basic tee.",
     },
     {
-      src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg',
-      alt: 'Model wearing plain gray basic tee.',
+      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
+      alt: "Model wearing plain gray basic tee.",
     },
     {
-      src: 'https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg',
-      alt: 'Model wearing plain white basic tee.',
+      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
+      alt: "Model wearing plain white basic tee.",
     },
   ],
   colors: [
-    { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
-    { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
-    { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
+    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
+    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
   ],
-}
-const reviews = { href: '#', average: 4, totalCount: 117 }
+};
+const reviews = { href: "#", average: 4, totalCount: 117 };
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 function ProductDetails() {
-  const [activeImage, setActiveImage] = useState(null)
-  const navigate = useNavigate()
-  const params = useParams()
-  const dispatch = useDispatch()
-  const [rotationAngle, setRotationAngle] = useState(0)
-  const { products } = useSelector((store) => store)
+  const [activeImage, setActiveImage] = useState(null);
+  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
+
+  const dispatch = useDispatch();
+  const [rotationAngle, setRotationAngle] = useState(0);
+
+  const { products } = useSelector((store) => store);
+  const { isReviewing, itemId } = location.state || {};
 
   // notìy when add Product
-  const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState("");
 
   const rotateImage = () => {
     // Rotate by 45 degrees each time
-    setRotationAngle((prevAngle) => prevAngle + 45)
-  }
+    setRotationAngle((prevAngle) => prevAngle + 45);
+  };
   const handleAddToCart = () => {
-    const data = { productId: params.productId }
-    console.log('Selected data :', data)
-    dispatch(addItemToCart(data))
+    const data = { productId: params.productId };
+    console.log("Selected data :", data);
+    dispatch(addItemToCart(data));
 
-    setNotification('Product added to cart!');
+    setNotification("Product added to cart!");
 
     setTimeout(() => {
-      setNotification('');
+      setNotification("");
     }, 3000);
     // navigate('/cart')
-  }
+  };
 
   useEffect(() => {
-    const data = { productId: params.productId }
-    console.log(data)
-    dispatch(findProductsById(data))
-  }, [params.productId])
+    const data = { productId: params.productId };
+    console.log(data);
+    dispatch(findProductsById(data));
+    fetchReviews();
+  }, [params.productId]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const fetchReviews = async () => {
+    const jwt = localStorage.getItem("jwt"); // Token lấy từ localStorage
+    const config = {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      // Gọi API để lấy reviews cho sản phẩm
+      const response = await axios.get(
+        `${API_BASE_URL}/api/reviews/product/${params.productId}`,
+        config // Cấu hình headers cho request
+      );
+
+      console.log("API Response:", response.data);
+      setComments(response.data); // Lưu dữ liệu reviews vào state
+    } catch (error) {
+      console.error("Error:", error); // In lỗi nếu có
+    }
+  };
 
   return (
     <div className="bg-white lg:px-20">
@@ -210,9 +246,11 @@ function ProductDetails() {
                     </a> */}
                   </div>
                 </div>
-                {notification && <div className="notification">{notification}</div>}
+                {notification && (
+                  <div className="notification">{notification}</div>
+                )}
                 <Button
-                  sx={{ px: '1.5rem', py: '1rem', bgcolor: '#9155fd' }}
+                  sx={{ px: "1.5rem", py: "1rem", bgcolor: "#9155fd" }}
                   variant="contained"
                   onClick={handleAddToCart}
                 >
@@ -244,11 +282,24 @@ function ProductDetails() {
           </div>
         </section>
 
+        <CommentBox itemId={itemId} />
+
         {/* Recent Raiting and reviews */}
         <section>
           <h1 className="font-bold text-lg pb-20 pt-20">
             Những bình luận và đánh giá hiện tại
           </h1>
+
+          {comments.map((comment, index) => (
+            <UserComment
+              key={"comment#" + index}
+              email={comment.userEmail}
+              rating={comment.rating}
+              content={comment.comment}
+              productDetailName={comment.productDetailName}
+            />
+          ))}
+
           <div className="broder p-5">
             <Grid container spacing={7}>
               <Grid item xs={7}>
@@ -279,9 +330,9 @@ function ProductDetails() {
                     </Grid>
                     <Grid item xs={7}>
                       <LinearProgress
-                        sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
-                        value="55"
+                        value={55}
                         color="success"
                       />
                     </Grid>
@@ -293,9 +344,9 @@ function ProductDetails() {
                     </Grid>
                     <Grid item xs={7}>
                       <LinearProgress
-                        sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
-                        value="40"
+                        value={40}
                         color="primary"
                       />
                     </Grid>
@@ -307,9 +358,9 @@ function ProductDetails() {
                     </Grid>
                     <Grid item xs={7}>
                       <LinearProgress
-                        sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
-                        value="59"
+                        value={59}
                         color="secondary"
                       />
                     </Grid>
@@ -321,9 +372,9 @@ function ProductDetails() {
                     </Grid>
                     <Grid item xs={7}>
                       <LinearProgress
-                        sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
-                        value="20"
+                        value={20}
                         color="warning"
                       />
                     </Grid>
@@ -335,9 +386,9 @@ function ProductDetails() {
                     </Grid>
                     <Grid item xs={7}>
                       <LinearProgress
-                        sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
-                        value="10"
+                        value={20}
                         color="error"
                       />
                     </Grid>
@@ -352,14 +403,14 @@ function ProductDetails() {
         <section className="pt-10">
           <h1 className="font-bold text-xl py-5">Các sản phẩm tương tự</h1>
           <div className=" flex flex-wrap space-y-5">
-            {data_mock.map((item) => (
-              <HomeSectionCard product={item} />
+            {data_mock.map((item, index) => (
+              <HomeSectionCard product={item} key={`product#${index}`} />
             ))}
           </div>
         </section>
       </div>
     </div>
-  )
+  );
 }
 
-export default ProductDetails
+export default ProductDetails;

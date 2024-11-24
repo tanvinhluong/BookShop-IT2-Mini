@@ -18,10 +18,10 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "ROLE_NAME")
+    @Column(name = "role_name")
     private String name;
 
-    @Column(name = "ROLE_DESCRIPTION")
+    @Column(name = "role_description")
     private String description;
 
     @ManyToMany(mappedBy = "roles")
@@ -31,8 +31,8 @@ public class Role {
     @ManyToMany
     @JoinTable(
             name = "role_permission",
-            joinColumns = @JoinColumn(name = "ROLE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PERMISSION_ID")
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     @JsonIgnore
     private Set<Permission> permissions;

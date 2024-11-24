@@ -1,6 +1,7 @@
 package com.bookshop.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,4 +33,10 @@ public class OrderItem {
     private Integer price;
 
     private Integer discountedPrice;
+
+    @JsonProperty("productId")
+    public Integer getProductId() {
+        return this.productDetail != null ? this.productDetail.getProduct().getId() : null;
+    }
+
 }

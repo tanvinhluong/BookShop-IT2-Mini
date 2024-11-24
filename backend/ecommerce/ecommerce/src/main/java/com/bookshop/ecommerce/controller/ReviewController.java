@@ -1,6 +1,7 @@
 package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.exception.ProductException;
+import com.bookshop.ecommerce.exception.ReviewException;
 import com.bookshop.ecommerce.exception.UserException;
 import com.bookshop.ecommerce.model.Review;
 import com.bookshop.ecommerce.model.User;
@@ -29,18 +30,21 @@ public class ReviewController {
         // TODO Auto-generated constructor stub
     }
     @PostMapping("/create")
-    public ResponseEntity<Review> createReviewHandler(@RequestBody ReviewRequest req,@RequestHeader("Authorization") String jwt) throws UserException, ProductException{
+    public ResponseEntity<Review> createReviewHandler(@RequestBody ReviewRequest req,@RequestHeader("Authorization") String jwt) throws UserException, ReviewException {
         User user=userService.findUserProfileByJwt(jwt);
-        System.out.println("product id "+req.getProductId()+" - "+req.getReview());
+
         Review review=reviewService.createReview(req, user);
-        System.out.println("product review "+req.getReview());
+
         return new ResponseEntity<Review>(review,HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Review>> getProductsReviewHandler(@PathVariable Integer productId){
-        List<Review>reviews=reviewService.getAllReview(productId);
+    public ResponseEntity<List<Review>> getProductReviewsHandler(@PathVariable Integer productId){
+        List<Review>reviews=reviewService.getAllReviewsByProductId(productId);
         return new ResponseEntity<List<Review>>(reviews,HttpStatus.OK);
     }
 
+
 }
+
+

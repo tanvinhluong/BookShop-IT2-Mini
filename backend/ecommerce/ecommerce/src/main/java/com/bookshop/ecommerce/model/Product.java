@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,7 +49,8 @@ public class Product {
     private List<CategoryDetail> categoryDetails;
 
     // product detail
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ProductDetail> productDetails;
 
     @ManyToOne
@@ -59,5 +61,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Promotion> promotions;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<Review> reviews;
 
 }

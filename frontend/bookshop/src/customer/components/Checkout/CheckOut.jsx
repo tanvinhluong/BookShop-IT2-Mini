@@ -19,7 +19,7 @@ function Checkout() {
   const [skipped, setSkipped] = React.useState(new Set());
   const location = useLocation();
   const querySearch = new URLSearchParams(location.search);
-  const step = querySearch.get("step");
+  const step = parseInt(querySearch.get("step"));
 
   const handleNext = () => {
     let newSkipped = skipped;

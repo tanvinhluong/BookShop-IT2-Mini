@@ -2,6 +2,7 @@ package com.bookshop.ecommerce.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class Review {
 
     private Boolean active;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ORDER_ITEM_ID")
     @JsonIgnore
     private OrderItem orderItem;
@@ -40,4 +41,14 @@ public class Review {
     @JoinColumn(name = "PRODUCT_ID")
     @JsonIgnore
     private Product product;
+
+    @JsonProperty("userEmail")
+    public String getUserEmail() {
+        return this.orderItem != null ? this.orderItem.getOrder().getUser().getEmail() : null;
+    }
+
+    @JsonProperty("productDetailName")
+    public String getProductDetailName() {
+        return this.orderItem != null ? this.orderItem.getProductDetail().getName() : null;
+    }
 }
