@@ -61,7 +61,7 @@ const OrderDeli = () => {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
-      const response = await axios.put(
+      await axios.put(
         `${API_BASE_URL}/api/admin/orders/${orderId}/update-delivery-date`,
         null,
         {
@@ -101,7 +101,9 @@ const OrderDeli = () => {
       setEditingOrderId(orderId);
       setNewDeliveryDate(currentDeliveryDate);
     } else {
-      alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ nhận đơn.");
+      alert(
+        "Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ nhận đơn."
+      );
     }
   };
 
@@ -146,7 +148,7 @@ const OrderDeli = () => {
   }, []);
 
   return (
-    <div className="list-order">
+    <div className="orderdeli-container">
       <h1>Orders List</h1>
       <div>
         <label htmlFor="status-filter">Filter by Order Status:</label>
@@ -162,26 +164,30 @@ const OrderDeli = () => {
           <option value="5">Hủy bỏ</option>
         </select>
       </div>
-      <div className="listorder-format-main">
+      <div className="orderdeli-listorder-main">
         <p>Order ID</p>
         <p>Total Items</p>
         <p>Total Price</p>
         <p>Order Date</p>
-        <p>Delivery Date</p> {/* Thêm cột Ngày giao hàng */}
+        <p>Delivery Date</p>
         <p>Order Status</p>
         <p>Actions</p>
       </div>
-      <div className="listorder-allorders">
+      <div className="orderdeli-allorders">
         <hr />
         {!!filteredOrders &&
           filteredOrders.map((order, index) => (
             <React.Fragment key={index}>
-              <div className="listorder-format-main listorder-format">
+              <div className="orderdeli-listorder-row">
                 <p>{order.id}</p>
                 <p>{order.totalItem}</p>
                 <p>{order.totalPrice}</p>
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
-                <p>{order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : "Chưa có"}</p> {/* Hiển thị ngày giao hàng */}
+                <p>
+                  {order.deliveryDate
+                    ? new Date(order.deliveryDate).toLocaleDateString()
+                    : "Chưa có"}
+                </p>
                 <p>
                   {order.orderStatus === 2
                     ? "Đã giao hoàn tất"
@@ -193,64 +199,52 @@ const OrderDeli = () => {
                     ? "Hủy bỏ"
                     : "Không xác định"}
                 </p>
-                <div className="actions-row">
-                  {order.orderStatus === 3 && new Date(order.deliveryDate) >= new Date() && (
+                <div className="orderdeli-actions">
+                  {order.orderStatus === 3 &&
+                    new Date(order.deliveryDate) >= new Date() && (
+                      <button onClick={() => handleDeliverOrder(order.id)}>
+                        Nhận đơn
+                      </button>
+                    )}
+                  {order.orderStatus === 3 && (
                     <button
-                      onClick={() => handleDeliverOrder(order.id)}
-                      className="deliver-button"
+                      onClick={() =>
+                        handleEditClick(
+                          order.id,
+                          order.deliveryDate,
+                          order.orderStatus
+                        )
+                      }
                     >
-                      Nhận đơn
+                      Chỉnh sửa ngày giao hàng
                     </button>
                   )}
-                  {order.orderStatus === 3 && (
-                    <>
-                      <button
-                        onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
-                        className="edit-delivery-date-button"
-                      >
-                        Chỉnh sửa ngày giao hàng
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDetailsClick(order.id)}
-                    className="details-button"
-                  >
+                  <button onClick={() => handleDetailsClick(order.id)}>
                     Details
                   </button>
-                  {order.orderStatus == 4 && (
-                    <button
-                      onClick={() => handleCompleteOrder(order.id)}
-                      className="confirm-button"
-                    >
+                  {order.orderStatus === 4 && (
+                    <button onClick={() => handleCompleteOrder(order.id)}>
                       Hoàn tất
                     </button>
                   )}
-                  {order.orderStatus == 4 && (
-                    <button
-                      onClick={() => handleCancelOrder(order.id)}
-                      className="cancel-button"
-                    >
+                  {order.orderStatus === 4 && (
+                    <button onClick={() => handleCancelOrder(order.id)}>
                       Hủy
                     </button>
                   )}
                   {editingOrderId === order.id && (
-                    <div className="date-edit-form">
+                    <div>
                       <input
                         type="date"
                         value={newDeliveryDate}
                         onChange={(e) => setNewDeliveryDate(e.target.value)}
                       />
                       <button
-                        className="update-date-button"
                         onClick={() => handleDeliveryDateUpdate(order.id)}
                       >
                         Update
                       </button>
-                      <button
-                        className="cancel-update-button"
-                        onClick={() => setEditingOrderId(null)}
-                      >
+                      <button onClick={() => setEditingOrderId(null)}>
                         Cancel
                       </button>
                     </div>

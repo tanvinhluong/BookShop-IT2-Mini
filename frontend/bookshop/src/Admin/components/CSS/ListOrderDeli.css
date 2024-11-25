@@ -1,4 +1,4 @@
-.list-order {
+.orderdeli-container {
   font-family: Arial, sans-serif;
   max-width: 100%;
   margin: 20px auto;
@@ -15,9 +15,9 @@ h1 {
   margin-bottom: 20px;
 }
 
-.listorder-format-main {
+.orderdeli-listorder-main {
   display: grid;
-  grid-template-columns: repeat(6, 1fr) 2fr; 
+  grid-template-columns: repeat(6, 1fr) 2fr;
   gap: 10px;
   font-weight: bold;
   background-color: #e9ecef;
@@ -26,43 +26,43 @@ h1 {
   text-align: center;
 }
 
-.listorder-format-main p {
+.orderdeli-listorder-main p {
   text-align: center;
   color: #495057;
   padding: 5px 0;
 }
 
-.listorder-allorders {
+.orderdeli-allorders {
   margin-top: 20px;
 }
 
-.listorder-format {
+.orderdeli-listorder-row {
   display: grid;
-  grid-template-columns: repeat(6, 1fr) 2fr; /* Cột cuối dành riêng cho nút */
+  grid-template-columns: repeat(6, 1fr) 2fr;
   gap: 10px;
   padding: 15px 0;
   border-top: 1px solid #ddd;
-  align-items: center; /* Căn giữa nội dung theo chiều dọc */
+  align-items: center;
 }
 
-.listorder-format p {
+.orderdeli-listorder-row p {
   text-align: center;
   padding: 5px 0;
-  word-wrap: break-word; /* Chia từ nếu nội dung quá dài */
-  overflow: hidden; /* Ẩn nội dung tràn */
-  text-overflow: ellipsis; /* Thêm dấu "..." nếu nội dung tràn */
-  white-space: nowrap; /* Không xuống dòng */
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.actions-row {
+.orderdeli-actions {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Khoảng cách giữa các nút */
-  flex-wrap: wrap; /* Cho phép nút xuống dòng nếu không đủ không gian */
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.actions-row button {
+.orderdeli-actions button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -73,31 +73,31 @@ h1 {
   font-size: 14px;
 }
 
-.actions-row button:hover {
+.orderdeli-actions button:hover {
   background-color: #0056b3;
 }
 
-.confirm-button {
+.orderdeli-actions .confirm-button {
   background-color: #28a745;
 }
 
-.confirm-button:hover {
+.orderdeli-actions .confirm-button:hover {
   background-color: #218838;
 }
 
-.cancel-button {
+.orderdeli-actions .cancel-button {
   background-color: #dc3545;
 }
 
-.cancel-button:hover {
+.orderdeli-actions .cancel-button:hover {
   background-color: #c82333;
 }
 
-.details-button {
+.orderdeli-actions .details-button {
   background-color: #17a2b8;
 }
 
-.details-button:hover {
+.orderdeli-actions .details-button:hover {
   background-color: #117a8b;
 }
 

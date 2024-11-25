@@ -105,16 +105,15 @@ const OrdersTable = () => {
       alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt.");
     }
   };
-  
 
   useEffect(() => {
     fetchOrders();
   }, []);
 
   return (
-    <div className="list-order">
+    <div className="ordersTable-container">
       <h1>All Orders List</h1>
-      <div>
+      <div className="ordersTable-filter">
         <label htmlFor="status-filter">Filter by Order Status:</label>
         <select
           id="status-filter"
@@ -129,7 +128,7 @@ const OrdersTable = () => {
           <option value="5">Hủy bỏ</option>
         </select>
       </div>
-      <div className="listorder-format-main">
+      <div className="ordersTable-header">
         <p>Order ID</p>
         <p>Total Price</p>
         <p>Order Date</p>
@@ -138,12 +137,12 @@ const OrdersTable = () => {
         <p>Approve</p>
         <p>Actions</p>
       </div>
-      <div className="listorder-allorders">
+      <div className="ordersTable-rows">
         <hr />
         {!!filteredOrders &&
           filteredOrders.map((order, index) => (
             <React.Fragment key={index}>
-              <div className="listorder-format-main listorder-format">
+              <div className="ordersTable-row">
                 <p>{order.id}</p>
                 <p>{order.totalPrice}</p>
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
@@ -162,47 +161,49 @@ const OrdersTable = () => {
                     : "Không xác định"}
                 </p>
                 <p>
-                {order.orderStatus === 0 && new Date(order.deliveryDate) >= new Date() && (
-                  <button
-                    className="confirm-button"
-                    onClick={() => handleShipOrder(order.id)}
-                  >
-                    Duyệt
-                  </button>
-                )}
+                  {order.orderStatus === 0 && (
+                    <button
+                      className="ordersTable-approveBtn"
+                      onClick={() => handleShipOrder(order.id)}
+                    >
+                      Duyệt
+                    </button>
+                  )}
                 </p>
                 <p>
+                  <div className="ordersTable-actions">
                   <button
-                    className="details-button"
+                    className="ordersTable-detailsBtn"
                     onClick={() => handleDetailsClick(order.id)}
                   >
                     Details
                   </button>
-                  {order.orderStatus === 0 && (
-                    <button
-                      className="delivery-date-button"
-                      onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
-                    >
-                      Edit DeliDate
-                    </button>
-                  )}
-                </p>
+                {order.orderStatus === 0 && (
+                  <button
+                    className="ordersTable-editDeliveryDateBtn"
+                    onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
+                  >
+                     Edit
+                  </button>
+                )}
+                  </div>
+              </p>
               </div>
               {editingOrderId === order.id && (
-                <div className="date-edit-form">
+                <div className="ordersTable-editForm">
                   <input
                     type="date"
                     value={newDeliveryDate}
                     onChange={(e) => setNewDeliveryDate(e.target.value)}
                   />
                   <button
-                    className="update-date-button"
+                    className="ordersTable-updateBtn"
                     onClick={() => handleDeliveryDateUpdate(order.id)}
                   >
                     Update
                   </button>
                   <button
-                    className="cancel-update-button"
+                    className="ordersTable-cancelBtn"
                     onClick={() => setEditingOrderId(null)}
                   >
                     Cancel
