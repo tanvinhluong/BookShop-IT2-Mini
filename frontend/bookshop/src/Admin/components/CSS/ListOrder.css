@@ -1,4 +1,4 @@
-.list-order {
+.ordersTable-container {
   font-family: Arial, sans-serif;
   max-width: 900px;
   margin: 20px auto;
@@ -14,7 +14,11 @@ h1 {
   margin-bottom: 20px;
 }
 
-.listorder-format-main {
+.ordersTable-filter {
+  margin-bottom: 20px;
+}
+
+.ordersTable-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 15px;
@@ -24,17 +28,17 @@ h1 {
   border-radius: 8px;
 }
 
-.listorder-format-main p {
+.ordersTable-header p {
   text-align: center;
   color: #495057;
   padding: 5px 0;
 }
 
-.listorder-allorders {
+.ordersTable-rows {
   margin-top: 20px;
 }
 
-.listorder-format {
+.ordersTable-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 15px;
@@ -42,12 +46,14 @@ h1 {
   border-top: 1px solid #ddd;
 }
 
-.listorder-format p {
+.ordersTable-row p {
   text-align: center;
   padding: 5px 0;
 }
 
-.listorder-format button {
+.ordersTable-approveBtn,
+.ordersTable-detailsBtn,
+.ordersTable-editDeliveryDateBtn {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -57,8 +63,49 @@ h1 {
   transition: background-color 0.3s;
 }
 
-.listorder-format button:hover {
+.ordersTable-approveBtn:hover,
+.ordersTable-detailsBtn:hover,
+.ordersTable-editDeliveryDateBtn:hover {
   background-color: #0056b3;
+}
+
+.ordersTable-editForm {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.ordersTable-editForm input {
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.ordersTable-updateBtn,
+.ordersTable-cancelBtn {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ordersTable-updateBtn {
+  background-color: #28a745;
+}
+
+.ordersTable-cancelBtn {
+  background-color: #dc3545;
+}
+
+.ordersTable-updateBtn:hover {
+  background-color: #218838;
+}
+
+.ordersTable-cancelBtn:hover {
+  background-color: #c82333;
 }
 
 hr {
@@ -67,93 +114,14 @@ hr {
   margin: 20px 0;
 }
 
-.confirm-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 5px;
-  transition: background-color 0.3s;
-}
-
-.confirm-button:hover {
-  background-color: #218838;
-}
-
-.details-button {
-  background-color: #17a2b8;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.details-button:hover {
-  background-color: #117a8b;
-}
-
-.delivery-date-button {
-  background-color: #ffc107;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.delivery-date-button:hover {
-  background-color: #e0a800;
-}
-
-.date-edit-form {
+.ordersTable-actions {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-top: 10px;
+  justify-content: center;
+  gap: 10px; /* Khoảng cách giữa các nút */
 }
 
-.date-edit-form input {
-  padding: 5px;
-  margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.update-date-button,
-.cancel-update-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.update-date-button {
-  background-color: #28a745;
-}
-
-.cancel-update-button {
-  background-color: #dc3545;
-}
-
-.update-date-button:hover {
-  background-color: #218838;
-}
-
-.cancel-update-button:hover {
-  background-color: #c82333;
-}
-
-.hidden {
-  display: none;
-}
-
-.listorder-format button {
+.ordersTable-detailsBtn,
+.ordersTable-editDeliveryDateBtn {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -163,21 +131,8 @@ hr {
   transition: background-color 0.3s;
 }
 
-.listorder-format button:hover {
+.ordersTable-detailsBtn:hover,
+.ordersTable-editDeliveryDateBtn:hover {
   background-color: #0056b3;
 }
 
-.delivery-date-button {
-  background-color: #ffc107;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: 15px; /* Thêm khoảng cách giữa nút "Details" và "Edit Delivery Date" */
-}
-
-.delivery-date-button:hover {
-  background-color: #e0a800;
-}
