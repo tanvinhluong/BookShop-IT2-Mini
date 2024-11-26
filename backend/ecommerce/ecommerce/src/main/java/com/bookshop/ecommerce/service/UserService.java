@@ -45,4 +45,30 @@ public class UserService implements IUserService {
 
         return userRepo.findAll();
     }
+
+    @Override
+    public User updateUserProfile(String jwt, User updatedUser) throws UserException {
+        String email = jwtProvider.getEmailFromToken(jwt);
+        User existingUser = userRepo.findByEmail(email);
+
+        if (existingUser == null) {
+            throw new UserException("User not found with email: " + email);
+        }
+
+        if (updatedUser.getFirstName() != null) {
+            existingUser.setFirstName(updatedUser.getFirstName());
+        }
+        if (updatedUser.getLastName() != null) {
+            existingUser.setLastName(updatedUser.getLastName());
+        }
+        if (updatedUser.getMobile() != null) {
+            existingUser.setMobile(updatedUser.getMobile());
+        }
+        if (updatedUser.getDefault_address_id() != null) {
+            existingUser.setDefault_address_id(updatedUser.getDefault_address_id());
+        }
+
+
+        return userRepo.save(existingUser);
+    }
 }
