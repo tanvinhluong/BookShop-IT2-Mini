@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.bookshop.ecommerce.request.ChangePasswordRequest;
 
 import java.util.List;
 
@@ -42,5 +43,13 @@ public class UserController {
             @RequestBody User updatedUser) throws UserException {
         User user = userService.updateUserProfile(jwt, updatedUser);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePasswordHandler(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ChangePasswordRequest changePasswordRequest) throws UserException {
+        userService.changePassword(jwt, changePasswordRequest);
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 }

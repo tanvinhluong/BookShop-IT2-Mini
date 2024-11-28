@@ -7,6 +7,8 @@ import com.bookshop.ecommerce.repository.UserRepository;
 import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.bookshop.ecommerce.request.ChangePasswordRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +70,30 @@ public class UserService implements IUserService {
             existingUser.setDefault_address_id(updatedUser.getDefault_address_id());
         }
 
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(existingUser.getEmail())) {
+            existingUser.setEmail(updatedUser.getEmail());
+        }
 
         return userRepo.save(existingUser);
+    }
+
+    @Override
+    public void changePassword(String jwt, ChangePasswordRequest changePasswordRequest) throws UserException {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String email = jwtProvider.getEmailFromToken(jwt);
+        User user = userRepo.findByEmail(email);
+
+        if (user == null) {
+            throw new UserException("User not found with email: " + email);
+        }
+
+
+        if (!encoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new UserException("Old password is incorrect");
+        }
+
+
+        user.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
+        userRepo.save(user);
     }
 }
