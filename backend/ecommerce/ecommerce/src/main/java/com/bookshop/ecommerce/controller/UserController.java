@@ -6,10 +6,8 @@ import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.bookshop.ecommerce.request.ChangePasswordRequest;
 
 import java.util.List;
 
@@ -39,4 +37,19 @@ public class UserController {
         return new ResponseEntity<User>(user,HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("/edit")
+    public ResponseEntity<User> editUserProfileHandler(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody User updatedUser) throws UserException {
+        User user = userService.updateUserProfile(jwt, updatedUser);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePasswordHandler(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ChangePasswordRequest changePasswordRequest) throws UserException {
+        userService.changePassword(jwt, changePasswordRequest);
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+    }
 }

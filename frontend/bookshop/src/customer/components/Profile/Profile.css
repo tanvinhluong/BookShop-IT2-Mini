@@ -1,46 +1,112 @@
-/* Profile.css */
 .profile-container {
-  width: 60%;
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 30px;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.profile-container h1{
-  font-weight: bold;
-  font-size: 35px;
+  margin: 0 auto;
+  max-width: 600px;
 }
 
-hr {
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 20px 0;
+.profile-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
-.profile-header {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+.profile-content {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .profile-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .profile-label {
   font-weight: bold;
   color: #333;
-  width: 30%;
 }
 
 .profile-value {
   color: #555;
-  width: 70%;
-  text-align: right;
+}
+
+.profile-input {
+  width: 60%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-button-edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.profile-button-save {
+  background-color: #28a745;
+  color: white;
+}
+
+.profile-button-cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.profile-button:hover {
+  opacity: 0.9;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 20px;
+}
+
+.profile-button {
+  background-color: #007bff;   
+  color: #fff;              
+  border: none;             
+  padding: 10px 20px;      
+  font-size: 16px;            
+  border-radius: 5px;         
+  cursor: pointer;            
+  transition: background-color 0.3s ease;
+}
+
+.profile-button:hover {
+  background-color: #0056b3;
+}
+
+.profile-button:disabled {
+  background-color: #ccc;    
+  cursor: not-allowed;       
+}
+
+.profile-button-edit {
+  background-color: #0056b3;
+}
+
+.profile-button-password {
+  background-color: #0056b3;
+}
+
+
+.profile-button-edit:hover {
+  background-color: #0056b3;
+}
+
+.profile-button-password:hover {
+  background-color: #0056b3;
 }
