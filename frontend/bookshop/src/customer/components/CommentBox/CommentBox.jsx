@@ -3,10 +3,10 @@ import axios from "axios";
 import "./CommentBox.css";
 import { API_BASE_URL } from "../../../config/apiConfig";
 
-const CommentBox = ({ itemId }) => {
-  const [rating, setRating] = useState(0); // Đánh giá hiện tại
+const CommentBox = ({ itemId, submitType, star, cmt, reviewId }) => {
+  const [rating, setRating] = useState(star ? star : 0); // Đánh giá hiện tại
   const [hoverRating, setHoverRating] = useState(0); // Đánh giá khi hover
-  const [comment, setComment] = useState(""); // Nội dung bình luận
+  const [comment, setComment] = useState(cmt ? cmt : ""); // Nội dung bình luận
   const [isSubmitting, setIsSubmitting] = useState(false); // Trạng thái gửi dữ liệu
 
   const handleSubmit = async () => {
@@ -30,24 +30,44 @@ const CommentBox = ({ itemId }) => {
       },
     };
 
-    try {
-      setIsSubmitting(true); // Đặt trạng thái gửi
-      const response = await axios.post(
-        `${API_BASE_URL}/api/reviews/create`,
-        body,
-        config
-      );
-      alert("Đánh giá của bạn đã được gửi!");
-      console.log("API Response:", response.data);
+    if (submitType === "edit") {
+      try {
+        const response = await axios.put(
+          `${API_BASE_URL}/api/reviews/update/${reviewId}`,
+          body,
+          config
+        );
+        alert("Đánh giá của bạn đã được gửi!");
+        console.log("API Response:", response.data);
 
-      // Reset trạng thái sau khi gửi thành công
-      setRating(0);
-      setComment("");
-    } catch (error) {
-      console.error("Error submitting review:", error);
-      alert("Có lỗi xảy ra, vui lòng thử lại sau.");
-    } finally {
-      setIsSubmitting(false); // Hoàn thành gửi
+        // Reset trạng thái sau khi gửi thành công
+        setRating(0);
+        setComment("");
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Có lỗi xảy ra, vui lòng thử lại sau.");
+      } finally {
+        window.location.reload();
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/reviews/create`,
+          body,
+          config
+        );
+        alert("Đánh giá của bạn đã được gửi!");
+        console.log("API Response:", response.data);
+
+        // Reset trạng thái sau khi gửi thành công
+        setRating(0);
+        setComment("");
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Có lỗi xảy ra, vui lòng thử lại sau.");
+      } finally {
+        window.location.reload();
+      }
     }
   };
 

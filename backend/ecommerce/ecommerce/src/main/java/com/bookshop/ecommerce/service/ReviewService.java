@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -71,6 +72,45 @@ public class ReviewService implements IReviewService {
 
 
         return reviewRepository.save(review);
+    }
+
+    @Override
+    public Review updateReview(Integer reviewId, ReviewRequest req, User user) throws ReviewException {
+        Review review = findReviewById(reviewId);
+        if(!Objects.equals(review.getUserEmail(), user.getEmail())) {
+            throw new ReviewException("Bạn không có quyền sửa đánh giá này!");
+        }
+
+        if (req.getRating() < 1 || req.getRating() > 5) {
+            throw new ReviewException("Điểm đánh giá phải nằm trong khoảng từ 1 đến 5");
+        }
+
+        review.setComment(req.getComment());
+        review.setRating(req.getRating());
+        return reviewRepository.save(review);
+    }
+
+    @Override
+    public void deleteReview(Integer reviewId, User user) throws ReviewException {
+        Review review = findReviewById(reviewId);
+
+        if(!Objects.equals(review.getUserEmail(), user.getEmail())) {
+            throw new ReviewException("Bạn không có quyền xóa đánh giá này!");
+        }
+
+        reviewRepository.delete(review);
+    }
+
+
+
+    @Override
+    public Review findReviewById(Integer reviewId) throws ReviewException {
+        Optional<Review> review=reviewRepository.findById(reviewId);
+
+        if(review.isPresent()) {
+            return review.get();
+        }
+        throw new ReviewException("order not exist with id "+reviewId);
     }
 
     @Override

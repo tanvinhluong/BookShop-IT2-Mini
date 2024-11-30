@@ -54,3 +54,85 @@
   color: #424242;
   margin-left: 60px;
 }
+
+.user-comment__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.user-comment__button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+.user-comment__button--edit {
+  background-color: #4caf50; /* Green for Edit */
+}
+
+.user-comment__button--delete {
+  background-color: #f44336; /* Red for Delete */
+}
+
+.user-comment__button:hover {
+  opacity: 0.9;
+}
+
+.user-comment__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.user-comment__overlay-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.user-comment__overlay-content p {
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: #424242;
+}
+
+.user-comment__overlay-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.user-comment__overlay-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+.user-comment__overlay-button--confirm {
+  background-color: #f44336; /* Red for Confirm */
+}
+
+.user-comment__overlay-button--cancel {
+  background-color: #4caf50; /* Green for Cancel */
+}
+
+.user-comment__overlay-button:hover {
+  opacity: 0.9;
+}

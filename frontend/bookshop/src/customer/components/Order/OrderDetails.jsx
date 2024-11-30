@@ -118,23 +118,29 @@ const OrderDetails = () => {
                 </div>
               </div>
             </Grid>
-            <Grid item>
-              <Box
-                sx={{ color: deepPurple[500] }}
-                className="flex items-center cursor-pointer"
-                onClick={() => {
-                  navigate(`/product/${item.productId}`, {
-                    state: {
-                      isReviewing: true, // Giá trị boolean
-                      itemId: item.id, // ID của item
-                    },
-                  });
-                }}
-              >
-                <StarIcon sx={{ fontSize: "2rem" }} className="px-2 text-5xl" />
-                <span>Đánh giá sản phẩm</span>
-              </Box>
-            </Grid>
+
+            {order?.orderStatus === 2 && (
+              <Grid item>
+                <Box
+                  sx={{ color: deepPurple[500] }}
+                  className="flex items-center cursor-pointer"
+                  onClick={() => {
+                    navigate(`/product/${item.productId}`, {
+                      state: {
+                        isReviewing: true, // Giá trị boolean
+                        itemId: item.id, // ID của item
+                      },
+                    });
+                  }}
+                >
+                  <StarIcon
+                    sx={{ fontSize: "2rem" }}
+                    className="px-2 text-5xl"
+                  />
+                  <span>Đánh giá sản phẩm</span>
+                </Box>
+              </Grid>
+            )}
           </Grid>
         ))}
       </Grid>

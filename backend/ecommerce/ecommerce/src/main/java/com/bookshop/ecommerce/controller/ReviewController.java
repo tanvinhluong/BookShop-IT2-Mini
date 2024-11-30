@@ -44,6 +44,44 @@ public class ReviewController {
         return new ResponseEntity<List<Review>>(reviews,HttpStatus.OK);
     }
 
+    @PutMapping("/update/{reviewId}")
+    public ResponseEntity<Review> updateReview(@PathVariable Integer reviewId, @RequestBody ReviewRequest req, @RequestHeader("Authorization") String jwt) throws UserException, ReviewException {
+        User user=userService.findUserProfileByJwt(jwt);
+
+        Review review=reviewService.updateReview(reviewId, req, user);
+
+        return new ResponseEntity<Review>(review,HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/delete/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId, @RequestHeader("Authorization") String jwt) throws UserException {
+        User user=userService.findUserProfileByJwt(jwt);
+
+        try {
+            reviewService.deleteReview(reviewId, user);
+            return ResponseEntity.ok("Review đã được xóa thành công");
+        } catch (ReviewException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi hệ thống");
+        }
+
+
+
+    }
+
+    @PostMapping("/conditions/{orderItemId}")
+    public ResponseEntity<Boolean> reviewConditions(@PathVariable Integer orderItemId, @RequestHeader("Authorization") String jwt) throws UserException {
+        User user = userService.findUserProfileByJwt(jwt);
+        Integer result = reviewService.reviewConditions(orderItemId, user.getId());
+        // Trả về true nếu có thể đánh giá, false nếu không thể
+        if (result == 5) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+    }
+
 
 }
 

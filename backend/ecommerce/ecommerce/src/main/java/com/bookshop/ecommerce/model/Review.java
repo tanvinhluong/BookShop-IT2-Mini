@@ -47,6 +47,11 @@ public class Review {
         return this.orderItem != null ? this.orderItem.getOrder().getUser().getEmail() : null;
     }
 
+    @JsonProperty("orderDetailId")
+    public Integer getOrderDetailId() {
+        return this.orderItem != null ? this.orderItem.getId() : null;
+    }
+
     @JsonProperty("productDetailName")
     public String getProductDetailName() {
         return this.orderItem != null ? this.orderItem.getProductDetail().getName() : null;

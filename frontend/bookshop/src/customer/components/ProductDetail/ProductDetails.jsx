@@ -54,6 +54,8 @@ function classNames(...classes) {
 
 function ProductDetails() {
   const [activeImage, setActiveImage] = useState(null);
+  const [email, setEmail] = useState("");
+  const [visibleCommentBox, setVisibleCommentBox] = useState(true);
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
@@ -67,6 +69,7 @@ function ProductDetails() {
 
   // notìy when add Product
   const [notification, setNotification] = useState("");
+  const jwt = localStorage.getItem("jwt");
 
   const rotateImage = () => {
     // Rotate by 45 degrees each time
@@ -89,15 +92,20 @@ function ProductDetails() {
     const data = { productId: params.productId };
     console.log(data);
     dispatch(findProductsById(data));
-    fetchReviews();
+    fetchUserData();
   }, [params.productId]);
+
+  useEffect(() => {
+    if (email) {
+      fetchReviews();
+    }
+  }, [email]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const fetchReviews = async () => {
-    const jwt = localStorage.getItem("jwt"); // Token lấy từ localStorage
     const config = {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -112,9 +120,45 @@ function ProductDetails() {
       );
 
       console.log("API Response:", response.data);
+      let alreadyCommented = response.data.some(
+        (review) => review.orderDetailId === itemId
+      );
+      setVisibleCommentBox(
+        !alreadyCommented // nếu như bình luận về orderdetailid này rồi thì ẩn khung comment đi
+      );
+
+      const reviewsToMove = response.data.filter(
+        (review) => review.userEmail === email
+      );
+
+      if (reviewsToMove.length > 0) {
+        // Lọc các phần tử có userEmail trùng với email ra khỏi mảng gốc
+        response.data = response.data.filter(
+          (review) => review.userEmail !== email
+        );
+
+        // Thêm các phần tử tìm được lên đầu mảng
+        response.data.unshift(...reviewsToMove);
+      }
+
       setComments(response.data); // Lưu dữ liệu reviews vào state
     } catch (error) {
       console.error("Error:", error); // In lỗi nếu có
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.get(
+        `${API_BASE_URL}/api/users/profile`,
+        config
+      );
+      setEmail(response.data.email);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
     }
   };
 
@@ -282,7 +326,7 @@ function ProductDetails() {
           </div>
         </section>
 
-        <CommentBox itemId={itemId} />
+        {isReviewing && visibleCommentBox && <CommentBox itemId={itemId} />}
 
         {/* Recent Raiting and reviews */}
         <section>
@@ -293,10 +337,12 @@ function ProductDetails() {
           {comments.map((comment, index) => (
             <UserComment
               key={"comment#" + index}
+              reviewId={comment.id}
               email={comment.userEmail}
               rating={comment.rating}
               content={comment.comment}
               productDetailName={comment.productDetailName}
+              currentEmail={email}
             />
           ))}
 
