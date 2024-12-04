@@ -77,8 +77,8 @@ const OrderCard = ({ order }) => {
         </Grid>
         <Grid item xs={3}>
           <p>Tạm tính: {order.totalPrice}đ</p>
-          <p>Giảm giá: {order.discountPrice || 0}đ</p> 
-          <p>Tổng tiền: {order.totalPrice - (order.discountPrice || 0)}đ</p>
+          <p>Giảm giá: {order.totalDiscountedPrice || 0}đ</p>
+          <p>Tổng tiền: {order.totalPrice - (order.totalDiscountedPrice || 0)}đ</p>
         </Grid>
         <Grid item xs={4}>
           {order.orderStatus === 5 && (

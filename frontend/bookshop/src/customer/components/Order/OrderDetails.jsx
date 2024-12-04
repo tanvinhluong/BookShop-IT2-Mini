@@ -82,7 +82,7 @@ const OrderDetails = () => {
             (addr) => addr.id === order?.shippingAddressId
           )}
         />
-        <p>Tổng tiền đơn hàng: {order?.totalPrice}đ</p>
+        <p>Tổng tiền đơn hàng: {order.totalPrice - (order.totalDiscountedPrice || 0)}đ</p>
       </div>
       <div className="py-20">
         <OrderTracker
@@ -114,7 +114,7 @@ const OrderDetails = () => {
                     <span>Số lượng: {item.quantity}</span>
                   </p>
                   <p>Tạm tính: {item?.price}đ</p>
-                  <p>Giảm giá còn: {order?.totalPrice}đ</p>
+                  <p>Giảm giá còn: {order.totalPrice - (order.totalDiscountedPrice || 0)}đ</p>
                 </div>
               </div>
             </Grid>
