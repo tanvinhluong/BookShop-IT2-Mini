@@ -1,13 +1,12 @@
 package com.bookshop.ecommerce.service;
 
 import com.bookshop.ecommerce.exception.ProductException;
+import com.bookshop.ecommerce.exception.UserException;
 import com.bookshop.ecommerce.model.*;
 import com.bookshop.ecommerce.repository.CartRepository;
+import com.bookshop.ecommerce.repository.UserRepository;
 import com.bookshop.ecommerce.request.AddItemRequest;
-import com.bookshop.ecommerce.service.impl.ICartItemService;
-import com.bookshop.ecommerce.service.impl.ICartService;
-import com.bookshop.ecommerce.service.impl.IProductDetailService;
-import com.bookshop.ecommerce.service.impl.IProductService;
+import com.bookshop.ecommerce.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,8 @@ public class CartService implements ICartService {
     private ICartItemService cartItemService;
     @Autowired
     private IProductDetailService productDetailService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -65,5 +66,21 @@ public class CartService implements ICartService {
         cart.setTotalItem(totalItem);
         cart.setTotalPrice(totalPrice);
         return cartRepository.save(cart);
+    }
+
+    public void clearCart(Integer userId) {
+        User user = null;
+        try {
+            user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserException("User not found"));
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
+
+        Cart cart = cartRepository.findByUserId(user.getId());
+        if (cart != null) {
+            cart.getCartItems().clear();
+            cartRepository.save(cart);
+        }
     }
 }

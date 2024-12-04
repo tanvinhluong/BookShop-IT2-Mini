@@ -40,4 +40,12 @@ public class CartController {
         ApiResponse res = new ApiResponse("Item Added To Cart Successfully", true);
         return new ResponseEntity<ApiResponse>(res, HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<ApiResponse> clearCart(@RequestHeader("Authorization") String jwt) throws UserException {
+        User user = shoppingFacade.getUserByJwt(jwt);
+        shoppingFacade.clearCart(user.getId());
+        ApiResponse res = new ApiResponse("Cart Cleared Successfully", true);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }

@@ -43,4 +43,7 @@ public class ShoppingFacade {
     public CartItem updateCartItem(Integer userId, Integer cartItemId, Integer quantity, CartItem cartItem) throws CartItemException, UserException {
         return cartItemService.updateCartItem(userId, cartItemId, quantity, cartItem);
     }
+    public void clearCart(Integer userId) {
+        cartService.clearCart(userId);
+    }
 }

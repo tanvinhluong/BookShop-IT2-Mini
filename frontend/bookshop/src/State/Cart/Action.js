@@ -12,6 +12,9 @@ import {
   UPDATE_CART_ITEM_FAILURE,
   UPDATE_CART_ITEM_REQUEST,
   UPDATE_CART_ITEM_SUCCESS,
+  CLEAR_CART_FAILURE,
+  CLEAR_CART_REQUEST,
+  CLEAR_CART_SUCCESS
 } from './ActionType'
 
 export const getCart = () => async (dispatch) => {
@@ -61,5 +64,20 @@ export const updateCartItem = (reqData) => async (dispatch) => {
     dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data })
   } catch (error) {
     dispatch({ type: UPDATE_CART_ITEM_FAILURE, payload: error.message })
+  }
+}
+export const clearCart = () => async (dispatch) => {
+  dispatch({ type: CLEAR_CART_REQUEST });
+  try {
+    const { data } = await api.delete(`/api/cart/clear`)
+    dispatch({ type: CLEAR_CART_SUCCESS });
+    console.log("clear: " + data)
+  } catch (error) {
+    dispatch({
+      type: CLEAR_CART_FAILURE,
+      payload: error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    })
   }
 }

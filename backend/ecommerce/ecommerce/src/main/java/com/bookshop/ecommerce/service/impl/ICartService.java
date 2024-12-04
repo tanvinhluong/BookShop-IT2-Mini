@@ -9,4 +9,5 @@ public interface ICartService {
     public Cart createCart(User user);
     public String addToCartItem(Integer UserId, AddItemRequest addItemRequest) throws ProductException;
     public Cart findUserCart(Integer userId);
+    public void clearCart(Integer userId);
 }

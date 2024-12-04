@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {Wallet, CircleDollarSign } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../config/apiConfig'
+import { clearCart } from '../../../State/Cart/Action';
+import {useDispatch} from "react-redux";
 
 // Mock data for payment methods
 const paymentMethods = [
@@ -39,6 +41,7 @@ const PaymentInfo = ({orderId}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const jwt = localStorage.getItem('jwt')
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -74,7 +77,9 @@ const PaymentInfo = ({orderId}) => {
         const response = await axios.post(`${API_BASE_URL}/api/payments/momo`, {
           amount,
           userId
-        }, config);
+        }, config)
+        // clear cart
+        dispatch(clearCart());
 
         window.location.href = response.data.paymentUrl;
       } else if (selectedMethod === 2) { // VNPay
@@ -82,9 +87,10 @@ const PaymentInfo = ({orderId}) => {
           amount,
           userId
         }, config);
-
+        dispatch(clearCart());
         window.location.href = response.data.paymentUrl;
       } else { // Thanh toán khi nhận hàng
+        dispatch(clearCart());
         window.location.href = '/checkout?step=5';
       }
     } catch (error) {
