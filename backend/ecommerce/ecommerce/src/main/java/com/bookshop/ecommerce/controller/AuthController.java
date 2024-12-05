@@ -75,9 +75,11 @@ public class AuthController {
         newUser.setLastName(lastName);
         newUser.setCreatedAt(new Date());
         newUser.setDefault_address_id(0);
-        newUser.setMobile("0");
+        newUser.setMobile(mobile);
         newUser.setActive(false);
         User savedUser = userRepo.save(newUser);
+
+        cartService.createCart(savedUser);
 
         String verifyMailToken = verifyService.createVerificationToken(savedUser);
         emailService.sendVerificationEmail(savedUser, verifyMailToken);

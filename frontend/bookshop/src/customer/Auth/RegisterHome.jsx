@@ -25,6 +25,7 @@ const RegisterHome = () => {
       lastName: data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
+      mobile: data.get('mobile'),
     }
     dispatch(register(userData))
     console.log('userData', userData)
@@ -75,6 +76,17 @@ const RegisterHome = () => {
               fullWidth
               autoComplete="password"
               type="password"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+                required
+                id="mobile"
+                name="mobile"
+                label="Mobile"
+                fullWidth
+                autoComplete="mobile"
+                type="mobile"
             />
           </Grid>
           <Grid item xs={12}>

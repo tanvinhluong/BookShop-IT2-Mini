@@ -7,6 +7,7 @@ import com.bookshop.ecommerce.model.Cart;
 import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.request.AddItemRequest;
 import com.bookshop.ecommerce.response.ApiResponse;
+import com.bookshop.ecommerce.service.impl.ICartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,18 @@ public class CartController {
     private ShoppingFacade shoppingFacade;
 
     @Autowired
+    private ICartService cartService;
+
+    @Autowired
     public CartController(ShoppingFacade shoppingFacade) {
         this.shoppingFacade = shoppingFacade;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Cart> createCartHandler(@RequestHeader("Authorization") String jwt) throws UserException {
+        User user = shoppingFacade.getUserByJwt(jwt);
+        Cart cart = cartService.createCart(user);
+        return new ResponseEntity<Cart>(cart, HttpStatus.CREATED);
     }
 
     @GetMapping("/")
