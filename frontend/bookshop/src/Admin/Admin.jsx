@@ -82,7 +82,7 @@ const menu = [
         style={{ width: 24, height: 24 }}
       />
     ),
-    requiredPermission: "Order Manager",
+    requiredPermission: "All",
   },
   {
     name: "Promotion",
@@ -174,7 +174,7 @@ const Admin = () => {
           {userPermission?.includes("All") && (
             <Route path="/products" element={<ProductsTable />} />
           )}
-          {userPermission?.includes("Order Manager") && (
+          {userPermission?.includes("All") && (
             <Route path="/orders" element={<OrdersTable />} />
           )}
           {userPermission?.includes("All") && (
@@ -183,7 +183,7 @@ const Admin = () => {
           {userPermission?.includes("All") && (
             <Route path="/products/edit/:productId" element={<EditProduct />} />
           )}
-          {userPermission?.includes("Order Manager") && (
+          {userPermission?.includes("All") && (
             <Route path="/orders/:orderId" element={<OrderDetails />} />
           )}
           {userPermission?.includes("All") && (

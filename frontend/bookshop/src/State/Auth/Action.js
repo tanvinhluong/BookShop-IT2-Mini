@@ -83,7 +83,7 @@ export const adminLogin = (userData) => async (dispatch) => {
     if (user.jwt) {
       localStorage.setItem("adminjwt", user.jwt);
     }
-    console.log("Login response:", response); // Log response here
+    console.log("Login response:", response);
     dispatch(loginSuccess(user.jwt, response.data.message));
     window.location.reload();
   } catch (error) {

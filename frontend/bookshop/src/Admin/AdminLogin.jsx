@@ -19,7 +19,6 @@ const AdminLogin = () => {
 
     const checkJwt = async () => {
       if (jwt && (userRole?.includes("Admin") || userRole?.includes("Staff"))) {
-        // Chờ 1 giây trước khi điều hướng
         await delay(1000);
         navigate("/admin");
       } else {
@@ -34,16 +33,14 @@ const AdminLogin = () => {
   useEffect(() => {
     const fetchAdminData = async () => {
       if (jwt) {
-        // Dispatch action để lấy dữ liệu admin
+
         dispatch(getAdmin(jwt));
 
-        // Hàm delay
         const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        // Chờ 1 giây trước khi điều hướng
         await delay(1000);
 
-        // Điều hướng đến trang admin sau khi chờ
+
         navigate("/admin");
       }
     };

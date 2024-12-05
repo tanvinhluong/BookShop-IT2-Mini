@@ -19,7 +19,7 @@ import './components/CSS/Admin.css';
 import dashBoardImg from './components/assets/dashboard-color.png';
 import checkListImg from './components/assets/checklist.png';
 import Header from './components/Header';
-import OrderDeli from './components/OrderDeli'; // Đảm bảo đã import đúng
+import OrderDeli from './components/OrderDeli';
 
 const menu = [
   {
@@ -35,7 +35,7 @@ const menu = [
   },
   {
     name: 'Orders',
-    path: '/admindeli/orders', // Đảm bảo đường dẫn đúng
+    path: '/admindeli/orders',
     icon: (
       <img
         src={checkListImg}
@@ -122,8 +122,8 @@ const AdminDeli = () => {
     </div>
   }
 />
-          <Route path="/orders" element={<OrderDeli />} /> {/* Hiển thị OrderDeli */}
-          <Route path="/orders/:orderId" element={<OrderDetails />} /> {/* Hiển thị OrderDetails khi có orderId */}
+          <Route path="/orders" element={<OrderDeli />} />
+          <Route path="/orders/:orderId" element={<OrderDetails />} />
         </Routes>
       </div>
     </div>

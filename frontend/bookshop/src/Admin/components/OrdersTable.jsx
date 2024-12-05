@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./CSS/ListOrder.css";
-import { API_BASE_URL } from "../../config/apiConfig";
+import { API_BASE_URL, API_TOKEN } from "../../config/apiConfig";
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
@@ -185,6 +185,14 @@ const OrdersTable = () => {
                   >
                      Edit
                   </button>
+                )}
+                {order.orderStatus === 0 && (
+                    <button
+                      className="ordersTable-approveBtn"
+                      // onClick={() => handleRequestConfirmation(order.id)}
+                    >
+                    Gửi yêu cầu xác nhận
+                    </button>
                 )}
                   </div>
               </p>
