@@ -79,6 +79,8 @@ public class AuthController {
         newUser.setActive(false);
         User savedUser = userRepo.save(newUser);
 
+        cartService.createCart(savedUser);
+
         String verifyMailToken = verifyService.createVerificationToken(savedUser);
         emailService.sendVerificationEmail(savedUser, verifyMailToken);
 
