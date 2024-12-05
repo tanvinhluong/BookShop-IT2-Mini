@@ -75,7 +75,7 @@ public class AuthController {
         newUser.setLastName(lastName);
         newUser.setCreatedAt(new Date());
         newUser.setDefault_address_id(0);
-        newUser.setMobile(mobile);
+        newUser.setMobile("0");
         newUser.setActive(false);
         User savedUser = userRepo.save(newUser);
 
