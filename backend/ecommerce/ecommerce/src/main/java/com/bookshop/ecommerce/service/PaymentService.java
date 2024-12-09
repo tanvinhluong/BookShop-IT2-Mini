@@ -47,6 +47,7 @@ public class PaymentService implements IPaymentService {
         PaymentInfo payment = new PaymentInfo();
         payment.setPaymentName("MOMO");
         payment.setPaymentCode(generatePaymentCode());
+        payment.setPaymentPhone(user.getMobile());
         payment.setPaymentAmount(amount);
         payment.setCreatedAt(getCurrentDateTime());
         payment.setMethod("MOMO_WALLET");
