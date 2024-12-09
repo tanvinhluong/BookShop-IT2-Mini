@@ -44,4 +44,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "PROMOTION_ID") // Liên kết với bảng Promotion qua promotionId
     private Promotion promotion;
+
+    @Column(name = "is_confirmed", nullable = false)
+    private boolean isConfirmed = false;
 }

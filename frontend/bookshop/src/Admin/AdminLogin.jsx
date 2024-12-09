@@ -16,19 +16,22 @@ const AdminLogin = () => {
 
   useEffect(() => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  
     const checkJwt = async () => {
       if (jwt && (userRole?.includes("Admin") || userRole?.includes("Staff"))) {
         await delay(1000);
         navigate("/admin");
       } else {
-        localStorage.clear();
+        localStorage.removeItem("adminjwt");
+        localStorage.removeItem("adminroles");
+        localStorage.removeItem("adminpermissions");
         setLoading(false);
       }
     };
-
+  
     checkJwt();
-  }, []);
+  }, [jwt, userRole, navigate]);
+   
 
   useEffect(() => {
     const fetchAdminData = async () => {

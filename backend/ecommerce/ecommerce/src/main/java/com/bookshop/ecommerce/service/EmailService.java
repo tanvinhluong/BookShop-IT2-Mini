@@ -1,5 +1,6 @@
 package com.bookshop.ecommerce.service;
 
+import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -79,6 +80,72 @@ public class EmailService {
                 + "        <p>Email này được gửi tự động, vui lòng không trả lời.</p>"
                 + "        <p>© 2024 Book Store. All rights reserved.</p>"
                 + "        <p>97 Man Thiện, phường Hiệp Phú, Thành phố Thủ Đức, TP. Hồ Chí Minh</p>"
+                + "    </div>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
+    }
+
+    public void sendOrderConfirmationEmail(User user, Order order, String token) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+        String htmlMsg = createOrderConfirmationTemplate(user.getFirstName(), order.getId(), token);
+
+        helper.setText(htmlMsg, true); // true = isHtml
+        helper.setTo(user.getEmail());
+        helper.setSubject("Xác nhận đơn hàng #" + order.getId());
+        try {
+            helper.setFrom("noreply@store.com", "Store"); // Tên hiển thị thay vì email
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        mailSender.send(mimeMessage);
+    }
+
+    private String createOrderConfirmationTemplate(String firstName, int orderId, String token) {
+        return "<!DOCTYPE html>"
+                + "<html>"
+                + "<head>"
+                + "<style>"
+                + "    .email-container { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }"
+                + "    .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }"
+                + "    .content { padding: 20px; background-color: #f8f9fa; }"
+                + "    .button { display: inline-block; padding: 10px 20px; background-color: #3498db; "
+                + "              color: white; text-decoration: none; border-radius: 5px; margin: 10px 0; }"
+                + "    .button.cancel { background-color: #e74c3c; }"
+                + "    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }"
+                + "</style>"
+                + "</head>"
+                + "<body>"
+                + "<div class='email-container'>"
+                + "    <div class='header'>"
+                + "        <h1>Store</h1>"
+                + "    </div>"
+                + "    <div class='content'>"
+                + "        <h2>Xin chào " + firstName + ",</h2>"
+                + "        <p>Cảm ơn bạn đã đặt hàng tại Store.</p>"
+                + "        <p>Vui lòng nhấn vào nút bên dưới để xác nhận hoặc hủy đơn hàng #" + orderId + " của bạn:</p>"
+                + "        <div style='text-align: center;'>"
+                + "            <a href='http://localhost:5454/api/admin/orders/user-confirm-order?token=" + token + "' class='button' "
+                + "               style='color: white;'>Xác nhận đơn hàng</a>"
+                + "            <a href='http://localhost:5454/api/admin/orders/user-cancel-order?token=" + token + "' class='button cancel' "
+                + "               style='color: white;'>Hủy đơn hàng</a>"
+                + "        </div>"
+                + "        <p>Hoặc bạn có thể copy các đường link sau và dán vào trình duyệt:</p>"
+                + "        <p style='word-break: break-all;'>"
+                + "            <small>Xác nhận đơn hàng: http://localhost:5454/api/admin/orders/user-confirm-order?token=" + token + "</small>"
+                + "        </p>"
+                + "        <p style='word-break: break-all;'>"
+                + "            <small>Hủy đơn hàng: http://localhost:5454/api/admin/orders/user-cancel-order?token=" + token + "</small>"
+                + "        </p>"
+                + "        <p>Link này sẽ hết hạn sau 4 ngày. Nếu đây là đơn hàng của bạn, vui lòng xác nhận hoặc hủy nếu cần thiết.</p>"
+                + "        <p>Nếu bạn không yêu cầu, hãy bỏ qua email này.</p>"
+                + "    </div>"
+                + "    <div class='footer'>"
+                + "        <p>Email này được gửi tự động, vui lòng không trả lời.</p>"
+                + "        <p>© 2024 Store. All rights reserved.</p>"
                 + "    </div>"
                 + "</div>"
                 + "</body>"

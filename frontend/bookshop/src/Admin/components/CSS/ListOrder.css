@@ -117,7 +117,7 @@ hr {
 .ordersTable-actions {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Khoảng cách giữa các nút */
+  gap: 10px;
 }
 
 .ordersTable-detailsBtn,
@@ -135,4 +135,107 @@ hr {
 .ordersTable-editDeliveryDateBtn:hover {
   background-color: #0056b3;
 }
+
+.ordersTable-container {
+  font-family: Arial, sans-serif;
+  max-width: 1200px; /* Mở rộng container */
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ordersTable-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  font-weight: bold;
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.ordersTable-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  padding: 10px 0; /* Thu gọn hàng */
+  border-top: 1px solid #ddd;
+}
+
+.ordersTable-row p {
+  text-align: center;
+}
+
+.ordersTable-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px; /* Thu gọn khoảng cách giữa các nút */
+}
+
+.ordersTable-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 10px; /* Thu gọn padding */
+  cursor: pointer;
+  border-radius: 4px; /* Giảm độ cong */
+  transition: background-color 0.3s;
+}
+
+.ordersTable-btn:hover {
+  background-color: #0056b3;
+}
+
+.ordersTable-editForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ordersTable-editForm input {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.ordersTable-updateBtn {
+  background-color: #28a745;
+}
+
+.ordersTable-updateBtn:hover {
+  background-color: #218838;
+}
+
+.ordersTable-cancelBtn {
+  background-color: #dc3545;
+}
+
+.ordersTable-cancelBtn:hover {
+  background-color: #c82333;
+}
+
+.ordersTable-select{
+  padding: 8px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: border-color 0.3s;
+}
+.ordersTable-select:hover,
+.ordersTable-select:focus{
+  border-color: #007bff;
+}
+
 

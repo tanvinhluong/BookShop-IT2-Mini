@@ -107,7 +107,7 @@ hr {
   margin: 20px 0;
 }
 
-select {
+.orderdeli-select {
   padding: 8px;
   margin: 20px 0;
   width: 100%;
@@ -124,8 +124,8 @@ select {
   transition: border-color 0.3s;
 }
 
-select:hover,
-select:focus {
+.orderdeli-select:hover,
+.orderdeli-select:focus {
   border-color: #007bff;
 }
 
@@ -136,3 +136,4 @@ label {
   text-align: center;
   color: #495057;
 }
+

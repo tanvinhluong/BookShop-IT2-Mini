@@ -145,9 +145,19 @@ export const getAdmin = (jwt) => async (dispatch) => {
   }
 };
 
-export const logout = (token) => {
+export const logout = (userType) => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
-    localStorage.clear();
+
+    if (userType === "admin") {
+      localStorage.removeItem("adminjwt");
+      localStorage.removeItem("adminroles");
+      localStorage.removeItem("adminpermissions");
+    } else if (userType === "customer") {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("permissions");
+    }
   };
 };
+

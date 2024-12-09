@@ -10,10 +10,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, useNavigate, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
 import { logout } from "../State/Auth/Action";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -25,6 +24,8 @@ import CustomersTable from "./components/CustomersTable";
 import AdminDashboard from "./components/Dashboard";
 import EditProduct from "./components/EditProduct";
 import OrderDetails from "./components/OrderDetails";
+import OrderDeli from "./components/OrderDeli";
+import PromotionTable from "./components/PromotionTable";
 import "./components/CSS/Admin.css";
 import dashBoardImg from "./components/assets/dashboard-color.png";
 import checkListImg from "./components/assets/checklist.png";
@@ -32,7 +33,6 @@ import newProductImg from "./components/assets/new-product.png";
 import customerImg from "./components/assets/rating.png";
 import promotionImg from "./components/assets/shopping-online.png";
 import Header from "./components/Header";
-import PromotionTable from "./components/PromotionTable";
 import { PowerCircleIcon } from "lucide-react";
 
 const menu = [
@@ -54,7 +54,7 @@ const menu = [
     icon: (
       <img
         src={newProductImg}
-        alt="Dashboard"
+        alt="Products"
         style={{ width: 24, height: 24 }}
       />
     ),
@@ -66,7 +66,7 @@ const menu = [
     icon: (
       <img
         src={customerImg}
-        alt="Dashboard"
+        alt="Customers"
         style={{ width: 24, height: 24 }}
       />
     ),
@@ -78,7 +78,7 @@ const menu = [
     icon: (
       <img
         src={checkListImg}
-        alt="Dashboard"
+        alt="Orders"
         style={{ width: 24, height: 24 }}
       />
     ),
@@ -90,11 +90,23 @@ const menu = [
     icon: (
       <img
         src={promotionImg}
-        alt="Dashboard"
+        alt="Promotion"
         style={{ width: 24, height: 24 }}
       />
     ),
     requiredPermission: "All",
+  },
+  {
+    name: "Delivery Orders",
+    path: "/admin/delivery/orders",
+    icon: (
+      <img
+        src={checkListImg}
+        alt="Delivery Orders"
+        style={{ width: 24, height: 24 }}
+      />
+    ),
+    requiredPermission: "Order_Delivery",
   },
 ];
 
@@ -106,8 +118,15 @@ const Admin = () => {
   const navigate = useNavigate();
   const userPermission = localStorage.getItem("adminpermissions");
 
+  useEffect(() => {
+    if (!userPermission) {
+      navigate("/admin/login");
+    }
+  }, [userPermission, navigate]);
+
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.removeItem("adminpermissions");
     navigate("/admin/login");
   };
 
@@ -123,7 +142,7 @@ const Admin = () => {
     >
       <List>
         {menu.map(
-          (item, index) =>
+          (item) =>
             !!userPermission?.includes(item.requiredPermission) && (
               <ListItem
                 key={item.name}
@@ -149,7 +168,7 @@ const Admin = () => {
           </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding onClick={() => handleLogout()}>
+        <ListItem disablePadding onClick={handleLogout}>
           <ListItemButton>
             <ListItemIcon>
               <PowerCircleIcon />
@@ -184,10 +203,13 @@ const Admin = () => {
             <Route path="/products/edit/:productId" element={<EditProduct />} />
           )}
           {userPermission?.includes("All") && (
-            <Route path="/orders/:orderId" element={<OrderDetails />} />
-          )}
-          {userPermission?.includes("All") && (
             <Route path="/promotion" element={<PromotionTable />} />
+          )}
+          {userPermission?.includes("Order_Delivery") && (
+            <Route path="/delivery/orders" element={<OrderDeli />} />
+          )}
+          {userPermission?.includes("Order_Delivery") && (
+            <Route path="/orders/:orderId" element={<OrderDetails />} />
           )}
         </Routes>
       </div>

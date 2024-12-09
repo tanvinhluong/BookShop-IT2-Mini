@@ -153,6 +153,7 @@ const OrderDeli = () => {
       <div>
         <label htmlFor="status-filter">Filter by Order Status:</label>
         <select
+          className="orderdeli-select"
           id="status-filter"
           value={selectedStatus}
           onChange={handleStatusChange}

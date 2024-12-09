@@ -39,17 +39,37 @@ const OrdersTable = () => {
     }
   };
 
+  const handleRequestConfirmation = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.post(
+        `${API_BASE_URL}/api/admin/orders/request-order-confirmation`,
+        null,
+        {
+          params: { orderId },
+          ...config,
+        }
+      );
+      alert(response.data);
+    } catch (error) {
+      console.error("Error sending order confirmation request:", error);
+      alert("Có lỗi xảy ra khi gửi yêu cầu xác nhận.");
+    }
+  };
+
   const handleShipOrder = async (orderId) => {
     try {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
       await axios.put(
-        `${API_BASE_URL}/api/admin/orders/${orderId}/ship`,
+        `${API_BASE_URL}/api/admin/orders/${orderId}/approve`,
         null,
         config
       );
-      alert("Đơn hàng đã chuyển sang trạng thái Đang giao!");
+      alert("Đơn hàng đã chuyển sang trạng thái Đã duyệt!");
       fetchOrders();
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -102,7 +122,9 @@ const OrdersTable = () => {
       setEditingOrderId(orderId);
       setNewDeliveryDate(currentDeliveryDate);
     } else {
-      alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt.");
+      alert(
+        "Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt."
+      );
     }
   };
 
@@ -115,7 +137,8 @@ const OrdersTable = () => {
       <h1>All Orders List</h1>
       <div className="ordersTable-filter">
         <label htmlFor="status-filter">Filter by Order Status:</label>
-        <select
+        <select 
+          className="  "
           id="status-filter"
           value={selectedStatus}
           onChange={handleStatusChange}
@@ -161,9 +184,9 @@ const OrdersTable = () => {
                     : "Không xác định"}
                 </p>
                 <p>
-                  {order.orderStatus === 0 && (
+                  {order.confirmed === true && (
                     <button
-                      className="ordersTable-approveBtn"
+                      className="ordersTable-btn ordersTable-approveBtn"
                       onClick={() => handleShipOrder(order.id)}
                     >
                       Duyệt
@@ -172,30 +195,36 @@ const OrdersTable = () => {
                 </p>
                 <p>
                   <div className="ordersTable-actions">
-                  <button
-                    className="ordersTable-detailsBtn"
-                    onClick={() => handleDetailsClick(order.id)}
-                  >
-                    Details
-                  </button>
-                {order.orderStatus === 0 && (
-                  <button
-                    className="ordersTable-editDeliveryDateBtn"
-                    onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
-                  >
-                     Edit
-                  </button>
-                )}
-                {order.orderStatus === 0 && (
                     <button
-                      className="ordersTable-approveBtn"
-                      // onClick={() => handleRequestConfirmation(order.id)}
+                      className="ordersTable-btn ordersTable-detailsBtn"
+                      onClick={() => handleDetailsClick(order.id)}
                     >
-                    Gửi yêu cầu xác nhận
+                      Details
                     </button>
-                )}
+                    {order.orderStatus === 0 && (
+                      <button
+                        className="ordersTable-btn ordersTable-editDeliveryDateBtn"
+                        onClick={() =>
+                          handleEditClick(
+                            order.id,
+                            order.deliveryDate,
+                            order.orderStatus
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {order.orderStatus === 0 && order.confirmed === false && (
+                      <button
+                        className="ordersTable-btn ordersTable-requestConfirmBtn"
+                        onClick={() => handleRequestConfirmation(order.id)}
+                      >
+                        Gửi yêu cầu xác nhận
+                      </button>
+                    )}
                   </div>
-              </p>
+                </p>
               </div>
               {editingOrderId === order.id && (
                 <div className="ordersTable-editForm">

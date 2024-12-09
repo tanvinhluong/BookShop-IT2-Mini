@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>Kích hoạt tài khoản thành công</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #28a745;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .checkmark {
+            color: white;
+            font-size: 40px;
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .loader {
+            width: 150px;
+            height: 3px;
+            background: #f3f3f3;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+        .loader:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: #28a745;
+            animation: load 5s linear forwards;
+        }
+        @keyframes load {
+            0% { width: 0% }
+            100% { width: 100% }
+        }
+    </style>
+</head>
+<body>
+<div class='container'>
+    <div class='success-icon'>
+        <span class='checkmark'>✓</span>
+    </div>
+    <h1>Xác nhận hủy đơn hàng thành công!</h1>
+    <p>Hẹn gặp lại lần sau !!!.</p>
+    <div class='loader'></div>
+    <p>Đang chuyển hướng về trang chủ...</p>
+</div>
+<script>
+    setTimeout(function() {
+        window.location.href = 'http://localhost:3000/';
+    }, 5000);
+</script>
+</body>
+</html>
