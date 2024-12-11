@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useNavigate, useLocation } from 'react-router-dom'
-import cross_icon from '../../customer/components/assets/cross_icon.png'
-import './CSS/ListProduct.css'
-import { API_BASE_URL, API_TOKEN } from '../../config/apiConfig'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import cross_icon from "../../customer/components/assets/cross_icon.png";
+import "./CSS/ListProduct.css";
+import { API_BASE_URL, API_TOKEN } from "../../config/apiConfig";
 
 const ProductsTable = () => {
-  const [results, setResults] = useState([])
-  const [imageUrl, setImage] = useState(null)
-  const [showForm, setShowForm] = useState(false)
+  const [results, setResults] = useState([]);
+  const [imageUrl, setImage] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [newProduct, setNewProduct] = useState({
-    productName: '',
-    productDescription: '',
+    productName: "",
+    productDescription: "",
     price: 0,
     isActive: true,
-    imageUrl: '',
-    supplierId: '',
+    imageUrl: "",
+    supplierId: "",
     categoryIds: [],
-  })
-  const [suppliers, setSuppliers] = useState([])
-  const [categories, setCategories] = useState([])
-  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
-  const [loadingCategories, setLoadingCategories] = useState(true)
-  const navigate = useNavigate()
-  const jwt = localStorage.getItem('jwt')
-  const location = useLocation()
+    quantity: 0,
+    productDetailName: "",
+  });
+  const [suppliers, setSuppliers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const navigate = useNavigate();
+  const jwt = localStorage.getItem("jwt");
+  const location = useLocation();
 
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem("jwt");
         const suppliersResponse = await axios.get(
           `${API_BASE_URL}/api/admin/supplier/all`,
           {
@@ -37,179 +39,197 @@ const ProductsTable = () => {
               Authorization: `Bearer ${API_TOKEN}`,
             },
           }
-        )
+        );
         if (Array.isArray(suppliersResponse.data)) {
-          setSuppliers(suppliersResponse.data)
+          setSuppliers(suppliersResponse.data);
         } else {
           console.error(
-            'Dữ liệu suppliers không phải là một mảng:',
+            "Dữ liệu suppliers không phải là một mảng:",
             suppliersResponse.data
-          )
+          );
         }
       } catch (error) {
-        console.error('Error fetching suppliers:', error)
+        console.error("Error fetching suppliers:", error);
       } finally {
-        setLoadingSuppliers(false)
+        setLoadingSuppliers(false);
       }
-    }
+    };
 
-    fetchSuppliers()
-  }, [])
+    fetchSuppliers();
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const categoriesResponse = await axios.get(
           `${API_BASE_URL}/api/category/get`
-        )
+        );
         if (Array.isArray(categoriesResponse.data)) {
-          setCategories(categoriesResponse.data)
+          setCategories(categoriesResponse.data);
         } else {
           console.error(
-            'Dữ liệu categories không phải là một mảng:',
+            "Dữ liệu categories không phải là một mảng:",
             categoriesResponse.data
-          )
+          );
         }
       } catch (error) {
-        console.error('Error fetching categories:', error)
+        console.error("Error fetching categories:", error);
       } finally {
-        setLoadingCategories(false)
+        setLoadingCategories(false);
       }
-    }
+    };
 
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
           `${API_BASE_URL}/api/products/getAll?pageNumber=0&pageSize=100`
-        )
+        );
         if (response.data && Array.isArray(response.data.content)) {
-          setResults(response.data.content)
+          setResults(response.data.content);
         } else {
-          console.error('Dữ liệu sản phẩm không đúng định dạng:', response.data)
+          console.error(
+            "Dữ liệu sản phẩm không đúng định dạng:",
+            response.data
+          );
         }
       } catch (error) {
-        console.error('Có lỗi xảy ra khi fetch sản phẩm:', error)
+        console.error("Có lỗi xảy ra khi fetch sản phẩm:", error);
       }
-    }
-    fetchProducts()
-  }, [])
+    };
+    fetchProducts();
+  }, []);
 
   const handleDelete = async (productId) => {
-    const conFirmDelete = window.confirm('Bạn có muốn xóa không?')
+    const conFirmDelete = window.confirm("Bạn có muốn xóa không?");
     if (conFirmDelete) {
       try {
         const config = {
           headers: { Authorization: `Bearer ${jwt}` },
-        }
+        };
         await axios.delete(
           `${API_BASE_URL}/api/admin/products/${productId}/delete`,
           config
-        )
-        setResults(results.filter((product) => product.id !== productId))
+        );
+        setResults(results.filter((product) => product.id !== productId));
       } catch (error) {
-        console.error('Error deleting product:', error)
+        console.error("Error deleting product:", error);
       }
     }
-  }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setImage(objectUrl);
+      setNewProduct((prev) => ({
+        ...prev,
+        imageUrl: objectUrl,
+      }));
+    }
+  };
 
   const handleEdit = (productId) => {
-    navigate(`/admin/products/edit/${productId}`)
-  }
+    navigate(`/admin/products/edit/${productId}`);
+  };
 
   const handleAddProduct = () => {
-    setShowForm(true)
-  }
+    setShowForm(true);
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setNewProduct((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleCategoryChange = (e) => {
-    const { value } = e.target
+    const { value } = e.target;
     setNewProduct((prev) => ({
       ...prev,
       categoryIds: Array.from(
         e.target.selectedOptions,
         (option) => option.value
       ),
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+
     if (
       !newProduct.productName ||
       !newProduct.price ||
       !newProduct.supplierId ||
       newProduct.categoryIds.length === 0
     ) {
-      console.error('Các trường bắt buộc chưa được điền đầy đủ!')
-      return
+      console.error("Các trường bắt buộc chưa được điền đầy đủ!");
+      return;
     }
 
     const productData = {
       productName: newProduct.productName,
       createdAt: new Date().toISOString(),
       supplierId: newProduct.supplierId,
-      productDescription: newProduct.productDescription || '',
-      imageUrl: imageUrl || '',
+      productDescription: newProduct.productDescription || "",
+      imageUrl: newProduct.imageUrl || "", // Sử dụng imageUrl đã được lưu trong state
       price: newProduct.price,
       isActive: newProduct.isActive,
       numRate: 0,
-      quantity: 0,
+      quantity: newProduct.quantity,
       categoryIds: newProduct.categoryIds,
-    }
+      productDetailName: newProduct.productDetailName,
+    };
 
     try {
-      const token = localStorage.getItem('jwt')
+      const token = localStorage.getItem("jwt");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-      }
+      };
 
       const response = await axios.post(
         `${API_BASE_URL}/api/admin/products/create`,
         productData,
         config
-      )
+      );
 
-      setShowForm(false)
-      setResults((prev) => [...prev, response.data])
+      setShowForm(false);
+      setResults((prev) => [...prev, response.data]);
       setNewProduct({
-        productName: '',
-        productDescription: '',
+        productName: "",
+        productDescription: "",
         price: 0,
         isActive: true,
-        imageUrl: '',
-        supplierId: '',
+        imageUrl: "",
+        supplierId: "",
         categoryIds: [],
-      })
-      setImage(null)
+        quantity: 0,
+        productDetailName: "",
+      });
+      alert("Thêm sản phẩm thành công");
     } catch (error) {
       console.error(
-        'Error adding product:',
+        "Error adding product:",
         error.response ? error.response.data : error.message
-      )
+      );
     }
-  }
-
+  };
   const handleCancel = () => {
-    setShowForm(false)
-  }
+    setShowForm(false);
+  };
 
   return (
     <div className="list-product">
-      {location.search.includes('message=edit_success') && (
+      {location.search.includes("message=edit_success") && (
         <div className="success-message">Edit successful!</div>
       )}
       <button className="add-product-button" onClick={handleAddProduct}>
@@ -237,9 +257,9 @@ const ProductsTable = () => {
                   className="listproduct-product-icon"
                 />
                 <p>{result.productName}</p>
-                <p>{result.productDescription || 'No description'}</p>
+                <p>{result.productDescription || "No description"}</p>
                 <p>{result.price.toLocaleString()} VND</p>
-                <p>{result.quantity || 'N/A'}</p>
+                <p>{result.quantity || "N/A"}</p>
                 <img
                   onClick={() => handleDelete(result.id)}
                   src={cross_icon}
@@ -268,6 +288,16 @@ const ProductsTable = () => {
             />
           </label>
           <label>
+            Product Detail Name:
+            <input
+              type="text"
+              name="productDetailName"
+              value={newProduct.productDetailName}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
             Product Description:
             <input
               type="text"
@@ -282,6 +312,16 @@ const ProductsTable = () => {
               type="number"
               name="price"
               value={newProduct.price}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Quantity:
+            <input
+              type="number"
+              name="quantity"
+              value={newProduct.quantity}
               onChange={handleInputChange}
               required
             />
@@ -334,12 +374,12 @@ const ProductsTable = () => {
           </label>
           <label>
             Image:
-            <input type="file" accept="image/*" />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
             {imageUrl && (
               <img
                 src={imageUrl}
                 alt="Product Preview"
-                style={{ width: '100px', height: '100px', marginTop: '10px' }}
+                style={{ width: "100px", height: "100px", marginTop: "10px" }}
               />
             )}
           </label>
@@ -350,7 +390,7 @@ const ProductsTable = () => {
         </form>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ProductsTable
+export default ProductsTable;

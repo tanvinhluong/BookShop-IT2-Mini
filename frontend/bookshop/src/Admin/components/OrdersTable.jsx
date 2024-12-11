@@ -10,6 +10,7 @@ const OrdersTable = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [newDeliveryDate, setNewDeliveryDate] = useState("");
+  const [showRules, setShowRules] = useState(false);
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
@@ -118,14 +119,18 @@ const OrdersTable = () => {
   };
 
   const handleEditClick = (orderId, currentDeliveryDate, orderStatus) => {
-    if (orderStatus === 0) {
+    if (orderStatus !== 5 && orderStatus !== 2) {
       setEditingOrderId(orderId);
       setNewDeliveryDate(currentDeliveryDate);
     } else {
       alert(
-        "Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt."
+        "Bạn không thể chỉnh sửa ngày giao hàng khi đơn hàng đã hoàn tất hoặc bị hủy."
       );
     }
+  };
+
+  const toggleRules = () => {
+    setShowRules(!showRules);
   };
 
   useEffect(() => {
@@ -134,11 +139,40 @@ const OrdersTable = () => {
 
   return (
     <div className="ordersTable-container">
-      <h1>All Orders List</h1>
+      <h1 className="ordersTable-h1">All Orders List</h1>
+      <div className="ordersTable-rules">
+        <span className="ordersTable-rules-icon" onClick={toggleRules}>
+          !
+        </span>
+        {showRules && (
+          <div className={`ordersTable-rules-popup ${showRules ? "show" : ""}`}>
+            <h3>Quy tắc làm việc</h3>
+            <ul>
+              <li>
+                - Chỉ có thể chỉnh sửa ngày giao hàng nếu đơn hàng không bị hủy bỏ
+                hoặc đã hoàn tất.
+              </li>
+              <li> - Nếu quá số ngày quy định mà khách hàng chưa phản hồi thì có thể vào phần Details để đơn phương hủy đơn hàng.</li>
+              <li>
+                 - Chỉ có thể duyệt đơn hàng khi trạng thái là "Đang chờ duyệt" và đơn hàng đã được xác nhận từ khách hàng.
+              </li>
+              <li>
+                 - Đảm bảo cập nhật trạng thái đơn hàng chính xác sau khi xử lý.
+              </li>
+              <li>
+               - Bấm nút "Gửi yêu cầu xác nhận" để gửi mail cho khách hàng xác nhận đơn hoặc xác nhận hủy đơn.
+              </li>
+            </ul>
+            <button className="ordersTable-close-rules" onClick={toggleRules}>
+              Đóng
+            </button>
+          </div>
+        )}
+      </div>
       <div className="ordersTable-filter">
         <label htmlFor="status-filter">Filter by Order Status:</label>
-        <select 
-          className="  "
+        <select
+          className="ordersTable-select"
           id="status-filter"
           value={selectedStatus}
           onChange={handleStatusChange}
@@ -184,7 +218,7 @@ const OrdersTable = () => {
                     : "Không xác định"}
                 </p>
                 <p>
-                  {order.confirmed === true && (
+                  {(order.confirmed === true && order.orderStatus === 0) && (
                     <button
                       className="ordersTable-btn ordersTable-approveBtn"
                       onClick={() => handleShipOrder(order.id)}
@@ -201,7 +235,7 @@ const OrdersTable = () => {
                     >
                       Details
                     </button>
-                    {order.orderStatus === 0 && (
+                    {(order.orderStatus === 0 || order.orderStatus === 4) && (
                       <button
                         className="ordersTable-btn ordersTable-editDeliveryDateBtn"
                         onClick={() =>

@@ -219,6 +219,11 @@ public class OrderService implements IOrderService {
     @Override
     public Order updateDeliveryDate(Integer orderId, Date deliveryDate) throws OrderException {
         Order order = findOrderById(orderId);
+
+        if (order.getOrderStatus() == 5) {
+            order.setOrderStatus(4);
+        }
+
         order.setDeliveryDate(deliveryDate);
         return orderRepository.save(order);
     }

@@ -10,6 +10,7 @@ const OrderDeli = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [newDeliveryDate, setNewDeliveryDate] = useState("");
+  const [showRules, setShowRules] = useState(false);
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
@@ -56,11 +57,13 @@ const OrderDeli = () => {
     }
   };
 
-  const handleDeliveryDateUpdate = async (orderId) => {
+  const handleDeliveryDateUpdate = async (orderId, orderStatus) => {
     try {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
+
+      // Cập nhật ngày giao hàng
       await axios.put(
         `${API_BASE_URL}/api/admin/orders/${orderId}/update-delivery-date`,
         null,
@@ -69,7 +72,21 @@ const OrderDeli = () => {
           ...config,
         }
       );
-      alert("Ngày giao hàng đã được cập nhật!");
+
+      // Nếu trạng thái là "hủy bỏ", chuyển thành "đang giao"
+      if (orderStatus === 5) {
+        await axios.put(
+          `${API_BASE_URL}/api/admin/orders/${orderId}/deliver`,
+          null,
+          config
+        );
+        alert(
+          "Ngày giao hàng đã được cập nhật và trạng thái chuyển thành 'đang giao'!"
+        );
+      } else {
+        alert("Ngày giao hàng đã được cập nhật!");
+      }
+
       fetchOrders();
       setEditingOrderId(null);
     } catch (error) {
@@ -97,13 +114,11 @@ const OrderDeli = () => {
   };
 
   const handleEditClick = (orderId, currentDeliveryDate, orderStatus) => {
-    if (orderStatus === 3) {
+    if (orderStatus !== 2) {
       setEditingOrderId(orderId);
       setNewDeliveryDate(currentDeliveryDate);
     } else {
-      alert(
-        "Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ nhận đơn."
-      );
+      alert("Bạn không thể chỉnh sửa ngày giao hàng khi đơn hàng đã hoàn tất.");
     }
   };
 
@@ -143,13 +158,53 @@ const OrderDeli = () => {
     }
   };
 
+  const toggleRules = () => {
+    setShowRules(!showRules);
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
   return (
     <div className="orderdeli-container">
-      <h1>Orders List</h1>
+      <h1 className="orderdeli-h1">Orders Delivery List</h1>
+      <div className="ordersTable-rules">
+        <span className="ordersTable-rules-icon" onClick={toggleRules}>
+          !
+        </span>
+        {showRules && (
+          <div className={`ordersTable-rules-popup ${showRules ? "show" : ""}`}>
+            <h3>Quy tắc làm việc</h3>
+            <ul>
+              <li>
+              - Chỉ có thể chỉnh sửa ngày giao hàng nếu đơn hàng không ở trạng thái "Hoàn tất"
+              </li>
+              <li>
+                {" "}
+                - Nhân viên giao hàng bấm nút "Nhận đơn" để lấy đơn hàng.
+              </li>
+              <li>
+                - Nhân viên giao hàng sau khi giao xong sẽ bấm "Hoàn tất" nếu
+                giao thành công hoặc "Hủy" nếu khách hàng không nhận đơn.
+              </li>
+              <li>
+                - Nhân viên giao hàng có thể xem chi tiết đơn hàng bằng cách
+                nhấn nút "Details"
+              </li>
+              <li>
+                - Đảm bảo cập nhật trạng thái đơn hàng chính xác sau khi xử lý.
+              </li>
+              <li>
+                - Nếu đơn hàng bị hủy mà khách hàng kêu là muốn giao lại thì có thể chỉnh sửa ngày giao và trạng thái đơn hàng sẽ cập nhật thành "Đang giao".
+              </li>
+            </ul>
+            <button className="ordersTable-close-rules" onClick={toggleRules}>
+              Đóng
+            </button>
+          </div>
+        )}
+      </div>
       <div>
         <label htmlFor="status-filter">Filter by Order Status:</label>
         <select
@@ -207,7 +262,7 @@ const OrderDeli = () => {
                         Nhận đơn
                       </button>
                     )}
-                  {order.orderStatus === 3 && (
+                  {(order.orderStatus === 3 || order.orderStatus === 5) && (
                     <button
                       onClick={() =>
                         handleEditClick(
@@ -241,7 +296,9 @@ const OrderDeli = () => {
                         onChange={(e) => setNewDeliveryDate(e.target.value)}
                       />
                       <button
-                        onClick={() => handleDeliveryDateUpdate(order.id)}
+                        onClick={() =>
+                          handleDeliveryDateUpdate(order.id, order.orderStatus)
+                        }
                       >
                         Update
                       </button>
