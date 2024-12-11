@@ -210,7 +210,7 @@ const PromotionTable = () => {
   return (
     <div className="promotion-table">
       <h1>All Promotions</h1>
-      <button className="add-product-button" onClick={handleAddPromotion}>
+      <button className="add-promotion-button" onClick={handleAddPromotion}>
         ADD PROMOTION
       </button>
 
