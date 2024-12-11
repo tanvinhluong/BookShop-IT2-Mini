@@ -9,10 +9,30 @@
   overflow-x: auto;
 }
 
-h1 {
+.orderdeli-h1 {
   text-align: center;
-  color: #333;
+  color: #333; /* Màu chữ chính */
+  font-size: 36px; /* Tăng kích thước chữ */
+  font-weight: bold; /* Đậm chữ */
   margin-bottom: 20px;
+  letter-spacing: 1px; /* Khoảng cách giữa các chữ */
+  text-transform: uppercase; /* Viết hoa tất cả chữ cái */
+  position: relative;
+}
+
+.orderdeli-h1::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50%;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.orderdeli-h1:hover {
+  color: #007bff; /* Thay đổi màu chữ khi hover */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
 }
 
 .orderdeli-listorder-main {
@@ -107,7 +127,7 @@ hr {
   margin: 20px 0;
 }
 
-select {
+.orderdeli-select {
   padding: 8px;
   margin: 20px 0;
   width: 100%;
@@ -124,8 +144,8 @@ select {
   transition: border-color 0.3s;
 }
 
-select:hover,
-select:focus {
+.orderdeli-select:hover,
+.orderdeli-select:focus {
   border-color: #007bff;
 }
 
@@ -136,3 +156,4 @@ label {
   text-align: center;
   color: #495057;
 }
+

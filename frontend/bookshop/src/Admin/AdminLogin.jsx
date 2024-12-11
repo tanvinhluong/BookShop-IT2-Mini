@@ -16,34 +16,34 @@ const AdminLogin = () => {
 
   useEffect(() => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  
     const checkJwt = async () => {
       if (jwt && (userRole?.includes("Admin") || userRole?.includes("Staff"))) {
-        // Chờ 1 giây trước khi điều hướng
         await delay(1000);
         navigate("/admin");
       } else {
-        localStorage.clear();
+        localStorage.removeItem("adminjwt");
+        localStorage.removeItem("adminroles");
+        localStorage.removeItem("adminpermissions");
         setLoading(false);
       }
     };
-
+  
     checkJwt();
-  }, []);
+  }, [jwt, userRole, navigate]);
+   
 
   useEffect(() => {
     const fetchAdminData = async () => {
       if (jwt) {
-        // Dispatch action để lấy dữ liệu admin
+
         dispatch(getAdmin(jwt));
 
-        // Hàm delay
         const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        // Chờ 1 giây trước khi điều hướng
         await delay(1000);
 
-        // Điều hướng đến trang admin sau khi chờ
+
         navigate("/admin");
       }
     };

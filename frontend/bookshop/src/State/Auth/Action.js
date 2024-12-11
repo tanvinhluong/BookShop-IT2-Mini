@@ -83,7 +83,7 @@ export const adminLogin = (userData) => async (dispatch) => {
     if (user.jwt) {
       localStorage.setItem("adminjwt", user.jwt);
     }
-    console.log("Login response:", response); // Log response here
+    console.log("Login response:", response);
     dispatch(loginSuccess(user.jwt, response.data.message));
     window.location.reload();
   } catch (error) {
@@ -145,9 +145,19 @@ export const getAdmin = (jwt) => async (dispatch) => {
   }
 };
 
-export const logout = (token) => {
+export const logout = (userType) => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
-    localStorage.clear();
+
+    if (userType === "admin") {
+      localStorage.removeItem("adminjwt");
+      localStorage.removeItem("adminroles");
+      localStorage.removeItem("adminpermissions");
+    } else if (userType === "customer") {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("permissions");
+    }
   };
 };
+

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./CSS/ListOrder.css";
-import { API_BASE_URL } from "../../config/apiConfig";
+import { API_BASE_URL, API_TOKEN } from "../../config/apiConfig";
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
@@ -10,6 +10,7 @@ const OrdersTable = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [newDeliveryDate, setNewDeliveryDate] = useState("");
+  const [showRules, setShowRules] = useState(false);
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
 
@@ -39,17 +40,37 @@ const OrdersTable = () => {
     }
   };
 
+  const handleRequestConfirmation = async (orderId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+      const response = await axios.post(
+        `${API_BASE_URL}/api/admin/orders/request-order-confirmation`,
+        null,
+        {
+          params: { orderId },
+          ...config,
+        }
+      );
+      alert(response.data);
+    } catch (error) {
+      console.error("Error sending order confirmation request:", error);
+      alert("Có lỗi xảy ra khi gửi yêu cầu xác nhận.");
+    }
+  };
+
   const handleShipOrder = async (orderId) => {
     try {
       const config = {
         headers: { Authorization: `Bearer ${jwt}` },
       };
       await axios.put(
-        `${API_BASE_URL}/api/admin/orders/${orderId}/ship`,
+        `${API_BASE_URL}/api/admin/orders/${orderId}/approve`,
         null,
         config
       );
-      alert("Đơn hàng đã chuyển sang trạng thái Đang giao!");
+      alert("Đơn hàng đã chuyển sang trạng thái Đã duyệt!");
       fetchOrders();
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -98,12 +119,18 @@ const OrdersTable = () => {
   };
 
   const handleEditClick = (orderId, currentDeliveryDate, orderStatus) => {
-    if (orderStatus === 0) {
+    if (orderStatus !== 5 && orderStatus !== 2) {
       setEditingOrderId(orderId);
       setNewDeliveryDate(currentDeliveryDate);
     } else {
-      alert("Bạn chỉ có thể chỉnh sửa ngày giao hàng khi đơn hàng đang chờ duyệt.");
+      alert(
+        "Bạn không thể chỉnh sửa ngày giao hàng khi đơn hàng đã hoàn tất hoặc bị hủy."
+      );
     }
+  };
+
+  const toggleRules = () => {
+    setShowRules(!showRules);
   };
 
   useEffect(() => {
@@ -112,10 +139,40 @@ const OrdersTable = () => {
 
   return (
     <div className="ordersTable-container">
-      <h1>All Orders List</h1>
+      <h1 className="ordersTable-h1">All Orders List</h1>
+      <div className="ordersTable-rules">
+        <span className="ordersTable-rules-icon" onClick={toggleRules}>
+          !
+        </span>
+        {showRules && (
+          <div className={`ordersTable-rules-popup ${showRules ? "show" : ""}`}>
+            <h3>Quy tắc làm việc</h3>
+            <ul>
+              <li>
+                - Chỉ có thể chỉnh sửa ngày giao hàng nếu đơn hàng không bị hủy bỏ
+                hoặc đã hoàn tất.
+              </li>
+              <li> - Nếu quá số ngày quy định mà khách hàng chưa phản hồi thì có thể vào phần Details để đơn phương hủy đơn hàng.</li>
+              <li>
+                 - Chỉ có thể duyệt đơn hàng khi trạng thái là "Đang chờ duyệt" và đơn hàng đã được xác nhận từ khách hàng.
+              </li>
+              <li>
+                 - Đảm bảo cập nhật trạng thái đơn hàng chính xác sau khi xử lý.
+              </li>
+              <li>
+               - Bấm nút "Gửi yêu cầu xác nhận" để gửi mail cho khách hàng xác nhận đơn hoặc xác nhận hủy đơn.
+              </li>
+            </ul>
+            <button className="ordersTable-close-rules" onClick={toggleRules}>
+              Đóng
+            </button>
+          </div>
+        )}
+      </div>
       <div className="ordersTable-filter">
         <label htmlFor="status-filter">Filter by Order Status:</label>
         <select
+          className="ordersTable-select"
           id="status-filter"
           value={selectedStatus}
           onChange={handleStatusChange}
@@ -161,9 +218,9 @@ const OrdersTable = () => {
                     : "Không xác định"}
                 </p>
                 <p>
-                  {order.orderStatus === 0 && (
+                  {(order.confirmed === true && order.orderStatus === 0) && (
                     <button
-                      className="ordersTable-approveBtn"
+                      className="ordersTable-btn ordersTable-approveBtn"
                       onClick={() => handleShipOrder(order.id)}
                     >
                       Duyệt
@@ -172,22 +229,36 @@ const OrdersTable = () => {
                 </p>
                 <p>
                   <div className="ordersTable-actions">
-                  <button
-                    className="ordersTable-detailsBtn"
-                    onClick={() => handleDetailsClick(order.id)}
-                  >
-                    Details
-                  </button>
-                {order.orderStatus === 0 && (
-                  <button
-                    className="ordersTable-editDeliveryDateBtn"
-                    onClick={() => handleEditClick(order.id, order.deliveryDate, order.orderStatus)}
-                  >
-                     Edit
-                  </button>
-                )}
+                    <button
+                      className="ordersTable-btn ordersTable-detailsBtn"
+                      onClick={() => handleDetailsClick(order.id)}
+                    >
+                      Details
+                    </button>
+                    {(order.orderStatus === 0 || order.orderStatus === 4) && (
+                      <button
+                        className="ordersTable-btn ordersTable-editDeliveryDateBtn"
+                        onClick={() =>
+                          handleEditClick(
+                            order.id,
+                            order.deliveryDate,
+                            order.orderStatus
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {order.orderStatus === 0 && order.confirmed === false && (
+                      <button
+                        className="ordersTable-btn ordersTable-requestConfirmBtn"
+                        onClick={() => handleRequestConfirmation(order.id)}
+                      >
+                        Gửi yêu cầu xác nhận
+                      </button>
+                    )}
                   </div>
-              </p>
+                </p>
               </div>
               {editingOrderId === order.id && (
                 <div className="ordersTable-editForm">

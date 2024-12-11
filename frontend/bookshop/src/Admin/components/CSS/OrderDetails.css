@@ -62,3 +62,28 @@
   margin-bottom: 10px;
   text-align: center;
 }
+/* CSS cho phần Cancel Order */
+.cancel-order {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.cancel-order button {
+  background-color: #ff4d4d; /* Màu đỏ cho nút hủy */
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-order button:hover {
+  background-color: #ff0000; /* Màu đỏ đậm khi hover */
+}
+
+.cancel-order button:disabled {
+  background-color: #d3d3d3; /* Màu xám khi nút bị vô hiệu hóa */
+  cursor: not-allowed;
+}

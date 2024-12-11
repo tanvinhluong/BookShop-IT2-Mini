@@ -1,6 +1,6 @@
 .ordersTable-container {
   font-family: Arial, sans-serif;
-  max-width: 900px;
+  max-width: 1200px; /* Mở rộng container */
   margin: 20px auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -8,12 +8,31 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.ordersTable-h1 {
   text-align: center;
-  color: #333;
+  color: #333; /* Màu chữ chính */
+  font-size: 36px; /* Tăng kích thước chữ */
+  font-weight: bold; /* Đậm chữ */
   margin-bottom: 20px;
+  letter-spacing: 1px; /* Khoảng cách giữa các chữ */
+  text-transform: uppercase; /* Viết hoa tất cả chữ cái */
+  position: relative;
 }
 
+.ordersTable-h1::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50%;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.ordersTable-h1:hover {
+  color: #007bff; /* Thay đổi màu chữ khi hover */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+}
 .ordersTable-filter {
   margin-bottom: 20px;
 }
@@ -42,66 +61,57 @@ h1 {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 15px;
-  padding: 15px 0;
+  padding: 10px 0; /* Thu gọn hàng */
   border-top: 1px solid #ddd;
 }
 
 .ordersTable-row p {
   text-align: center;
-  padding: 5px 0;
 }
 
-.ordersTable-approveBtn,
-.ordersTable-detailsBtn,
-.ordersTable-editDeliveryDateBtn {
+.ordersTable-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px; /* Thu gọn khoảng cách giữa các nút */
+}
+
+.ordersTable-btn {
   background-color: #007bff;
   color: #fff;
   border: none;
-  padding: 8px 12px;
+  padding: 6px 10px; /* Thu gọn padding */
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 4px; /* Giảm độ cong */
   transition: background-color 0.3s;
 }
 
-.ordersTable-approveBtn:hover,
-.ordersTable-detailsBtn:hover,
-.ordersTable-editDeliveryDateBtn:hover {
+.ordersTable-btn:hover {
   background-color: #0056b3;
 }
 
 .ordersTable-editForm {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  gap: 10px;
   margin-top: 10px;
 }
 
 .ordersTable-editForm input {
   padding: 5px;
-  margin-right: 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   border: 1px solid #ccc;
-}
-
-.ordersTable-updateBtn,
-.ordersTable-cancelBtn {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .ordersTable-updateBtn {
   background-color: #28a745;
 }
 
-.ordersTable-cancelBtn {
-  background-color: #dc3545;
-}
-
 .ordersTable-updateBtn:hover {
   background-color: #218838;
+}
+
+.ordersTable-cancelBtn {
+  background-color: #dc3545;
 }
 
 .ordersTable-cancelBtn:hover {
@@ -114,25 +124,111 @@ hr {
   margin: 20px 0;
 }
 
-.ordersTable-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px; /* Khoảng cách giữa các nút */
-}
-
-.ordersTable-detailsBtn,
-.ordersTable-editDeliveryDateBtn {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
+.ordersTable-select {
+  padding: 8px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 200px;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: border-color 0.3s;
 }
 
-.ordersTable-detailsBtn:hover,
-.ordersTable-editDeliveryDateBtn:hover {
-  background-color: #0056b3;
+.ordersTable-select:hover,
+.ordersTable-select:focus {
+  border-color: #007bff;
+}
+
+/* Thiết lập cho biểu tượng chấm than */
+.ordersTable-rules-icon {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffcc00; /* Màu vàng sáng để nổi bật */
+  background-color: red;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+/* Cửa sổ popup hiển thị quy tắc */
+.ordersTable-rules-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 2px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  z-index: 9999; /* Đảm bảo cửa sổ pop-up nổi bật */
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Cửa sổ popup khi hiển thị */
+.ordersTable-rules-popup.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Kiểu dáng cho tiêu đề quy tắc */
+.ordersTable-rules-popup h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Kiểu dáng cho danh sách quy tắc */
+.ordersTable-rules-popup ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.ordersTable-rules-popup ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Nút đóng cửa sổ */
+.ordersTable-close-rules {
+  display: block;
+  margin: 10px auto 0;
+  padding: 5px 15px;
+  background-color: #ff5a5f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ordersTable-close-rules:hover {
+  background-color: #e94f50;
+}
+
+
+.ordersTable-container {
+  position: relative;
+  padding: 20px;
+}
+
+.ordersTable-rules {
+  position: relative;
 }
 

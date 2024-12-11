@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 
 const PromotionTable = () => {
   const [promotions, setPromotions] = useState([])
-  const jwt = localStorage.getItem('jwt') // su dung khi authen
+  const jwt = localStorage.getItem('jwt')
   const [showForm, setShowForm] = useState(false)
   const [newPromotion, setNewPromotion] = useState({
     promotionName: '',

@@ -163,7 +163,7 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    public Order deliveredOrder(Integer orderId) throws OrderException {
+    public Order deliveringOrder(Integer orderId) throws OrderException {
         Order order=findOrderById(orderId);
         order.setOrderStatus(OrderStatus.DELIVERED.ordinal());
         return orderRepository.save(order);
@@ -219,6 +219,11 @@ public class OrderService implements IOrderService {
     @Override
     public Order updateDeliveryDate(Integer orderId, Date deliveryDate) throws OrderException {
         Order order = findOrderById(orderId);
+
+        if (order.getOrderStatus() == 5) {
+            order.setOrderStatus(4);
+        }
+
         order.setDeliveryDate(deliveryDate);
         return orderRepository.save(order);
     }

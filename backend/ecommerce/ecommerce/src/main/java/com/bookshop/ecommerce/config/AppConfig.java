@@ -28,6 +28,8 @@ public class AppConfig {
                                 .requestMatchers("api/cart/**").permitAll()
                                 .requestMatchers("api/cart/").permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/admin/orders/user-confirm-order").permitAll()
+                                .requestMatchers("/api/admin/orders/user-cancel-order").permitAll()
                                 .requestMatchers("/api/payments/momo/callback").permitAll()
                                 .requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 

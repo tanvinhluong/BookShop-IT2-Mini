@@ -18,7 +18,7 @@ public interface IOrderService {
     public Order placedOrder(Integer orderId) throws OrderException;
     public Order confirmedOrder(Integer orderId) throws OrderException;
     public Order ShippedOrder(Integer orderId) throws OrderException;
-    public Order deliveredOrder(Integer orderId) throws OrderException;
+    public Order deliveringOrder(Integer orderId) throws OrderException;
     public Order cancelOrder(Integer orderId) throws OrderException;
     public List<Order> getAllOrders();
     public void deleteOrder(Integer orderId) throws OrderException;

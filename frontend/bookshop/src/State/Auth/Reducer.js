@@ -17,6 +17,7 @@ const initialState = {
   error: null,
   jwt: null,
 }
+
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case REGISTER_REQUEST:
