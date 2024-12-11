@@ -33,7 +33,7 @@ function OrderPaymentConfirm() {
 
   return (
     <div className="container-order-confirm">
-      <h1 className="title-order-confirm">Thanh toán thành công ✅</h1>
+      <h1 className="title-order-confirm">Đặt hàng thành công ✅</h1>
 
       <p className="message-order-confirm">
         Bạn sẽ được tự động chuyển về trang chính sau {countdown} giây
