@@ -135,7 +135,12 @@ public class PaymentController {
             return ResponseEntity.ok(redirectHtml);
         } else {
             paymentService.updatePaymentStatus(orderId, "FAILED");
-            return ResponseEntity.ok("Payment failed");
+            String redirectHtml = "<html><head><script>" +
+                    "setTimeout(function() { " +
+                    "window.location.href = 'http://localhost:3000/checkout?step=4'; " +
+                    "}, 5000);" +
+                    "</script><body><h1>Giao dịch đã huỷ vui lòng chờ chuyển trang và tiếp tục thanh toán...</h1></body></html>";
+            return ResponseEntity.ok(redirectHtml);
         }
     }
 

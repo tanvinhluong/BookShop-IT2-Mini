@@ -58,7 +58,44 @@ function OrderSummary() {
 
   const calculateDiscount = () => {
     if (!selectedPromotion || !cart.cart?.totalPrice) return 0;
-    return Math.floor((cart.cart.totalPrice * selectedPromotion.percentage) / 100);
+
+    if (selectedPromotion.promotionType === 1) {
+      // Khuyến mãi toàn đơn hàng
+      return Math.floor((cart.cart.totalPrice * selectedPromotion.percentage) / 100);
+    } else if (selectedPromotion.promotionType === 2) {
+      // Khuyến mãi theo sản phẩm
+
+      const productIdFromPromotion = selectedPromotion.product.id;
+      if (!productIdFromPromotion) {
+        console.error("Missing product ID in promotion:", selectedPromotion);
+        return 0;
+      } else {
+
+      }
+
+      const matchingProducts = cart.cart?.cartItems.filter(item => {
+        if (!item.productDetail) {
+          return false;
+        }
+        if (!item.productDetail.product) {
+          return false;
+        }
+        if (item.productDetail.product.id !== selectedPromotion.product.id) {
+          console.log(
+              `Product ID mismatch: ${item.productDetail.product.id} !== ${selectedPromotion.product.id}`
+          );
+          return false;
+        }
+        return true;
+      });
+      const productDiscount = matchingProducts.reduce((total, item) => {
+        return total + Math.floor((item.price * selectedPromotion.percentage) / 100);
+      }, 0);
+
+      return productDiscount;
+    }
+    console.log("No matching promotion type.");
+    return 0;
   };
 
 
@@ -89,9 +126,27 @@ function OrderSummary() {
   };
 
   const handleApplyPromotion = (promotion) => {
+    if (promotion?.promotionType === 1) {
     setSelectedPromotion(selectedPromotion?.id === promotion.id ? null : promotion);
     setPromoCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
     setInputCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
+    } else if (promotion?.promotionType === 2) {
+      const hasMatchingProduct = cart.cart?.cartItems.some(
+          item => item.productDetail.product.id === promotion.product.id
+      );
+
+      console.log('Promotion Details:', promotion);
+      console.log('Cart Items:', cart.cart?.cartItems);
+      console.log('Matching Product Check:', hasMatchingProduct);
+
+      if (hasMatchingProduct) {
+        setSelectedPromotion(selectedPromotion?.id === promotion.id ? null : promotion);
+        setPromoCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
+        setInputCode(selectedPromotion?.id === promotion.id ? '' : promotion.promotionCode);
+      } else {
+        alert('Mã khuyến mãi này không áp dụng cho sản phẩm trong giỏ hàng');
+      }
+    }
   };
 
   const handleApplyPromoCodeInput = () => {
@@ -100,6 +155,8 @@ function OrderSummary() {
     );
     if (matchingPromotion) {
       handleApplyPromotion(matchingPromotion);
+    } else {
+      alert('Mã giảm giá không hợp lệ');
     }
   };
 

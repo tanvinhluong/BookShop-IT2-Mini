@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService {
@@ -85,14 +87,44 @@ public class OrderService implements IOrderService {
     @Override
     public Order createOrderPhase2(User user, Integer cartId, Integer addressId, List<String> promotionCodes) {
 
+        Objects.requireNonNull(user, "User cannot be null");
+
         Cart cart=cartService.findUserCart(user.getId());
-        Promotion promotion = promotionRepository.findByPromotionCode(String.valueOf(promotionCodes));
-        double totalDiscount =0;
-        if (promotion != null){
-                totalDiscount += calculateDiscount(cart.getTotalPrice(), promotion);
-        } else {
-            totalDiscount = 0;
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            throw new IllegalStateException("Cart is empty");
         }
+        double totalDiscount = 0;
+        Promotion applyPromotion = null;
+
+        if (promotionCodes != null && !promotionCodes.isEmpty()) {
+            for (String promoCode : promotionCodes) {
+                Promotion promo = promotionRepository.findByPromotionCode(promoCode);
+
+                if (promo != null) {
+                    if (promo.getPromotionType() == 1) {
+                        totalDiscount = calculateDiscount(cart.getTotalPrice(), promo);
+                        applyPromotion = promo;
+                        break;
+                    } else if (promo.getPromotionType() == 2) {
+                        boolean hasProduct = cart.getCartItems().stream()
+                                .anyMatch(cartItem -> cartItem.getProductDetail().getProduct().getId().equals(promo.getProduct().getId()));
+                        if (hasProduct) {
+                            double productDiscount = calculateProductDiscount(cart, promo);
+                            totalDiscount += productDiscount;
+                            applyPromotion = promo;
+                        }
+                    }
+                }
+            }
+        }
+//        rule KM old
+//        Promotion promotion = promotionRepository.findByPromotionCode(String.valueOf(promotionCodes));
+//        double totalDiscount =0;
+//        if (promotion != null){
+//                totalDiscount += calculateDiscount(cart.getTotalPrice(), promotion);
+//        } else {
+//            totalDiscount = 0;
+//        }
 
         Order createdOrder=new Order();
         createdOrder.setUser(user);
@@ -103,31 +135,35 @@ public class OrderService implements IOrderService {
         createdOrder.setOrderStatus(OrderStatus.PENDING.ordinal());
         createdOrder.setShippingAddressId(addressId);
         createdOrder.setDeliveryDate(new Date());
-        createdOrder.setPromotion(promotion);
+        createdOrder.setPromotion(applyPromotion);
 
 
         Order savedOrder=orderRepository.save(createdOrder);
 
-        List<OrderItem> orderItems=new ArrayList<>();
+        Promotion finalApplyPromotion = applyPromotion;
+        List<OrderItem> orderItems = cart.getCartItems().stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(savedOrder);
+                    orderItem.setPrice(cartItem.getPrice());
+                    orderItem.setProductDetail(cartItem.getProductDetail());
+                    orderItem.setQuantity(cartItem.getQuantity());
 
-        for(CartItem item: cart.getCartItems()) {
-            OrderItem orderItem=new OrderItem();
-            orderItem.setOrder(savedOrder);
-            orderItem.setPrice(item.getPrice());
-            orderItem.setProductDetail(item.getProductDetail());
-            orderItem.setQuantity(item.getQuantity());
-            orderItem.setPrice(item.getPrice());
-            orderItem.setDiscountedPrice((int) totalDiscount);
-            OrderItem createdOrderItem = orderItemRepository.save(orderItem);
+                    // Tính toán khuyến mãi theo item
+                    double itemDiscount = 0;
+                    if (finalApplyPromotion.getPromotionType() == 2) {
+                        itemDiscount = calculateItemDiscount(cartItem, finalApplyPromotion);
+                    }
+                    if (finalApplyPromotion.getPromotionType() == 1) {
+                        double totalCartDiscount = calculateOrderDiscount(cart, finalApplyPromotion);
+                        double itemPercentageOfCart = cartItem.getPrice() * cartItem.getQuantity() / cart.getTotalPrice();
+                        itemDiscount = totalCartDiscount * itemPercentageOfCart;
+                    }
+                    orderItem.setDiscountedPrice((int) itemDiscount);
 
-            orderItems.add(createdOrderItem);
-        }
-
-
-        for(OrderItem item: orderItems) {
-            item.setOrder(savedOrder);
-            orderItemRepository.save(item);
-        }
+                    return orderItemRepository.save(orderItem);
+                })
+                .collect(Collectors.toList());
 
         savedOrder.setOrderItems(orderItems);
         return savedOrder;
@@ -137,6 +173,38 @@ public class OrderService implements IOrderService {
     private double calculateDiscount(double totalPrice, Promotion promotion) {
         return totalPrice * (promotion.getPercentage() / 100.0);
     }
+
+    private double calculateProductDiscount(Cart cart, Promotion promotion) {
+        List<CartItem> matchingItems = cart.getCartItems().stream()
+                .filter(item -> item.getProductDetail().getProduct().getId().equals(promotion.getProduct().getId()))
+                .collect(Collectors.toList());
+
+        return matchingItems.stream()
+                .mapToDouble(item -> calculateDiscount(item.getPrice(), promotion))
+                .sum();
+    }
+
+    private double calculateItemDiscount(CartItem cartItem, Promotion promotion) {
+        if (promotion == null) {
+            return 0;
+        }
+
+        // Check if this item matches the promotion's product
+        if (cartItem.getProductDetail().getProduct().getId().equals(promotion.getProduct().getId())) {
+            return calculateDiscount(cartItem.getPrice(), promotion);
+        }
+
+
+        return 0;
+    }
+
+    private double calculateOrderDiscount(Cart cart, Promotion promotion) {
+        if (promotion == null || promotion.getPromotionType() != 1) {
+            return 0;
+        }
+        return calculateDiscount(cart.getTotalPrice(), promotion);
+    }
+
 
     @Override
     public Order placedOrder(Integer orderId) throws OrderException {
