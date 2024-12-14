@@ -8,6 +8,7 @@
   margin:30px;
   border-radius: 6px;
   background: white;
+  position: relative;
 }
 .listproduct-format-main{
   display: grid;
@@ -57,66 +58,82 @@
   margin-bottom: 10px;
   border-radius: 5px;
 }
-.add-product-button {
-  align-self: flex-start; /* Đặt nút ở ngoài cùng bên trái */
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.add-product-button:hover {
-  background-color: #45a049;
-}
-
 .add-product-form {
-  width: 70%;
-  max-width: 800px;
+  width: 90%; 
+  max-width: 1000px; 
+  margin: -50px auto 50px auto;
+  padding: 30px;
   background-color: #f9f9f9;
-  padding: 20px 40px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
 }
 
 .add-product-form h2 {
   text-align: center;
+  font-size: 28px;
+  color: #4CAF50;
   margin-bottom: 20px;
-  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.add-product-form h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 50%;
+  height: 3px;
+  background-color: #4CAF50;
+  border-radius: 2px;
+}
+
+.add-product-form h2:hover {
+  color: #388E3C;
 }
 
 .add-product-form label {
   display: block;
-  margin: 10px 0 5px;
-  font-weight: bold;
+  font-size: 16px;
+  margin: 15px 0 5px;
+  color: #555;
 }
 
 .add-product-form input,
-.add-product-form select {
-  width: calc(100% - 20px);
+.add-product-form select,
+.add-product-form button {
+  width: 100%;
   padding: 10px;
-  margin: 0 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.add-product-form button[type="submit"],
-.add-product-form button[type="button"] {
-  width: calc(50% - 10px);
-  margin: 10px 5px;
-  padding: 12px;
-  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   font-size: 16px;
-  cursor: pointer;
 }
 
-.add-product-form button[type="submit"] {
+.add-product-form input[type="text"],
+.add-product-form input[type="number"] {
+  background-color: #f7f7f7;
+}
+
+.add-product-form select {
+  background-color: #f7f7f7;
+}
+
+.add-product-form input[type="file"] {
+  padding: 5px;
+  margin-bottom: 15px;
+}
+
+.add-product-form button {
   background-color: #4CAF50;
   color: white;
+  font-weight: bold;
+  cursor: pointer;
   border: none;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .add-product-form button[type="submit"]:hover {
@@ -125,10 +142,98 @@
 
 .add-product-form button[type="button"] {
   background-color: #f44336;
-  color: white;
-  border: none;
+  font-weight: normal;
 }
 
 .add-product-form button[type="button"]:hover {
-  background-color: #d32f2f;
+  background-color: #e53935;
 }
+
+.add-product-form img {
+  display: block;
+  margin: 10px auto;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.add-product-form select:focus,
+.add-product-form input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+  outline: none;
+}
+
+.add-product-form .loading-suppliers {
+  color: #888;
+  text-align: center;
+  font-size: 14px;
+}
+
+.add-product-form .form-section {
+  margin-bottom: 25px;
+}
+
+.add-product-form .form-section:last-child {
+  margin-bottom: 0;
+}
+
+@media(max-width: 800px) {
+  .add-product-form {
+    width: 95%;
+    padding: 20px;
+    margin: 30px auto;
+  }
+}
+
+.add-product-button {
+  position: absolute;
+  top: -20px;
+  left: -20px; 
+  padding: 12px 24px;
+  font-size: 18px;
+  color: white;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-product-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.add-product-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+}
+
+.list-product h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.list-product h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 50%;
+  height: 3px;
+  background-color: #4CAF50; 
+  border-radius: 2px;
+}
+
+.list-product h1:hover {
+  color: #388E3C;
+}
+
+

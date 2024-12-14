@@ -24,6 +24,16 @@ const ProductsTable = () => {
   const [categories, setCategories] = useState([]);
   const [loadingSuppliers, setLoadingSuppliers] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [isDuplicate, setIsDuplicate] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({
+    productName: false,
+    productDetailName: false,
+    productDescription: false,
+    price: false,
+    quantity: false,
+    priceLimitExceeded: false,
+    quantityLimitExceeded: false,
+  });
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
   const location = useLocation();
@@ -147,6 +157,43 @@ const ProductsTable = () => {
       ...prev,
       [name]: value,
     }));
+
+    if (
+      results.some(
+        (product) => product.productName.toLowerCase() === value.toLowerCase()
+      )
+    ) {
+      setIsDuplicate(true);
+    } else {
+      setIsDuplicate(false);
+    }
+
+    setValidationErrors((prev) => ({
+      ...prev,
+      [name]: value.trim() === "",
+    }));
+
+    if (name === "price") {
+      if (value > 1000000) {
+        setValidationErrors((prev) => ({ ...prev, priceLimitExceeded: true }));
+      } else {
+        setValidationErrors((prev) => ({ ...prev, priceLimitExceeded: false }));
+      }
+    }
+
+    if (name === "quantity") {
+      if (value > 1000) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          quantityLimitExceeded: true,
+        }));
+      } else {
+        setValidationErrors((prev) => ({
+          ...prev,
+          quantityLimitExceeded: false,
+        }));
+      }
+    }
   };
 
   const handleCategoryChange = (e) => {
@@ -178,7 +225,7 @@ const ProductsTable = () => {
       createdAt: new Date().toISOString(),
       supplierId: newProduct.supplierId,
       productDescription: newProduct.productDescription || "",
-      imageUrl: newProduct.imageUrl || "", // Sử dụng imageUrl đã được lưu trong state
+      imageUrl: newProduct.imageUrl || "",
       price: newProduct.price,
       isActive: newProduct.isActive,
       numRate: 0,
@@ -223,6 +270,7 @@ const ProductsTable = () => {
       );
     }
   };
+
   const handleCancel = () => {
     setShowForm(false);
   };
@@ -259,7 +307,7 @@ const ProductsTable = () => {
                 <p>{result.productName}</p>
                 <p>{result.productDescription || "No description"}</p>
                 <p>{result.price.toLocaleString()} VND</p>
-                <p>{result.quantity || "N/A"}</p>
+                <p>{result.productDetails && result.productDetails.length > 0 ? result.productDetails[0].inStock : "N/A"}</p>
                 <img
                   onClick={() => handleDelete(result.id)}
                   src={cross_icon}
@@ -273,7 +321,6 @@ const ProductsTable = () => {
             </React.Fragment>
           ))}
       </div>
-
       {showForm && (
         <form onSubmit={handleSubmit} className="add-product-form">
           <h2>Add New Product</h2>
@@ -284,9 +331,23 @@ const ProductsTable = () => {
               name="productName"
               value={newProduct.productName}
               onChange={handleInputChange}
+              placeholder="Type product name here"
               required
+              style={{
+                borderColor:
+                  validationErrors.productName || isDuplicate ? "red" : "",
+              }}
             />
+            {isDuplicate && (
+              <p style={{ color: "red" }}>
+                Cửa hàng của bạn đã có sản phẩm này rồi.
+              </p>
+            )}
+            {validationErrors.productName && (
+              <p style={{ color: "red" }}>Tên sản phẩm không được để trống.</p>
+            )}
           </label>
+
           <label>
             Product Detail Name:
             <input
@@ -294,18 +355,38 @@ const ProductsTable = () => {
               name="productDetailName"
               value={newProduct.productDetailName}
               onChange={handleInputChange}
+              placeholder="Type product detail name here"
               required
+              style={{
+                borderColor: validationErrors.productDetailName ? "red" : "",
+              }}
             />
+            {validationErrors.productDetailName && (
+              <p style={{ color: "red" }}>
+                Tên chi tiết sản phẩm không được để trống.
+              </p>
+            )}
           </label>
+
           <label>
             Product Description:
             <input
               type="text"
               name="productDescription"
               value={newProduct.productDescription}
+              placeholder="Type product description here"
               onChange={handleInputChange}
+              style={{
+                borderColor: validationErrors.productDescription ? "red" : "",
+              }}
             />
+            {validationErrors.productDescription && (
+              <p style={{ color: "red" }}>
+                Mô tả sản phẩm không được để trống.
+              </p>
+            )}
           </label>
+
           <label>
             Price:
             <input
@@ -314,8 +395,23 @@ const ProductsTable = () => {
               value={newProduct.price}
               onChange={handleInputChange}
               required
+              style={{
+                borderColor:
+                  validationErrors.price || validationErrors.priceLimitExceeded
+                    ? "red"
+                    : "",
+              }}
             />
+            {validationErrors.price && (
+              <p style={{ color: "red" }}>Giá tiền không được để trống.</p>
+            )}
+            {validationErrors.priceLimitExceeded && (
+              <p style={{ color: "red" }}>
+                Giá tiền không được vượt quá 1,000,000 VND
+              </p>
+            )}
           </label>
+
           <label>
             Quantity:
             <input
@@ -324,7 +420,20 @@ const ProductsTable = () => {
               value={newProduct.quantity}
               onChange={handleInputChange}
               required
+              style={{
+                borderColor:
+                  validationErrors.quantity ||
+                  validationErrors.quantityLimitExceeded
+                    ? "red"
+                    : "",
+              }}
             />
+            {validationErrors.quantity && (
+              <p style={{ color: "red" }}>Số lượng không được để trống.</p>
+            )}
+            {validationErrors.quantityLimitExceeded && (
+              <p style={{ color: "red" }}>Số lượng không được vượt quá 1000.</p>
+            )}
           </label>
           <label>
             Active:
@@ -348,7 +457,6 @@ const ProductsTable = () => {
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Select supplier</option>
                 {suppliers.map((supplier) => (
                   <option key={supplier.id} value={supplier.id}>
                     {supplier.name}
@@ -361,9 +469,9 @@ const ProductsTable = () => {
             Categories:
             <select
               name="categoryIds"
-              multiple
-              onChange={handleCategoryChange}
               value={newProduct.categoryIds}
+              onChange={handleCategoryChange}
+              required
             >
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
