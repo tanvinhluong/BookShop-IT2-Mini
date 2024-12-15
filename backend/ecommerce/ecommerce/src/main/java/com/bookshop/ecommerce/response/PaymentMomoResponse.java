@@ -9,4 +9,5 @@ import lombok.Data;
 public class PaymentMomoResponse {
     private PaymentInfo paymentInfo;
     private String paymentUrl;
+    private Integer paymentInfoId;
 }

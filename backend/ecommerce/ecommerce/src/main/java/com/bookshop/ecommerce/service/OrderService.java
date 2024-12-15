@@ -3,9 +3,11 @@ package com.bookshop.ecommerce.service;
 import com.bookshop.ecommerce.exception.OrderException;
 import com.bookshop.ecommerce.model.*;
 import com.bookshop.ecommerce.repository.*;
+import com.bookshop.ecommerce.request.PaymentUpdateDTO;
 import com.bookshop.ecommerce.service.impl.ICartService;
 import com.bookshop.ecommerce.service.impl.IOrderService;
 import com.bookshop.ecommerce.user.domain.OrderStatus;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService implements IOrderService {
     private final PromotionRepository promotionRepository;
+    private final PaymentInfoRepository paymentInfoRepository;
     private OrderRepository orderRepository;
     private ICartService cartService;
     private AddressRepository addressRepository;
@@ -27,7 +30,7 @@ public class OrderService implements IOrderService {
 
     public OrderService(OrderRepository orderRepository, ICartService cartService,
                         AddressRepository addressRepository, UserRepository userRepository,
-                        OrderItemService orderItemService, OrderItemRepository orderItemRepository, PromotionRepository promotionRepository) {
+                        OrderItemService orderItemService, OrderItemRepository orderItemRepository, PromotionRepository promotionRepository, PaymentInfoRepository paymentInfoRepository) {
         this.orderRepository=orderRepository;
         this.cartService=cartService;
         this.addressRepository=addressRepository;
@@ -35,6 +38,7 @@ public class OrderService implements IOrderService {
         this.orderItemService=orderItemService;
         this.orderItemRepository=orderItemRepository;
         this.promotionRepository = promotionRepository;
+        this.paymentInfoRepository = paymentInfoRepository;
     }
 
     @Override
@@ -140,32 +144,51 @@ public class OrderService implements IOrderService {
 
         Order savedOrder=orderRepository.save(createdOrder);
 
-        Promotion finalApplyPromotion = applyPromotion;
-        List<OrderItem> orderItems = cart.getCartItems().stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(savedOrder);
-                    orderItem.setPrice(cartItem.getPrice());
-                    orderItem.setProductDetail(cartItem.getProductDetail());
-                    orderItem.setQuantity(cartItem.getQuantity());
+        if (applyPromotion != null) {
+            Promotion finalApplyPromotion = applyPromotion;
+            List<OrderItem> orderItems = cart.getCartItems().stream()
+                    .map(cartItem -> {
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.setOrder(savedOrder);
+                        orderItem.setPrice(cartItem.getPrice());
+                        orderItem.setProductDetail(cartItem.getProductDetail());
+                        orderItem.setQuantity(cartItem.getQuantity());
 
-                    // Tính toán khuyến mãi theo item
-                    double itemDiscount = 0;
-                    if (finalApplyPromotion.getPromotionType() == 2) {
-                        itemDiscount = calculateItemDiscount(cartItem, finalApplyPromotion);
-                    }
-                    if (finalApplyPromotion.getPromotionType() == 1) {
-                        double totalCartDiscount = calculateOrderDiscount(cart, finalApplyPromotion);
-                        double itemPercentageOfCart = cartItem.getPrice() * cartItem.getQuantity() / cart.getTotalPrice();
-                        itemDiscount = totalCartDiscount * itemPercentageOfCart;
-                    }
-                    orderItem.setDiscountedPrice((int) itemDiscount);
+                        // Tính toán khuyến mãi theo item
+                        double itemDiscount = 0;
+                        if (finalApplyPromotion.getPromotionType() == 2) {
+                            itemDiscount = calculateItemDiscount(cartItem, finalApplyPromotion);
+                        }
+                        if (finalApplyPromotion.getPromotionType() == 1) {
+                            double totalCartDiscount = calculateOrderDiscount(cart, finalApplyPromotion);
+                            double itemPercentageOfCart = cartItem.getPrice() * cartItem.getQuantity() / cart.getTotalPrice();
+                            itemDiscount = totalCartDiscount * itemPercentageOfCart;
+                        }
+                        orderItem.setDiscountedPrice((int) itemDiscount);
 
-                    return orderItemRepository.save(orderItem);
-                })
-                .collect(Collectors.toList());
+                        return orderItemRepository.save(orderItem);
+                    })
+                    .collect(Collectors.toList());
 
-        savedOrder.setOrderItems(orderItems);
+
+            savedOrder.setOrderItems(orderItems);
+        } else {
+            List<OrderItem> orderItems = cart.getCartItems().stream()
+                    .map(cartItem -> {
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.setOrder(savedOrder);
+                        orderItem.setPrice(cartItem.getPrice());
+                        orderItem.setProductDetail(cartItem.getProductDetail());
+                        orderItem.setQuantity(cartItem.getQuantity());
+                        orderItem.setDiscountedPrice(0);
+                        return orderItemRepository.save(orderItem);
+                    })
+                    .collect(Collectors.toList());
+
+            savedOrder.setOrderItems(orderItems);
+        }
+        // paymentInfo = null == chua co giao dich
+        savedOrder.setPaymentInfo(null);
         return savedOrder;
 
     }
@@ -296,4 +319,16 @@ public class OrderService implements IOrderService {
         return orderRepository.save(order);
     }
 
+    @Override
+    public Order updateOrderPayment(PaymentUpdateDTO paymentUpdateDTO) {
+        Order order = orderRepository.findById(paymentUpdateDTO.getOrderId())
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + paymentUpdateDTO.getOrderId()));
+
+        PaymentInfo paymentInfo = paymentInfoRepository.findById(paymentUpdateDTO.getPaymentInfoId())
+                .orElseThrow(() -> new EntityNotFoundException("Payment Info not found with id: " + paymentUpdateDTO.getPaymentInfoId()));
+
+        order.setPaymentInfo(paymentInfo);
+
+        return orderRepository.save(order);
+    }
 }

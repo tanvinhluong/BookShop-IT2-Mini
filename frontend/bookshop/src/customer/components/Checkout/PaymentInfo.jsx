@@ -63,6 +63,26 @@ const PaymentInfo = ({orderId}) => {
     fetchOrderDetails();
   }, [orderId]);
 
+  const updateOrderPayment = async (paymentId) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      }
+
+      const updatePaymentDto = {
+        orderId: orderData.id,
+        paymentInfoId: paymentId
+      };
+      console.log('Update Payment DTO:', updatePaymentDto);
+
+      await axios.put(`${API_BASE_URL}/api/orders/update-payment`, updatePaymentDto, config);
+      return true;
+    } catch (error) {
+      console.error('Cập nhật thông tin thanh toán thất bại', error);
+      return false;
+    }
+  };
+
   const handlePayment = async () => {
     if (!orderData) return;
 
@@ -73,25 +93,47 @@ const PaymentInfo = ({orderId}) => {
     }
 
     try {
+      let paymentId;
+      let paymentResponse;
       if (selectedMethod === 1) { // MOMO
-        const response = await axios.post(`${API_BASE_URL}/api/payments/momo`, {
+        paymentResponse = await axios.post(`${API_BASE_URL}/api/payments/momo`, {
           amount,
           userId
         }, config)
-        // clear cart
+        console.log('Full MOMO Payment Response:', paymentResponse);
+        console.log('Specific paymentInfoId:', paymentResponse.data.paymentInfoId);
+        paymentId = paymentResponse.data.paymentInfoId;
+      } else if (selectedMethod === 2) { // VNPay
+        // paymentResponse = await axios.post(`${API_BASE_URL}/api/payments/vnpay`, {
+        //   amount,
+        //   userId
+        // }, config);
+        // paymentId = paymentResponse.data.paymentInfoId;
+        // dispatch(clearCart());
+        // window.location.href = paymentResponse.data.paymentUrl;
+        alert('Chức năng thanh toán VNPay đang được phát triển. Vui lòng chọn hình thức thanh toán khác');
+      } else { // Thanh toán khi nhận hàng
+        paymentResponse = await axios.post(`${API_BASE_URL}/api/payments/cod`, {
+            amount,
+            userId
+        }, config);
+        console.log('Full COD Payment Response:', paymentResponse);
+        console.log('Specific paymentInfoId:', paymentResponse.data.paymentInfoId);
+        paymentId = paymentResponse.data.paymentInfoId;
+      }
+      const paymentUpdateSuccess = await updateOrderPayment(paymentId);
+      if (paymentUpdateSuccess) {
+        // Clear cart
         dispatch(clearCart());
 
-        window.location.href = response.data.paymentUrl;
-      } else if (selectedMethod === 2) { // VNPay
-        const response = await axios.post(`${API_BASE_URL}/api/payments/vnpay`, {
-          amount,
-          userId
-        }, config);
-        dispatch(clearCart());
-        window.location.href = response.data.paymentUrl;
-      } else { // Thanh toán khi nhận hàng
-        dispatch(clearCart());
-        window.location.href = '/checkout?step=5';
+        // Redirect based on payment method
+        if (selectedMethod === 1) {
+          window.location.href = paymentResponse.data.paymentUrl;
+        } else {
+          window.location.href = '/checkout?step=5';
+        }
+      } else {
+        throw new Error('Failed to update order payment');
       }
     } catch (error) {
       console.error('Thanh toán thất bại', error);

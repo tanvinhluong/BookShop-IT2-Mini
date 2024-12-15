@@ -6,6 +6,7 @@ import com.bookshop.ecommerce.model.Address;
 import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.request.CreateOrderRequest;
+import com.bookshop.ecommerce.request.PaymentUpdateDTO;
 import com.bookshop.ecommerce.service.impl.IOrderService;
 import com.bookshop.ecommerce.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,9 @@ public class OrderController {
         }
     }
 
-
+    @PutMapping("/update-payment")
+    public ResponseEntity<Order> updateOrderPayment(@RequestBody PaymentUpdateDTO paymentUpdateDTO) throws OrderException {
+        Order updatedOrder = orderService.updateOrderPayment(paymentUpdateDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
 }

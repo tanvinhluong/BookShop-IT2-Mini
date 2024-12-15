@@ -1,6 +1,7 @@
 package com.bookshop.ecommerce.controller;
 
 import com.bookshop.ecommerce.model.PaymentInfo;
+import com.bookshop.ecommerce.request.CODRequest;
 import com.bookshop.ecommerce.request.MomoPaymentRequest;
 import com.bookshop.ecommerce.request.VNPayRequest;
 import com.bookshop.ecommerce.response.PaymentMomoResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -48,6 +50,27 @@ public class PaymentController {
             return ResponseEntity.ok(payment);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/cod")
+    public ResponseEntity<?> createCodPayment(@RequestBody CODRequest codPaymentDTO) {
+        try {
+            // Create COD payment info
+            PaymentInfo paymentInfo = paymentService.createCodPayment(codPaymentDTO);
+
+            // Prepare response
+            Map<String, Object> response = new HashMap<>();
+            response.put("paymentInfoId", paymentInfo.getId());
+//            response.put("paymentUrl", "/checkout?step=5");
+            response.put("message", "Thanh toán khi nhận hàng đã được xác nhận");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Không thể tạo thanh toán",
+                    "details", e.getMessage()
+            ));
         }
     }
 

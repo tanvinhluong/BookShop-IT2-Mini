@@ -4,6 +4,7 @@ import com.bookshop.ecommerce.model.PaymentInfo;
 import com.bookshop.ecommerce.model.User;
 import com.bookshop.ecommerce.repository.PaymentInfoRepository;
 import com.bookshop.ecommerce.repository.UserRepository;
+import com.bookshop.ecommerce.request.CODRequest;
 import com.bookshop.ecommerce.response.PaymentMomoResponse;
 import com.bookshop.ecommerce.response.PaymentVNPayResponse;
 import com.bookshop.ecommerce.service.impl.IPaymentService;
@@ -60,6 +61,7 @@ public class PaymentService implements IPaymentService {
 
         return PaymentMomoResponse.builder()
                 .paymentInfo(payment)
+                .paymentInfoId(payment.getId())
                 .paymentUrl(paymentUrl)
                 .build();
     }
@@ -88,6 +90,27 @@ public class PaymentService implements IPaymentService {
                 .paymentUrl(paymentUrl)
                 .build();
     }
+
+    //COD payment
+    @Override
+    public PaymentInfo createCodPayment(CODRequest codPaymentDTO) {
+        User user = userRepository.findById(codPaymentDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setMethod("CASH_ON_DELIVERY");
+        paymentInfo.setPaymentName("COD");
+        paymentInfo.setPaymentAmount(codPaymentDTO.getAmount());
+        paymentInfo.setPaymentPhone(user.getMobile());
+        paymentInfo.setCreatedAt(getCurrentDateTime());
+        paymentInfo.setUser(user);
+        paymentInfo.setStatus("PENDING");
+
+        // Save and return the payment info
+        return paymentRepository.save(paymentInfo);
+    }
+
+
 
     @Override
     public PaymentInfo getPaymentByCode(String paymentCode) {

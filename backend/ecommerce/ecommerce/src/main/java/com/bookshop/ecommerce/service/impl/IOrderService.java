@@ -5,6 +5,8 @@ import com.bookshop.ecommerce.exception.OrderException;
 import com.bookshop.ecommerce.model.Address;
 import com.bookshop.ecommerce.model.Order;
 import com.bookshop.ecommerce.model.User;
+import com.bookshop.ecommerce.request.PaymentUpdateDTO;
+
 import java.util.Date;
 
 import java.util.List;
@@ -23,4 +25,5 @@ public interface IOrderService {
     public List<Order> getAllOrders();
     public void deleteOrder(Integer orderId) throws OrderException;
     Order updateDeliveryDate(Integer orderId, Date deliveryDate) throws OrderException;
+    Order updateOrderPayment(PaymentUpdateDTO paymentUpdateDTO) throws OrderException;
 }
