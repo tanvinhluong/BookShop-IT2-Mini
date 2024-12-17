@@ -1,0 +1,16 @@
+{
+  "name": "ecommerce-book",
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/bookshop/build",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/bookshop/build/$1"
+    }
+  ]
+}

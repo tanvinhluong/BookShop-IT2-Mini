@@ -66,10 +66,10 @@ const Cart = () => {
                     </div>
 
 
-                    <div className="flex justify-between pt-3 text-black">
-                      <span>{t('deliveryCharges')}</span>
-                      <span className="text-green-600">Free</span>
-                    </div>
+                    {/*<div className="flex justify-between pt-3 text-black">*/}
+                    {/*  <span>{t('deliveryCharges')}</span>*/}
+                    {/*  <span className="text-green-600"></span>*/}
+                    {/*</div>*/}
 
                     <div className="flex justify-between pt-3 text-black">
                       <span className="font-bold">{t('totalAmount')}</span>

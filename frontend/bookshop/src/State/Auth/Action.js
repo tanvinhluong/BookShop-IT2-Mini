@@ -153,10 +153,8 @@ export const logout = (userType) => {
       localStorage.removeItem("adminjwt");
       localStorage.removeItem("adminroles");
       localStorage.removeItem("adminpermissions");
-    } else if (userType === "customer") {
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("roles");
-      localStorage.removeItem("permissions");
+    } else {
+      localStorage.clear();
     }
   };
 };

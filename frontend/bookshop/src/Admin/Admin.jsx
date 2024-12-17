@@ -108,6 +108,18 @@ const menu = [
     ),
     requiredPermission: "Order_Delivery",
   },
+  {
+    name: "Delivery Orders",
+    path: "/admin/delivery/orders",
+    icon: (
+        <img
+            src={checkListImg}
+            alt="Delivery Orders"
+            style={{ width: 24, height: 24 }}
+        />
+    ),
+    requiredPermission: "All",
+  },
 ];
 
 const Admin = () => {

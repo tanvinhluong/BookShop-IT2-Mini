@@ -35,6 +35,7 @@ function CartItem({ item, showButton }) {
           />
         </div>
         <div className="m-5 space-y-1">
+          <p className="font-semibold">{item?.productDetail?.product?.productName}</p>
           <p className="font-semibold">{item?.productDetail?.name}</p>
           <p className="opacity-70">
             {t('quantity')}: {item?.productDetail?.inStock}
@@ -47,7 +48,7 @@ function CartItem({ item, showButton }) {
       </div>
 
       {showButton && (
-        <div className="lg:flex items-center lg:space-x-10 pt-4">
+          <div className="lg:flex items-center lg:space-x-10 pt-4">
           <div className="flex items-center space-x-2">
             <IconButton
               onClick={() => handleUpdateCartItem(-1)}

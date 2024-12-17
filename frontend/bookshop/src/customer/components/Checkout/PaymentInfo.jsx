@@ -162,6 +162,7 @@ const PaymentInfo = ({orderId}) => {
                       className="w-20 h-20 object-cover rounded mr-4"
                   />
                   <div className="flex-grow">
+                    <p className="font-semibold">{item?.productDetail?.product?.productName}</p>
                     <h3 className="font-medium">{item.productDetail.name}</h3>
                     <p className="text-gray-600">Số lượng: {item.quantity}</p>
                     <p className="text-gray-600">Giá: {item.price.toLocaleString()}đ</p>

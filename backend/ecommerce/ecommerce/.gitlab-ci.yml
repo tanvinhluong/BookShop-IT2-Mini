@@ -1,0 +1,90 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  SPRING_PROFILES_ACTIVE: 'ci'
+  MYSQL_ROOT_PASSWORD: 'root'
+  MYSQL_DB_NAME: 'ecommerce'
+  MYSQL_USER: 'root'
+  # MYSQL_PASSWORD: 'root'
+  MYSQL_DB_PORT: '3307'
+  # MYSQL_IMAGE: 'mysqlcontainer'
+
+services:
+  - name: mysql:8.0
+    alias: mysql
+    command: ['--default-authentication-plugin=mysql_native_password']
+    variables:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DB_NAME
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+build_backend:
+  stage: build
+  image: maven:3.8.4-openjdk-17
+  script:
+    - cd backend/ecommerce/ecommerce
+    - mvn $MAVEN_CLI_OPTS clean install -DskipTests
+  artifacts:
+    paths:
+      - backend/ecommerce/ecommerce/target/*.jar
+test_backend:
+  stage: test
+  image: docker:20.10.7-dind
+  services:
+    - docker:20.10.7-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_REGISTRY: registry.gitlab.com
+  before_script:
+    - apk update && apk add --no-cache curl
+    - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
+    - dockerd-entrypoint.sh &
+    - |
+      while (! docker info > /dev/null 2>&1); do
+        echo "Chờ Docker sẵn sàng..."
+        sleep 1
+      done
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - cd backend/ecommerce/ecommerce
+    - echo "Tạo Dockerfile cho backend"
+    - echo 'FROM openjdk:17-jdk' > Dockerfile
+    - echo 'COPY target/*.jar /ecommerce.jar' >> Dockerfile
+    - echo 'EXPOSE 5454' >> Dockerfile
+    - echo 'ENTRYPOINT ["java","-jar","/ecommerce.jar"]' >> Dockerfile
+    - docker build -t $DOCKER_USERNAME/bookshopimage:latest .
+    - docker tag $DOCKER_USERNAME/bookshopimage:latest $DOCKER_USERNAME/bookshopimage:latest
+    - docker push $DOCKER_USERNAME/bookshopimage:latest
+    - docker run -d -p 5454:5454 --name ecommerce-bookshop-container $DOCKER_USERNAME/bookshopimage:latest
+  # after_script:
+  #   - docker stop ecommercebookcontainer || true # Dừng container nếu nó đang chạy
+  #   - docker rm ecommercebookcontainer || true # Xóa container đã dừng
+  #   - docker rmi tanvinhluong1702/ecommerce_book_image:latest || true # Xóa image đã tạo
+
+build_frontend:
+  stage: build
+  image: node:20
+  script:
+    - cd frontend
+    - cd bookshop
+    - npm install
+    - npm install --save-dev @babel/plugin-proposal-private-property-in-object
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/bookshop/build/
+
+deploy:
+  stage: deploy
+  image: node:20
+  script:
+    - cd frontend/bookshop
+    - npm install --global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel build --prod --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
